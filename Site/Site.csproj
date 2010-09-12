@@ -80,6 +80,7 @@
     <Compile Include="Controllers\AccessController.cs" />
     <Compile Include="Controllers\GalleryController.cs" />
     <Compile Include="Controllers\ImageController.cs" />
+    <Compile Include="Controllers\SetupController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -121,6 +122,8 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Views\Access\Login.aspx" />
+    <Content Include="Views\Gallery\Album.ascx" />
+    <Content Include="Views\Gallery\AlbumNames.ascx" />
     <Content Include="Views\Gallery\Home.aspx" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -130,9 +133,12 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Views\Web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Web.appSettings.config" />
+    <Content Include="Web.appSettings.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.machineKey.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">

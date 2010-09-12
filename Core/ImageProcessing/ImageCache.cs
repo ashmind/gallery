@@ -13,7 +13,7 @@ using Encoder = System.Drawing.Imaging.Encoder;
 
 namespace AshMind.Web.Gallery.Core.ImageProcessing 
 {
-    internal class ImageCache
+    public class ImageCache
     {
         private readonly object DiskAccessLock = new object();
 

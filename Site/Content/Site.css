@@ -97,7 +97,7 @@ a.block-link:hover {
     overflow: auto;
 }
 
-/*#wall {
+/*.wall {
     width: 100%;
     display: -moz-box;
     display: -webkit-box;
@@ -109,7 +109,11 @@ a.block-link:hover {
     -webkit-box-lines: multiple;
 }*/
 
-#main .item {
+.album-view .title {
+    font-size: 120%;
+}
+
+.album-view .wall .item {
     width: 250px;
     /*min-height: 250px;*/
     
@@ -127,7 +131,7 @@ a.block-link:hover {
     text-align: center;
 }
 
-.item img {
+.album-view .wall .item img {
     background-position: center center;
     background-repeat: no-repeat;
     background-image: url('Images/loading.gif');	

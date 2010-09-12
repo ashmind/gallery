@@ -9,5 +9,6 @@ namespace AshMind.Web.Gallery.Core
     {
         public string Name          { get; internal set; }
         public GalleryItemType Type { get; internal set; }
+        public DateTimeOffset Date  { get; internal set; }
     }
 }

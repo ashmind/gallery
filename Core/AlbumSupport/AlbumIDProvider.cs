@@ -32,7 +32,7 @@ namespace AshMind.Web.Gallery.Core.AlbumSupport
             if (pair != null)
                 return pair.Value.Key;
 
-            var id = Path.GetFileName(location);
+            var id = Path.GetFileName(location).Replace(" ", "_");
             if (this.idMap.TryAdd(id, location))
                 File.AppendAllText(this.idMapFilePath, id + "\t" + location + Environment.NewLine);
 

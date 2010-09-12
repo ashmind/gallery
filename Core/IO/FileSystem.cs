@@ -37,7 +37,7 @@ namespace AshMind.Web.Gallery.Core.IO
         }
 
         public bool IsFileName(string pathOrFileName) {
-            return pathOrFileName.IndexOfAny(new[] { Path.PathSeparator, Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }) > -1;
+            return pathOrFileName.IndexOfAny(new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar }) < 0;
         }
     }
 }

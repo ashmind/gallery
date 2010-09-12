@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using System.Web;
 using System.Web.Compilation;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -20,9 +19,6 @@ using Autofac.Builder;
 using Autofac.Modules;
 using Autofac.Integration.Web;
 using Autofac.Integration.Web.Mvc;
-using AshMind.Web.Gallery.Core.Access;
-using System.Security.Principal;
-using System.Configuration;
 
 namespace AshMind.Web.Gallery.Site {
     public class MvcApplication : System.Web.HttpApplication {
@@ -136,16 +132,6 @@ namespace AshMind.Web.Gallery.Site {
                 Response.Flush();
                 Response.End();
             }
-        }
-
-        protected void Application_AuthenticateRequest(object sender, EventArgs e) {
-            var principal = HttpContext.Current.User;
-            if (principal == null || !principal.Identity.IsAuthenticated)
-                return;
-
-            var userRepository = RequestContainer.Resolve<IUserRepository>();
-            var user = userRepository.Load(principal.Identity.Name);
-            HttpContext.Current.User = new GenericPrincipal(principal.Identity, new string[0]);
         }
 
         protected void Application_EndRequest(object sender, EventArgs e) {

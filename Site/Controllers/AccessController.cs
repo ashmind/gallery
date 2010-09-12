@@ -13,19 +13,20 @@ using DotNetOpenAuth.OpenId.RelyingParty;
 
 using AshMind.Extensions;
 
-using AshMind.Web.Gallery.Site.OpenIdAbstraction;
+using AshMind.Web.Gallery.Core;
+using AshMind.Web.Gallery.Core.Security;
 using AshMind.Web.Gallery.Site.Models;
-using AshMind.Web.Gallery.Core.Access;
+using AshMind.Web.Gallery.Site.OpenIdAbstraction;
 
 namespace AshMind.Web.Gallery.Site.Controllers {
     [HandleError]
     public class AccessController : Controller {
         private readonly IOpenIdAjaxRelyingParty openId;
-        private readonly IUserRepository userRepository;
+        private readonly IRepository<User> userRepository;
 
         public AccessController(
             IOpenIdAjaxRelyingParty openId,
-            IUserRepository userRepository
+            IRepository<User> userRepository
         ) {
             this.openId = openId;
             this.userRepository = userRepository;
@@ -79,7 +80,7 @@ namespace AshMind.Web.Gallery.Site.Controllers {
                     return RedirectToAction("Login");
                 }
 
-                var user = this.userRepository.Load(claims.Email);
+                var user = this.userRepository.FindByEmail(claims.Email);
                 if (user == null) {
                     ModelState.AddModelError("OpenID", "User is not known to access control system.");
                     return RedirectToAction("Login");

@@ -10,7 +10,7 @@ namespace AshMind.Web.Gallery.Core {
     public class PreviewFacade {
         private readonly ImageCache cache;
 
-        internal PreviewFacade(ImageCache cache) {
+        public PreviewFacade(ImageCache cache) {
             this.cache = cache;
         }
 

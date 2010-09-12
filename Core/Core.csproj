@@ -60,6 +60,7 @@
     <Reference Include="Autofac">
       <HintPath>..\.Libraries\Autofac\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="Google.GData.Contacts, Version=1.6.0.0, Culture=neutral, PublicKeyToken=7e065189dd4b982f, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\.Libraries\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -78,10 +79,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Access\JsonUserRepository.cs" />
-    <Compile Include="Access\IUserRepository.cs" />
-    <Compile Include="Access\User.cs" />
-    <Compile Include="Access\UserGroup.cs" />
+    <Compile Include="Metadata\ITagProvider.cs" />
+    <Compile Include="Security\AuthorizationService.cs" />
+    <Compile Include="Security\Internal\JsonSecurityRepository.cs" />
+    <Compile Include="Security\Permission.cs" />
+    <Compile Include="Security\PermissionStatus.cs" />
+    <Compile Include="Security\SecurableAction.cs" />
+    <Compile Include="Security\UserRepositoryExtensions.cs" />
+    <Compile Include="IRepository.cs" />
+    <Compile Include="Security\User.cs" />
+    <Compile Include="Security\UserGroup.cs" />
     <Compile Include="CoreModule.cs" />
     <Compile Include="GalleryItem.cs" />
     <Compile Include="GalleryItemType.cs" />

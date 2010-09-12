@@ -2,10 +2,12 @@
 
 using Autofac.Builder;
 
-using AshMind.Web.Gallery.Core.Access;
 using AshMind.Web.Gallery.Core.AlbumSupport;
 using AshMind.Web.Gallery.Core.ImageProcessing;
 using AshMind.Web.Gallery.Core.IO;
+using AshMind.Web.Gallery.Core.Metadata;
+using AshMind.Web.Gallery.Core.Security;
+using AshMind.Web.Gallery.Core.Security.Internal;
 
 namespace AshMind.Web.Gallery.Core {
     public class CoreModule : Module {
@@ -20,8 +22,8 @@ namespace AshMind.Web.Gallery.Core {
         protected override void Load(ContainerBuilder builder) {
             base.Load(builder);
 
-            builder.Register(new JsonUserRepository(Path.Combine(storagePath, "users.jsdb")))
-                   .As<IUserRepository>()
+            builder.Register(new JsonSecurityRepository(Path.Combine(storagePath, "users.jsdb")))
+                   .As<IRepository<User>, IRepository<UserGroup>>()
                    .SingletonScoped();
 
             builder.Register<FileSystem>()
@@ -31,11 +33,15 @@ namespace AshMind.Web.Gallery.Core {
             builder.Register(new ImageCache(Path.Combine(this.storagePath, "images"), ImageCacheFormat.Jpeg));
 
             builder.Register(c => new AlbumIDProvider(this.storagePath)).As<IAlbumIDProvider>();
-            
+
+            builder.Register<AuthorizationService>();
+
             builder.Register(c => new AlbumFacade(
                         this.albumPath,
                         c.Resolve<IFileSystem>(),
-                        c.Resolve<IAlbumIDProvider>()
+                        c.Resolve<IAlbumIDProvider>(),
+                        c.Resolve<AuthorizationService>(),
+                        c.Resolve<ITagProvider[]>()
                     ))
                    .SingletonScoped();
 
