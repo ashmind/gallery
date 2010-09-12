@@ -1,0 +1,181 @@
+html, body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    
+    overflow: hidden;
+}
+
+#left, #main {
+    padding: 12px;
+    margin: 16px;
+    
+    border: solid 1px #EEEEEE;
+}
+
+#left {
+    position: absolute;
+    
+    top : 0;
+    bottom: 0;
+    
+    width: 15em;
+    
+    overflow:	auto; /* Opera fix */
+    overflow-x: hidden;
+    overflow-y: auto;
+    text-overflow: ellipsis;
+
+    cursor: default;
+}
+
+a.block-link {
+    color: #26292D;
+    text-decoration: none;
+    -moz-border-radius: 5px;
+}
+
+a.block-link:hover {
+    background-color: #C3D9FF;
+}
+
+#left a {
+    display: block;
+    position: relative;
+    
+    padding: 0.2em;
+    white-space: nowrap;	
+    
+    overflow: hidden;	
+    text-overflow: ellipsis;
+}
+
+#left a .image-count {
+    /*float:          right;*/
+    position:         absolute;
+    right:            0px;
+    background-color: white;
+    height:           100%;
+    
+    padding-left:     0.5em;
+    
+    font-size:      80%;
+    color:          #CCCCCC;
+    
+    vertical-align: middle;
+}
+
+#left a:hover .image-count {
+    background-color: #C3D9FF;
+}
+
+#left a.selected {
+    background-color: #356AA0;    
+    color: #FFFFFF;
+    font-size: 120%;
+    cursor: default;
+}
+
+#left a:hover .image-count {
+    color: #111111;
+}
+
+#left a.selected .image-count {
+    display: none;
+}
+
+#main
+{	
+    position: absolute;
+    
+    left:	17.6em;	
+    right:	0;
+    top:	0;
+    bottom: 0;
+    
+    display: block;
+    overflow: auto;
+}
+
+/*#wall {
+    width: 100%;
+    display: -moz-box;
+    display: -webkit-box;
+    -moz-box-orient: horizontal;
+    -moz-box-align: stretch;
+    -moz-box-lines: multiple;
+    -webkit-box-orient: horizontal;
+    -webkit-box-align: stretch;
+    -webkit-box-lines: multiple;
+}*/
+
+#main .item {
+    width: 250px;
+    /*min-height: 250px;*/
+    
+    display: inline-block;
+    
+    /*display: block;
+    -moz-box-flex: 1;
+    -webkit-box-flex: 1;*/
+    
+    vertical-align: middle;
+    
+    margin-right: 10px;
+    margin-bottom: 10px;	
+
+    text-align: center;
+}
+
+.item img {
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-image: url('Images/loading.gif');	
+    
+    -moz-box-shadow:    0 0 5px #505050;
+    -webkit-box-shadow: 0 0 5px #505050;
+    box-shadow:         0 0 5px #505050;    
+ }
+
+.image-view {
+    display: block;
+    text-align: center;
+}
+
+#main img {
+    border: 0;
+}
+
+#login {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -6em;
+    margin-left: -4em;
+    
+    width: 8em;
+    height: 4em;
+    
+    padding: 2em;
+    
+    text-align: center;
+    
+    z-index: 1;
+    background: white;
+}
+
+.background {
+    background-color: #000;
+    opacity: 0.8;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    
+    z-index: 0;
+}
+
+.OpenIDForm, #OpenIDButton {
+    display: none;
+}
