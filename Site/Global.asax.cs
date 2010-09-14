@@ -62,6 +62,12 @@ namespace AshMind.Web.Gallery.Site {
             );
 
             routes.MapRoute(
+                "Ajax",
+                "ajax/{action}",
+                new { controller = "Gallery" }
+            );
+
+            routes.MapRoute(
                 "Image",
                 "{album}/{item}/{size}",
                 new { controller = "Image", action = "Get", size = ImageSize.Original }

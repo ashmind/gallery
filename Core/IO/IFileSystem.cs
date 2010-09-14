@@ -12,10 +12,15 @@ namespace AshMind.Web.Gallery.Core.IO
 
         bool IsFileName(string pathOrFileName);
         string GetFileName(string path);
+        string GetLocationName(string location);
         string BuildPath(params string[] parts);
 
         DateTimeOffset GetCreationTime(string location);
 
-        bool FileExists(string path);        
+        bool FileExists(string path);
+
+        bool IsLocation(string path);
+
+        string ReadAllText(string path);
     }
 }

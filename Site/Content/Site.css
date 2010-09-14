@@ -84,6 +84,10 @@ a.block-link:hover {
     display: none;
 }
 
+#left a.more {
+    text-align: center;
+}
+
 #main
 {	
     position: absolute;

@@ -16,6 +16,7 @@ namespace AshMind.Web.Gallery.Core
         private readonly IFileSystem fileSystem;
         private readonly IAlbumIDProvider idProvider;
         private readonly AuthorizationService authorization;
+        private readonly IAlbumFilter[] albumFilters;
         private readonly ITagProvider[] tagProviders;
 
         internal string RootPath { private set; get; }
@@ -25,6 +26,7 @@ namespace AshMind.Web.Gallery.Core
             IFileSystem fileSystem,
             IAlbumIDProvider idProvider,
             AuthorizationService authorization,
+            IAlbumFilter[] albumFilters,
             ITagProvider[] tagProviders
         ) {
             this.RootPath = rootPath;
@@ -32,23 +34,34 @@ namespace AshMind.Web.Gallery.Core
             this.fileSystem = fileSystem;
             this.idProvider = idProvider;
             this.authorization = authorization;
+            this.albumFilters = albumFilters;
             this.tagProviders = tagProviders;
         }
 
         public IEnumerable<GalleryAlbum> GetAlbums(User user) {
             var locations = this.fileSystem.GetLocations(this.RootPath);
             return from location in locations
-                   let tags = this.tagProviders.SelectMany(p => p.GetTags(location)).ToArray()
-                   where this.authorization.IsAuthorized(user, SecurableAction.View, tags)
-                   let items = this.GetItemsAtLocation(location, user).ToArray()
-                   where items.Count() > 0
-                   let date = items.Min(item => item.Date)
-                   orderby date descending
-                   select new GalleryAlbum(items, tags) {
-                       ID        = idProvider.GetAlbumID(location),
-                       Name      = this.fileSystem.GetFileName(location),
-                       Date      = date
-                   };
+                   where !this.albumFilters.Any(a => a.ShouldSkip(location))
+                   let album = GetAlbumAtLocation(location, user)
+                   where album != null
+                   orderby album.Date descending
+                   select album;
+        }
+
+        private GalleryAlbum GetAlbumAtLocation(string location, User user) {
+            var tags = this.tagProviders.SelectMany(p => p.GetTags(location)).ToArray();
+            if (!authorization.IsAuthorized(user, SecurableAction.View, tags))
+                return null;
+
+            var items = this.GetItemsAtLocation(location, user).ToArray();
+            if (items.Length == 0)
+                return null;
+
+            return new GalleryAlbum(items, tags) {
+                ID   = idProvider.GetAlbumID(location),
+                Name = this.fileSystem.GetFileName(location),
+                Date = items.Min(item => item.Date)
+            };
         }
         
         private IEnumerable<GalleryItem> GetItemsAtLocation(string location, User user) {
@@ -70,6 +83,11 @@ namespace AshMind.Web.Gallery.Core
 
             var path = this.idProvider.GetAlbumLocation(albumID);
             return fileSystem.BuildPath(path, itemName);
+        }
+
+        public GalleryAlbum GetAlbum(string albumID, User user) {
+            var location = this.idProvider.GetAlbumLocation(albumID);
+            return this.GetAlbumAtLocation(location, user);
         }
     }
 }

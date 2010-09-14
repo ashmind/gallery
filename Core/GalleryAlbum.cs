@@ -8,7 +8,13 @@ using AshMind.Extensions;
 
 namespace AshMind.Web.Gallery.Core {
     public class GalleryAlbum {
-        public GalleryAlbum(IList<GalleryItem> items, IList<string> tags) {
+        public static GalleryAlbum Empty { get; private set; }
+
+        static GalleryAlbum() {
+            Empty = new GalleryAlbum(new GalleryItem[0], new string[0]);
+        }
+
+        internal GalleryAlbum(IList<GalleryItem> items, IList<string> tags) {
             this.Items = items.AsReadOnly();
             this.Tags = tags.AsReadOnly();
         }

@@ -20,7 +20,6 @@ namespace AshMind.Web.Gallery.Core.ImageProcessing
         public string CacheRoot         { get; private set; }
         public ImageCacheFormat Format  { get; private set; }
 
-        private readonly MD5 md5 = MD5.Create();
         private readonly ImageCodecInfo m_imageEncoder;
         private readonly EncoderParameters m_imageEncoderParameters;
         
@@ -58,12 +57,14 @@ namespace AshMind.Web.Gallery.Core.ImageProcessing
         }
 
         private string GetCacheKey(string imagePath, int size) {
-            var pathBytes = Encoding.UTF8.GetBytes(imagePath);
-            var key = md5.ComputeHashAsString(pathBytes);
-            return string.Format(
-                "{0}-x{1}.{2}",
-                key, size, this.Format.FileExtension
-            );
+            using (var md5 = MD5.Create()) {
+                var pathBytes = Encoding.UTF8.GetBytes(imagePath);
+                var key = md5.ComputeHashAsString(pathBytes);
+                return string.Format(
+                    "{0}-x{1}.{2}",
+                    key, size, this.Format.FileExtension
+                );
+            }
         }
     }
 }
