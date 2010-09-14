@@ -123,7 +123,7 @@ a.block-link:hover {
 
 .album-view .wall .item {
     width: 250px;
-    /*min-height: 250px;*/
+    height: 250px;
     
     display: inline-block;
     

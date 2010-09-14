@@ -13,11 +13,6 @@ using AshMind.Web.Gallery.Core.IO;
 namespace AshMind.Web.Gallery.Site.Controllers {
     [Authorize]
     public class ImageController : Controller {
-        private IDictionary<ImageSize, int> imageSizes = new Dictionary<ImageSize, int> {
-            { ImageSize.Small,      250 },
-            { ImageSize.Preview,    1280 }
-        };
-
         private IDictionary<string, string> knownMimeTypes = new Dictionary<string, string> {
             {".jpg",    MediaTypeNames.Image.Jpeg},
             {".jpeg",   MediaTypeNames.Image.Jpeg},
@@ -33,15 +28,16 @@ namespace AshMind.Web.Gallery.Site.Controllers {
         }
 
         //[OutputCache(Duration = 60, VaryByParam = "*")]
-        public ActionResult Get(string album, string item, ImageSize size = ImageSize.Original) {
+        public ActionResult Get(string album, string item, string size) {
+            var imageSize = ImageSize.Parse(size);
             var path = this.gallery.GetFullPath(album, item);
-            if (size != ImageSize.Original)
-                path = this.preview.GetPreviewPath(path, imageSizes[size]);
+            if (imageSize != ImageSize.Original)
+                path = this.preview.GetPreviewPath(path, imageSize.Size);
 
             var ifModifiedSince = Request.Headers["If-Modified-Since"];
+            var lastModifiedDate = (DateTimeOffset)System.IO.File.GetLastWriteTimeUtc(path);
             if (!string.IsNullOrEmpty(ifModifiedSince)) {
                 var ifModifiedSinceDate = DateTimeOffset.Parse(ifModifiedSince);
-                var lastModifiedDate = (DateTimeOffset)System.IO.File.GetLastWriteTimeUtc(path);
 
                 if ((lastModifiedDate - ifModifiedSinceDate).TotalSeconds < 1) {
                     Response.StatusCode = 304;
@@ -53,7 +49,18 @@ namespace AshMind.Web.Gallery.Site.Controllers {
             Response.Cache.SetCacheability(HttpCacheability.Private);
             Response.Cache.SetETagFromFileDependencies();
             Response.Cache.SetLastModifiedFromFileDependencies();
-            Response.Cache.SetExpires(DateTime.Now.AddDays(5));
+
+            var maxAge = TimeSpan.Zero;
+            if ((DateTimeOffset.Now - lastModifiedDate).TotalDays > 30) { // I think I will not edit these
+                maxAge = TimeSpan.FromDays(90);
+            }
+            else {
+                maxAge = TimeSpan.FromHours(1);
+            }
+
+            Response.Cache.SetExpires((DateTimeOffset.Now + maxAge).UtcDateTime);
+            Response.Cache.SetMaxAge(maxAge);
+
             return File(
                 path,
                 knownMimeTypes[Path.GetExtension(path).ToLower()],

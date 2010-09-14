@@ -115,8 +115,11 @@
     <Content Include="Content\Images\fancy_title_over.png" />
     <Content Include="Content\Images\fancy_title_right.png" />
     <Content Include="Content\Images\loading.gif" />
+    <Content Include="Content\Images\openid\google.png" />
     <Content Include="Content\jquery.fancybox-1.3.1.css" />
+    <Content Include="Scripts\jquery.cookie.js" />
     <Content Include="Scripts\jquery.fancybox-1.3.1.js" />
+    <Content Include="Scripts\jquery.lazyload.js" />
     <Content Include="Scripts\jquery.masonry.js" />
     <Content Include="Scripts\site.js" />
   </ItemGroup>
@@ -126,6 +129,7 @@
     <Content Include="Views\Access\Login.aspx" />
     <Content Include="Views\Gallery\Album.ascx" />
     <Content Include="Views\Gallery\AlbumNames.ascx" />
+    <Content Include="Views\Gallery\Items.ascx" />
     <Content Include="Views\Gallery\Home.aspx" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

@@ -60,6 +60,9 @@
     <Reference Include="Autofac">
       <HintPath>..\.Libraries\Autofac\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="ExifLibrary">
+      <HintPath>..\.Libraries\ExifLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="Google.GData.Contacts, Version=1.6.0.0, Culture=neutral, PublicKeyToken=7e065189dd4b982f, processorArchitecture=MSIL" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\.Libraries\Newtonsoft.Json.dll</HintPath>
@@ -80,6 +83,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlbumSupport\IAlbumFilter.cs" />
+    <Compile Include="ImageProcessing\ImageMetadataExtractor.cs" />
+    <Compile Include="ImageProcessing\ImageInfo.cs" />
+    <Compile Include="ImageProcessing\ImageMetadata.cs" />
     <Compile Include="Integration\Picasa\PicasaAlbumFilter.cs" />
     <Compile Include="Metadata\Internal\JsonFileBasedTagProvider.cs" />
     <Compile Include="Metadata\ITagProvider.cs" />

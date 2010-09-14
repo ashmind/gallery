@@ -9,6 +9,17 @@ namespace AshMind.Web.Gallery.Core.ImageProcessing {
     internal static class ImageProcessor {
         private const int ExifOrientationId = 274;
 
+        private static HashSet<RotateFlipType> flipsWidthHeight = new HashSet<RotateFlipType> {
+            RotateFlipType.Rotate90FlipNone,
+            RotateFlipType.Rotate90FlipX,
+            RotateFlipType.Rotate90FlipXY,
+            RotateFlipType.Rotate90FlipY,
+            RotateFlipType.Rotate270FlipNone,
+            RotateFlipType.Rotate270FlipX,
+            RotateFlipType.Rotate270FlipXY,
+            RotateFlipType.Rotate270FlipY
+        };
+
         private static IDictionary<int, RotateFlipType> ms_orientations = new Dictionary<int, RotateFlipType> {
             { 1, RotateFlipType.RotateNoneFlipNone },
             { 2, RotateFlipType.RotateNoneFlipX },
@@ -20,20 +31,16 @@ namespace AshMind.Web.Gallery.Core.ImageProcessing {
             { 8, RotateFlipType.Rotate270FlipNone },
         };
 
-        public static Image ToThumbnail(Image image, int desiredSize) {
+        public static Image ReduceSize(Image image, int desiredSize) {
             var orientation = image.GetOrientation();
-            var ratio = ((double)desiredSize / image.Width);
+            var targetSize = EstimateSize(image.Size, desiredSize);
 
-            var targetWidth = desiredSize;
-            var targetHeight = (int)(image.Height * ratio);
-
-            var resized = new Bitmap(targetWidth, targetHeight, image.PixelFormat);
+            var resized = new Bitmap(targetSize.Width, targetSize.Height, image.PixelFormat);
             resized.SetResolution(image.HorizontalResolution, image.VerticalResolution);
 
-            using (var g = Graphics.FromImage(resized))
-            {
+            using (var g = Graphics.FromImage(resized)) {
                 g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                g.DrawImage(image, 0, 0, targetWidth, targetHeight);
+                g.DrawImage(image, 0, 0, targetSize.Width, targetSize.Height);
             }
 
             ImageProcessor.CorrectOrientation(resized, orientation);
@@ -41,16 +48,30 @@ namespace AshMind.Web.Gallery.Core.ImageProcessing {
             return resized;
         }
 
-        private static void CorrectOrientation(Bitmap bitmap, RotateFlipType? orientation)
-        {
+        public static Size EstimateSize(ImageMetadata metadata, int desiredSize) {
+            var size = EstimateSize(new Size(metadata.Width, metadata.Height), desiredSize);
+            if (metadata.Orientation != null && flipsWidthHeight.Contains(metadata.Orientation.Value))
+                size = new Size(size.Height, size.Width);
+
+            return size;
+        }
+
+        private static Size EstimateSize(Size size, int desiredSize) {
+            var ratio = ((double)desiredSize / size.Width);
+            return new Size(
+                desiredSize,
+                (int)(size.Height * ratio)
+            );
+        }
+
+        private static void CorrectOrientation(Bitmap bitmap, RotateFlipType? orientation) {
             if (orientation == null || orientation.Value == RotateFlipType.RotateNoneFlipNone)
                 return;
 
             bitmap.RotateFlip(orientation.Value);
         }
 
-        public static RotateFlipType? GetOrientation(this Image image)
-        {
+        public static RotateFlipType? GetOrientation(this Image image) {
             if (!image.PropertyIdList.Contains(ExifOrientationId))
                 return null;
 

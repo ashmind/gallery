@@ -10,60 +10,111 @@ using System.Web;
 using AshMind.Web.Gallery.Core.Internal;
 
 using Encoder = System.Drawing.Imaging.Encoder;
+using Newtonsoft.Json;
 
-namespace AshMind.Web.Gallery.Core.ImageProcessing 
-{
-    public class ImageCache
-    {
+namespace AshMind.Web.Gallery.Core.ImageProcessing {
+    public class ImageCache {
         private readonly object DiskAccessLock = new object();
 
-        public string CacheRoot         { get; private set; }
-        public ImageCacheFormat Format  { get; private set; }
+        public string CacheRoot { get; private set; }
+        public ImageCacheFormat Format { get; private set; }
 
-        private readonly ImageCodecInfo m_imageEncoder;
-        private readonly EncoderParameters m_imageEncoderParameters;
-        
+        private readonly ImageCodecInfo imageEncoder;
+        private readonly EncoderParameters imageEncoderParameters;
+
         public ImageCache(string cacheRoot, ImageCacheFormat format) {
             this.CacheRoot = cacheRoot;
             this.Format = format;
 
-            m_imageEncoder = ImageCodecInfo.GetImageEncoders().First(c => c.MimeType == format.MimeType);
-            m_imageEncoderParameters = new EncoderParameters {
+            this.imageEncoder = ImageCodecInfo.GetImageEncoders().First(c => c.MimeType == format.MimeType);
+            this.imageEncoderParameters = new EncoderParameters {
                 Param = new[] { new EncoderParameter(Encoder.Quality, 100L) }
             };
         }
 
-        public string GetResultPath(string imagePath, int size, Func<Image, int, Image> transform) {
-            var cacheKey = this.GetCacheKey(imagePath, size);
-            var cachePath = Path.Combine(this.CacheRoot, cacheKey);
-
-            if (!Directory.Exists(this.CacheRoot))
-                Directory.CreateDirectory(this.CacheRoot);
-
+        public string GetTransformPath(string imagePath, int size, Func<Image, int, Image> transform) {
+            var cachePath = GetCachePath(imagePath, size);
+            
             var cached = File.Exists(cachePath);
             if (!cached)
-                this.SaveTransform(imagePath, cachePath, image => transform(image, size));
+                return this.CacheTransform(imagePath, cachePath, image => transform(image, size));
 
             return cachePath;
         }
 
-        private void SaveTransform(string imagePath, string cachePath, Converter<Image, Image> transform) {
-            lock (DiskAccessLock) {
-                using (var original = Image.FromFile(imagePath))
-                using (var result = transform(original)) {
-                    result.Save(cachePath, m_imageEncoder, m_imageEncoderParameters);
-                }
+        public ImageMetadata GetMetadata(string imagePath, Func<ImageMetadata> getMetadata, Func<ImageMetadata, ImageMetadata> adjustMetadata) {
+            var metadataPath = GetMetadataPath(imagePath);
+            var metadata = (ImageMetadata)null;
+
+            if (File.Exists(metadataPath))
+                metadata = LoadMetadata(metadataPath);
+
+            if (metadata == null) {
+                metadata = getMetadata();
+                SaveMetadata(metadataPath, metadata);
+            }
+
+            return adjustMetadata(metadata);
+        }
+        
+        private string CacheTransform(string imagePath, string cachePath, Converter<Image, Image> transform) {
+            using (var original = LoadOriginalImage(imagePath))
+            using (var result = transform(original)) {
+                result.Save(cachePath, this.imageEncoder, this.imageEncoderParameters);
+                return cachePath;
             }
         }
 
+        private void SaveMetadata(string metadataPath, ImageMetadata metadata) {
+            File.WriteAllText(
+                metadataPath,
+                JsonConvert.SerializeObject(metadata)
+            );
+        }
+
+        private ImageMetadata LoadMetadata(string metadataPath) {
+            return JsonConvert.DeserializeObject<ImageMetadata>(
+                File.ReadAllText(metadataPath)
+            );
+        }
+
+        private Image LoadOriginalImage(string imagePath) {
+            lock (DiskAccessLock) {
+                return Image.FromFile(imagePath);
+            }
+        }
+
+        private string GetCachePath(string imagePath, int size) {
+            if (!Directory.Exists(this.CacheRoot))
+                Directory.CreateDirectory(this.CacheRoot);
+
+            var cacheKey = this.GetCacheKey(imagePath, size);
+            return Path.Combine(this.CacheRoot, cacheKey);
+        }
+
+        private string GetMetadataPath(string imagePath) {
+            if (!Directory.Exists(this.CacheRoot))
+                Directory.CreateDirectory(this.CacheRoot);
+
+            return Path.Combine(
+                this.CacheRoot,
+                GetCacheKey(imagePath) + ".metadata"
+            );
+        }
+
         private string GetCacheKey(string imagePath, int size) {
+            return string.Format(
+                "{0}-x{1}.{2}",
+                GetCacheKey(imagePath), size,
+                this.Format.FileExtension
+            );
+        }
+
+        private string GetCacheKey(string imagePath) {
             using (var md5 = MD5.Create()) {
                 var pathBytes = Encoding.UTF8.GetBytes(imagePath);
                 var key = md5.ComputeHashAsString(pathBytes);
-                return string.Format(
-                    "{0}-x{1}.{2}",
-                    key, size, this.Format.FileExtension
-                );
+                return key;
             }
         }
     }

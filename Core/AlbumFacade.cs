@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 
 using AshMind.Web.Gallery.Core.AlbumSupport;
+using AshMind.Web.Gallery.Core.ImageProcessing;
 using AshMind.Web.Gallery.Core.Internal;
 using AshMind.Web.Gallery.Core.IO;
 using AshMind.Web.Gallery.Core.Metadata;
@@ -14,6 +15,7 @@ namespace AshMind.Web.Gallery.Core
 {
     public class AlbumFacade {
         private readonly IFileSystem fileSystem;
+        private readonly PreviewFacade preview;
         private readonly IAlbumIDProvider idProvider;
         private readonly AuthorizationService authorization;
         private readonly IAlbumFilter[] albumFilters;
@@ -23,6 +25,7 @@ namespace AshMind.Web.Gallery.Core
 
         internal AlbumFacade(
             string rootPath,
+            PreviewFacade preview,
             IFileSystem fileSystem,
             IAlbumIDProvider idProvider,
             AuthorizationService authorization,
@@ -32,6 +35,7 @@ namespace AshMind.Web.Gallery.Core
             this.RootPath = rootPath;
 
             this.fileSystem = fileSystem;
+            this.preview = preview;
             this.idProvider = idProvider;
             this.authorization = authorization;
             this.albumFilters = albumFilters;
@@ -70,11 +74,14 @@ namespace AshMind.Web.Gallery.Core
                    where this.authorization.IsAuthorized(user, SecurableAction.View, tags)
                    let itemType = GuessItemType.Of(file)
                    where itemType != GalleryItemType.Unknown
-                   select new GalleryItem {
-                       Name = this.fileSystem.GetFileName(file),
-                       Date = this.fileSystem.GetCreationTime(file),
-                       Type = itemType
-                   };
+                   let date = this.fileSystem.GetCreationTime(file)
+                   orderby date
+                   select new GalleryItem(
+                       this.fileSystem.GetFileName(file),
+                       itemType,
+                       date,
+                       size => this.preview.GetPreviewMetadata(file, size)
+                   );
         }
 
         public string GetFullPath(string albumID, string itemName) {

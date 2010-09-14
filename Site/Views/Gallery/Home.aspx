@@ -1,6 +1,9 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/Main.Master" Inherits="System.Web.Mvc.ViewPage<GalleryViewModel>" %>
 
 <asp:Content ContentPlaceHolderID="title" runat="server">
+  <%= Request.Url.Host %> gallery <% if (Model.SelectedAlbum != null) { %>
+    : <%= Model.SelectedAlbum.Name %>
+  <% } %>
 </asp:Content>
 
 <asp:Content ContentPlaceHolderID="content" runat="server">

@@ -15,7 +15,15 @@ namespace AshMind.Web.Gallery.Core {
         }
 
         public string GetPreviewPath(string originalPath, int size) {
-            return this.cache.GetResultPath(originalPath, size, ImageProcessor.ToThumbnail);
+            return this.cache.GetTransformPath(originalPath, size, ImageProcessor.ReduceSize);
+        }
+
+        public ImageMetadata GetPreviewMetadata(string originalPath, int size) {
+            return this.cache.GetMetadata(
+                originalPath,
+                () => ImageMetadataExtractor.ReadMetadata(originalPath),
+                metadata => new ImageMetadata(ImageProcessor.EstimateSize(metadata, size))
+            );
         }
         
         public string ImageMimeType {
