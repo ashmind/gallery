@@ -15,7 +15,7 @@
 <asp:Content ContentPlaceHolderID="content" runat="server">
   <div class="background">
     <div id="login">
-      <%= Html.ValidationSummary("Could not log in:") %>
+      <%= Html.ValidationMessage("Login") %>
    
       <% using (Html.BeginForm("OpenIdLoginPostAssertion", "Access", FormMethod.Post, new { target = "_top", @class = "login" })) { %>
         <%= Html.AntiForgeryToken() %>
@@ -23,7 +23,7 @@
         <%= Html.Hidden("openid_openidAuthData") %>
          
         Log in using <%= Html.OpenIdSelector(this.Page, new SelectorButton[] {
-            new SelectorProviderButton("https://www.google.com/accounts/o8/id", Url.Content("~/Content/images/openid/google.gif")),
+            new SelectorProviderButton("https://www.google.com/accounts/o8/id", Url.Content("~/Content/images/openid/google.png")),
             new SelectorOpenIdButton(Url.Content("~/Content/images/openid.png"))
         }) %>
       <% } %>

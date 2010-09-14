@@ -91,6 +91,8 @@
     <Compile Include="OpenIdAbstraction\IOpenIdRelyingParty.cs" />
     <Compile Include="OpenIdAbstraction\OpenIdRelyingParty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Routing\LowerCaseRoute.cs" />
+    <Compile Include="Routing\RouteCollectionExtensions.cs" />
     <Compile Include="WebModule.cs" />
     <Content Include="Content\Images\blank.gif" />
     <Content Include="Content\Images\fancybox-x.png" />

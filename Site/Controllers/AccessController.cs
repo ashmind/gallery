@@ -32,7 +32,7 @@ namespace AshMind.Web.Gallery.Site.Controllers {
             this.userRepository = userRepository;
         }
       
-        public ActionResult Login() {
+        public ActionResult Login(string error) {
             Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-us");
             var returnToUrl = MakeAbsolute(Url.Action("OpenIdLoginReturnTo"));
             var requests = new[] { "https://www.google.com/accounts/o8/id" }.SelectMany(
@@ -42,6 +42,9 @@ namespace AshMind.Web.Gallery.Site.Controllers {
                 Email = DemandLevel.Require
             }));
             var ajax = this.openId.AsAjaxPreloadedDiscoveryResult(requests);
+
+            if (error.IsNotNullOrEmpty())
+                ModelState.AddModelError("Login", error);
 
             return View(new LoginViewModel { PreloadedDiscoveryResults = ajax });
         }
@@ -76,25 +79,19 @@ namespace AshMind.Web.Gallery.Site.Controllers {
             if (response.Status == AuthenticationStatus.Authenticated) {
                 var claims = response.GetExtension<ClaimsResponse>();
                 if (claims == null) {
-                    ModelState.AddModelError("OpenID", "OpenID service didn't provide an user email as requested.");
-                    return RedirectToAction("Login");
+                    return RedirectToAction("Login", new { error = "Email not received." });
                 }
 
                 var user = this.userRepository.FindByEmail(claims.Email);
-                if (user == null) {
-                    ModelState.AddModelError("OpenID", "User is not known to access control system.");
-                    return RedirectToAction("Login");
-                }
+                if (user == null)
+                    return RedirectToAction("Login", new { error = "User is not known." });
 
                 FormsAuthentication.SetAuthCookie(user.Email, false);
                 return Redirect(returnUrl);
             }
 
-            if (response.Status == AuthenticationStatus.Canceled) {
-                ModelState.AddModelError("OpenID", "OpenID login was cancelled.");
-            }
-            else if (response.Status == AuthenticationStatus.Failed) {
-                ModelState.AddModelError("OpenID", response.Exception.Message);
+            if (response.Status == AuthenticationStatus.Failed) {
+                return RedirectToAction("Login", new { error = response.Exception.Message });
             }
 
             return RedirectToAction("Login");

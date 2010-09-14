@@ -13,6 +13,7 @@ using AshMind.Extensions;
 
 using AshMind.Web.Gallery.Core;
 using AshMind.Web.Gallery.Site.Models;
+using AshMind.Web.Gallery.Site.Routing;
 
 using Autofac;
 using Autofac.Builder;
@@ -55,35 +56,36 @@ namespace AshMind.Web.Gallery.Site {
         public static void RegisterRoutes(RouteCollection routes) {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             
-            routes.MapRoute(
+            routes.MapLowerCaseRoute(
                 "Login",
                 "login/{action}",
-                new { controller = "Access", action = "Login" }
+                new { controller = "access", action = "login" }
             );
 
-            routes.MapRoute(
+            routes.MapLowerCaseRoute(
                 "Ajax",
                 "ajax/{action}",
-                new { controller = "Gallery" }
+                new { controller = "gallery" },
+                new { action = "(albumnames)" }
             );
 
             routes.MapRoute(
                 "Image",
                 "{album}/{item}/{size}",
-                new { controller = "Image", action = "Get", size = ImageSize.Original }
+                new { controller = "image", action = "get", size = ImageSize.Original }
             );
 
             routes.MapRoute(
                 "Home",
                 "{album}",
-                new { controller = "Gallery", action = "Home", album = "" }
+                new { controller = "gallery", action = "home", album = "" }
             );
 
             routes.MapRoute(
-                "OpenIdDiscover",
-                "openiddiscover",
-                new { controller = "Access", action = "Discover" }
-            );
+                 "OpenIdDiscover",
+                 "login/openiddiscover",
+                 new { controller = "access", action = "discover" }
+             );
         }
 
         protected virtual void RegisterContainer() {
