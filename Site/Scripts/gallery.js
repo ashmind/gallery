@@ -1,6 +1,9 @@
 ﻿$(function() {
     function prepareWall() {
-        $(".wall a").fancybox({
+        $(".wall a").click(function() {
+            $(this).parent().toggleClass('selected');
+        })
+        .fancybox({
             padding	        : 0,
             transitionIn	: 'fade',
             transitionOut	: 'fade',
@@ -19,8 +22,24 @@
         var imgs = $(".wall img");
         imgs.lazyload({
             placeholder : imgs.eq(0).attr('src'),
-            container: $("#main"),
-            effect : "fadeIn"
+            container   : $("#main"),
+            effect      : "fadeIn"
+        });
+
+        $('.wall').dragToSelect({
+            selectables  : '.item',
+            selectOnMove : true/*,
+            onHide       : function () {
+                var selected = $('.wall .item.selected');
+                if (selected.length > 0) {
+                    $("#main").css('right', '12.6em');
+                    $("#right-menu").show();
+                }
+                else {
+                    $("#right-menu").hide();
+                    $("#main").css('right', '0');
+                }
+            }*/
         });
     }
 

@@ -2,11 +2,6 @@ html, input, select, textarea {
     font-family: "Calibri",Verdana,Helvetica,sans-serif;
 }
 
-h1, h2, h3, h4 {
-    font-family: "Cambria",Verdana,Helvetica,sans-serif;
-    font-weight: normal;
-}
-
 html, body {
     height: 100%;
     padding: 0;
@@ -15,7 +10,17 @@ html, body {
     overflow: hidden;    
 }
 
-#left, #main {
+h1, h2, h3, h4 {
+    font-family: "Cambria",Verdana,Helvetica,sans-serif;
+    font-weight: normal;
+}
+
+h2 {
+    font-size: 110%;
+    margin: 0;
+}
+
+#left, #main, #right-menu {
     padding: 12px;
     margin: 16px;
     
@@ -110,6 +115,17 @@ a.block-link:hover {
     overflow: auto;
 }
 
+#right-menu {
+    display: none;
+    
+    position: absolute;
+    width: 10em;
+    
+    right:	0;
+    top:	0;
+    bottom: 0;
+}
+
 /*.wall {
     width: 100%;
     display: -moz-box;
@@ -151,11 +167,19 @@ a.block-link:hover {
     
     -moz-box-shadow:    0 0 5px #505050;
     -webkit-box-shadow: 0 0 5px #505050;
-    box-shadow:         0 0 5px #505050;    
+    box-shadow:         0 0 5px #505050;
+    
+    margin: 3px;
  }
 
+.album-view .wall .item.selected img {
+    border: 2px solid #356AA0 !important;
+    padding: 1px;
+    margin: 0;
+}
+
 .image-view {
-    display: block;
+    /*display: block;*/
     text-align: center;
 }
 

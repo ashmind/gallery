@@ -20,4 +20,8 @@
       <% Html.RenderPartial("Album", Model.SelectedAlbum); %>
     <% } %>
   </div>
+
+  <!--div id="right-menu">
+    <h2>Selected photos:</h2>
+  </div-->
 </asp:Content>

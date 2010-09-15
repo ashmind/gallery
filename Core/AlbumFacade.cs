@@ -84,7 +84,9 @@ namespace AshMind.Web.Gallery.Core {
 
         public GalleryItem GetItem(string albumID, string itemName, User user) {
             var path = GetFullPath(albumID, itemName);
-            var tags = this.tagProviders.SelectMany(p => p.GetTags(path)).ToArray();
+            var albumLocation = this.idProvider.GetAlbumLocation(albumID);
+
+            var tags = this.tagProviders.SelectMany(p => p.GetTags(albumLocation)).ToArray();
             if (!this.authorization.IsAuthorized(user, SecurableAction.View, tags))
                 throw new UnauthorizedAccessException();
 
