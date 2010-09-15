@@ -1,11 +1,19 @@
 ﻿$(function() {
     function prepareWall() {
         $(".wall a").fancybox({
-            'padding'		: 0,
+            padding	        : 0,
             transitionIn	: 'fade',
             transitionOut	: 'fade',
             overlayOpacity  : 0.8,
-            overlayColor    : '#000'
+            overlayColor    : '#000',
+            titlePosition   : 'over',
+            titleFormat     : function(title, currentArray, currentIndex) {
+                var a = currentArray.eq(currentIndex);
+                return "<span id='fancybox-title-over' class='image-actions'>" +
+                    "<a href='" + a.attr('data-action-download') + "'>Download</a>" +
+                    "<a href='" + a.attr('data-action-comment') + "'>Comment</a>"
+                "</span>";
+            }
         });
 
         var imgs = $(".wall img");

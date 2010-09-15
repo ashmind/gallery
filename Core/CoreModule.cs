@@ -8,6 +8,7 @@ using Autofac.Builder;
 using AshMind.Extensions;
 
 using AshMind.Web.Gallery.Core.AlbumSupport;
+using AshMind.Web.Gallery.Core.Commenting;
 using AshMind.Web.Gallery.Core.ImageProcessing;
 using AshMind.Web.Gallery.Core.IO;
 using AshMind.Web.Gallery.Core.Metadata;
@@ -33,6 +34,10 @@ namespace AshMind.Web.Gallery.Core {
                    .As<IRepository<User>, IRepository<UserGroup>>()
                    .SingletonScoped();
 
+            builder.Register<JsonCommentRepository>()
+                   .As<ICommentRepository>()
+                   .SingletonScoped();
+
             builder.Register<FileSystem>()
                    .As<IFileSystem>()
                    .SingletonScoped();
@@ -49,6 +54,7 @@ namespace AshMind.Web.Gallery.Core {
                         c.Resolve<IFileSystem>(),
                         c.Resolve<IAlbumIDProvider>(),
                         c.Resolve<AuthorizationService>(),
+                        c.Resolve<ICommentRepository>(),
                         c.Resolve<IAlbumFilter[]>(),
                         c.Resolve<ITagProvider[]>()
                     ))

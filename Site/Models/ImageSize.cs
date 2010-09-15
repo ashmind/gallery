@@ -7,17 +7,19 @@ using System.Linq;
 namespace AshMind.Web.Gallery.Site.Models {
     public sealed class ImageSize {
         public static ImageSize Small       { get; private set; }
-        public static ImageSize Preview     { get; private set; }
+        public static ImageSize Medium      { get; private set; }
+        public static ImageSize Large       { get; private set; }
         public static ImageSize Original    { get; private set; }
 
         private static IDictionary<string, ImageSize> sizesByName;
 
         static ImageSize() {
-            Small = new ImageSize("Small", 250);
-            Preview = new ImageSize("Preview", 1280);
+            Small    = new ImageSize("Small", 250);
+            Medium   = new ImageSize("Medium", 500);
+            Large    = new ImageSize("Large", 1000);
             Original = new ImageSize("Original", 10000);
 
-            sizesByName = new[] { Small, Preview, Original }.ToDictionary(s => s.Name, StringComparer.InvariantCultureIgnoreCase);
+            sizesByName = new[] { Small, Medium, Large, Original }.ToDictionary(s => s.Name, StringComparer.InvariantCultureIgnoreCase);
         }
 
         public ImageSize(string name, int size) {

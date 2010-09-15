@@ -1,5 +1,10 @@
-html, input, select {
+html, input, select, textarea {
     font-family: "Calibri",Verdana,Helvetica,sans-serif;
+}
+
+h1, h2, h3, h4 {
+    font-family: "Cambria",Verdana,Helvetica,sans-serif;
+    font-weight: normal;
 }
 
 html, body {
@@ -123,7 +128,7 @@ a.block-link:hover {
 
 .album-view .wall .item {
     width: 250px;
-    height: 250px;
+    min-height: 160px;
     
     display: inline-block;
     
@@ -152,6 +157,22 @@ a.block-link:hover {
 .image-view {
     display: block;
     text-align: center;
+}
+
+#fancybox-title {
+    display: none !important;
+}
+
+#fancybox-outer:hover #fancybox-title {
+    display: block !important;
+}
+
+#fancybox-title-over {
+    text-align: right;
+}
+
+.image-actions a + a {
+    margin-left: 0.5em;
 }
 
 #main img {
@@ -195,10 +216,10 @@ a.block-link:hover {
     height: auto;
 }
 
-.background {
+#background {
     background-color: #000;
     opacity: 0.8;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;

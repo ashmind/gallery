@@ -70,6 +70,13 @@ namespace AshMind.Web.Gallery.Site {
             );
 
             routes.MapRoute(
+                "Item Action",
+                "{album}/{item}/{action}",
+                new { controller = "gallery" },
+                new { action = "(view|comment)" }
+            );
+
+            routes.MapRoute(
                 "Image",
                 "{album}/{item}/{size}",
                 new { controller = "image", action = "get", size = ImageSize.Original }

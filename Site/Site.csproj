@@ -81,11 +81,13 @@
     <Compile Include="Controllers\GalleryController.cs" />
     <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Controllers\SetupController.cs" />
+    <Compile Include="Extensions\GravatarExtension.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\GalleryViewModel.cs" />
     <Compile Include="Models\ImageSize.cs" />
+    <Compile Include="Models\ItemViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="OpenIdAbstraction\IOpenIdAjaxRelyingParty.cs" />
     <Compile Include="OpenIdAbstraction\IOpenIdRelyingParty.cs" />
@@ -94,6 +96,7 @@
     <Compile Include="Routing\LowerCaseRoute.cs" />
     <Compile Include="Routing\RouteCollectionExtensions.cs" />
     <Compile Include="WebModule.cs" />
+    <Content Include="Content\item-details.css" />
     <Content Include="Content\Images\blank.gif" />
     <Content Include="Content\Images\fancybox-x.png" />
     <Content Include="Content\Images\fancybox-y.png" />
@@ -121,7 +124,7 @@
     <Content Include="Scripts\jquery.fancybox-1.3.1.js" />
     <Content Include="Scripts\jquery.lazyload.js" />
     <Content Include="Scripts\jquery.masonry.js" />
-    <Content Include="Scripts\site.js" />
+    <Content Include="Scripts\gallery.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
@@ -131,6 +134,7 @@
     <Content Include="Views\Gallery\AlbumNames.ascx" />
     <Content Include="Views\Gallery\Items.ascx" />
     <Content Include="Views\Gallery\Home.aspx" />
+    <Content Include="Views\Gallery\View.aspx" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

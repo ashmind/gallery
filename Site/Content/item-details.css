@@ -1,0 +1,64 @@
+html, body {
+    overflow: auto;
+}
+
+body {
+    height: auto;
+    min-height: 100%;
+}
+
+.navigation {
+    font-family: Arial;
+    font-size: 14px;
+    
+    padding: 10px;
+    background-image: url('images/fancy_title_over.png');
+    display: block;
+    
+    color: #FFF;
+}
+
+.navigation a {
+    color: #FFF;
+}
+
+.navigation {
+    margin-bottom: 10px;
+}
+
+#foreground {
+    position: relative;
+    
+    background: white;
+        
+    margin-top: 16px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 550px;
+    
+    z-index: 10;
+}
+
+img.view {
+    max-height: 100%;
+    display: block;
+    margin: auto;
+}
+
+h2 {
+    margin-top: 0;
+}
+
+.comment {
+    margin-top: 0.4em;
+}
+
+#comments {
+    margin-top: 1em;
+    padding: 1em;
+}
+
+#add-comment textarea {
+    height: 50px;
+    width: 400px;
+}

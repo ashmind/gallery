@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace AshMind.Web.Gallery.Core.IO
-{
-    public interface IFileSystem
-    {
+namespace AshMind.Web.Gallery.Core.IO {
+    public interface IFileSystem {
         IEnumerable<string> GetLocations(string root);
         IEnumerable<string> GetFileNames(string location);
 
         bool IsFileName(string pathOrFileName);
+
         string GetFileName(string path);
         string GetLocationName(string location);
+
         string BuildPath(params string[] parts);
 
         DateTimeOffset GetCreationTime(string location);
@@ -20,7 +21,9 @@ namespace AshMind.Web.Gallery.Core.IO
         bool FileExists(string path);
 
         bool IsLocation(string path);
+        string GetLocation(string path);
 
-        string ReadAllText(string path);
+        Stream ReadFile(string path, FileLockMode lockMode);
+        Stream OpenFile(string path, FileLockMode lockMode);
     }
 }

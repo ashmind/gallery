@@ -13,7 +13,7 @@
 </asp:Content>
 
 <asp:Content ContentPlaceHolderID="content" runat="server">
-  <div class="background">
+  <div id="background">
     <div id="login">
       <%= Html.ValidationMessage("Login") %>
    

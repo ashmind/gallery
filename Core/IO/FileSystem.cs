@@ -6,6 +6,13 @@ using System.IO;
 
 namespace AshMind.Web.Gallery.Core.IO {
     internal class FileSystem : IFileSystem {
+        private static IDictionary<FileLockMode, FileShare> fileShare = new Dictionary<FileLockMode, FileShare> {
+            { FileLockMode.None,        FileShare.ReadWrite },
+            { FileLockMode.Read,        FileShare.Write },
+            { FileLockMode.Write,       FileShare.Read },
+            { FileLockMode.ReadWrite,   FileShare.None },
+        };
+
         public IEnumerable<string> GetLocations(string root) {
             return Directory.GetDirectories(root, "*", SearchOption.AllDirectories);
         }
@@ -42,8 +49,16 @@ namespace AshMind.Web.Gallery.Core.IO {
             return Directory.Exists(path);
         }
 
-        public string ReadAllText(string path) {
-            return File.ReadAllText(path);
+        public string GetLocation(string path) {
+            return Path.GetDirectoryName(path);
+        }
+        
+        public Stream ReadFile(string path, FileLockMode lockMode) {
+            return File.Open(path, FileMode.Open, FileAccess.Read, fileShare[lockMode]);
+        }
+        
+        public Stream OpenFile(string path, FileLockMode lockMode) {
+            return File.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, fileShare[lockMode]);
         }
     }
 }

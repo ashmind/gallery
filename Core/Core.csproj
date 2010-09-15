@@ -83,10 +83,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlbumSupport\IAlbumFilter.cs" />
+    <Compile Include="Comment.cs" />
+    <Compile Include="Commenting\ICommentRepository.cs" />
+    <Compile Include="Commenting\JsonCommentRepository.cs" />
     <Compile Include="ImageProcessing\ImageMetadataExtractor.cs" />
     <Compile Include="ImageProcessing\ImageInfo.cs" />
     <Compile Include="ImageProcessing\ImageMetadata.cs" />
     <Compile Include="Integration\Picasa\PicasaAlbumFilter.cs" />
+    <Compile Include="IO\FileLockMode.cs" />
+    <Compile Include="IO\FileSystemExtensions.cs" />
     <Compile Include="Metadata\Internal\JsonFileBasedTagProvider.cs" />
     <Compile Include="Metadata\ITagProvider.cs" />
     <Compile Include="Security\AuthorizationService.cs" />
