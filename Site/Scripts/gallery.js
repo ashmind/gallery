@@ -44,6 +44,7 @@ function setupAlbum() {
         }
     });
 
+    $("#main").scrollTop(0);
     var imgs = $(".wall img");
     imgs.lazyload({
         placeholder : imgs.eq(0).attr('src'),
