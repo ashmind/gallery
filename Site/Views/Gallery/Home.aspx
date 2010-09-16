@@ -5,6 +5,7 @@
   <script src="<%= Url.Content("~/scripts/jquery.lazyload.js") %>" type="text/javascript"></script>
   <script src="<%= Url.Content("~/scripts/jquery.dragToSelect.js") %>" type="text/javascript"></script>
   <script src="<%= Url.Content("~/scripts/jquery.form.js") %>" type="text/javascript"></script>
+  <script src="<%= Url.Content("~/scripts/jquery.history.js") %>" type="text/javascript"></script>
   <script src="<%= Url.Content("~/scripts/gallery.js") %>" type="text/javascript"></script>
 </asp:Content>
 
