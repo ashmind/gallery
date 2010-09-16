@@ -1,5 +1,5 @@
 NOTE
-----
+====
 
 See [Peer-to-browser photo sharing](http://en.wikipedia.org/wiki/Photo_sharing#Peer-to-browser_photo_sharing) for the basic description of the idea.
 
