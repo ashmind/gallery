@@ -55,14 +55,13 @@ namespace AshMind.Web.Gallery.Core {
                         c.Resolve<IAlbumIDProvider>(),
                         c.Resolve<AuthorizationService>(),
                         c.Resolve<ICommentRepository>(),
-                        c.Resolve<IAlbumFilter[]>(),
-                        c.Resolve<ITagProvider[]>()
+                        c.Resolve<IAlbumFilter[]>()
                     ))
                    .SingletonScoped();
 
             builder.Register<PreviewFacade>().SingletonScoped();
 
-            RegisterAllImplementationsOf<ITagProvider>(builder, types);
+            RegisterAllImplementationsOf<IPermissionProvider>(builder, types);
             RegisterAllImplementationsOf<IAlbumFilter>(builder, types);
         }
 

@@ -57,8 +57,13 @@ namespace AshMind.Web.Gallery.Core.IO {
             return File.Open(path, FileMode.Open, FileAccess.Read, fileShare[lockMode]);
         }
         
-        public Stream OpenFile(string path, FileLockMode lockMode) {
-            return File.Open(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, fileShare[lockMode]);
+        public Stream OpenFile(string path, FileLockMode lockMode, bool overwrite) {
+            return File.Open(
+                path,
+                overwrite ? FileMode.Create : FileMode.OpenOrCreate,
+                overwrite ? FileAccess.Write : FileAccess.ReadWrite,
+                fileShare[lockMode]
+            );
         }
     }
 }

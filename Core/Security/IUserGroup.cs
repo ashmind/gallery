@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 
 namespace AshMind.Web.Gallery.Core.Security {
-    public enum PermissionStatus {
-        None,
-        Allow,
-        Deny
+    public interface IUserGroup {
+        string Name { get; }
+        HashSet<User> GetUsers();
     }
 }

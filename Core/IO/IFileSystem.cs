@@ -24,6 +24,6 @@ namespace AshMind.Web.Gallery.Core.IO {
         string GetLocation(string path);
 
         Stream ReadFile(string path, FileLockMode lockMode);
-        Stream OpenFile(string path, FileLockMode lockMode);
+        Stream OpenFile(string path, FileLockMode lockMode, bool overwrite);
     }
 }

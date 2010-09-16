@@ -13,41 +13,49 @@ namespace AshMind.Web.Gallery.Site.Controllers {
     [Authorize]
     public class GalleryController : Controller {
         private readonly AlbumFacade gallery;
+        private readonly AuthorizationService authorization;
         private readonly ICommentRepository commentRepository;
         private readonly IRepository<User> userRepository;
 
         public GalleryController(
             AlbumFacade gallery,
+            AuthorizationService authorization,
             ICommentRepository commentRepository,
             IRepository<User> userRepository
         ) {
             this.gallery = gallery;
+            this.authorization = authorization;
             this.commentRepository = commentRepository;
             this.userRepository = userRepository;
         }
 
-        public ActionResult Home(string album, int count = 20) {
+        public ActionResult Home(string album, int albumCount = 20) {
             var user = GetCurrentUser();
 
             if (Request.IsAjaxRequest())
                 return AjaxAlbum(album, user);
 
-            var albums = this.gallery.GetAlbums(user).Take(count).ToArray();
+            var albums = this.gallery.GetAlbums(user).Take(albumCount).ToArray();
             var selected = albums.FirstOrDefault(f => f.ID == album);
 
-            return View(new GalleryViewModel(albums, selected));
+            return View(new GalleryViewModel(
+                new PagedListViewModel<Album>(albums, 0),
+                ToViewModel(selected))
+            );
         }
 
         private ActionResult AjaxAlbum(string albumID, User user) {
-            var album = this.gallery.GetAlbum(albumID, user) ?? GalleryAlbum.Empty;
-            return PartialView("Album", album);
+            var album = this.gallery.GetAlbum(albumID, user) ?? Album.Empty;
+            return PartialView("Album", ToViewModel(album));
         }
 
         public ActionResult AlbumNames(int start, int count) {
             var user = GetCurrentUser();
             var albums = this.gallery.GetAlbums(user).Skip(start - 1).Take(count).ToArray();
 
-            return PartialView(new GalleryViewModel(albums, null));
+            return PartialView(new GalleryViewModel(
+                new PagedListViewModel<Album>(albums, start), null
+            ));
         }
 
         public new ActionResult View(string album, string item) {
@@ -70,6 +78,22 @@ namespace AshMind.Web.Gallery.Site.Controllers {
 
         private User GetCurrentUser() {
             return this.userRepository.FindByEmail(User.Identity.Name);
+        }
+
+        private AlbumViewModel ToViewModel(Album album) {
+            if (album == null)
+                return null;
+
+            if (!authorization.IsAuthorized(GetCurrentUser(), SecurableAction.ManageSecurity, null))
+                return new AlbumViewModel(album);
+
+            var token = this.gallery.GetAlbumToken(album.ID);
+            return new AlbumViewModel(
+                album, true, (
+                    from @group in this.authorization.GetAuthorizedTo(SecurableAction.View, token)
+                    select new UserGroupViewModel(@group)
+                ).ToList()
+            );
         }
     }
 }

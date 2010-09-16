@@ -9,18 +9,19 @@ using AshMind.Web.Gallery.Core;
 namespace AshMind.Web.Gallery.Site.Models {
     public class GalleryViewModel {
         public GalleryViewModel(
-            IList<GalleryAlbum> albums,
-            GalleryAlbum selectedAlbum
+            PagedListViewModel<Album> albums,
+            AlbumViewModel selected
         ) {
-            this.Albums = new ReadOnlyCollection<GalleryAlbum>(albums);
-            this.SelectedAlbum = selectedAlbum;
+            this.Albums = albums;
+            this.Selected = selected;
         }
 
-        public ReadOnlyCollection<GalleryAlbum> Albums { get; private set; }
-        public GalleryAlbum SelectedAlbum { get; private set; }
+        public PagedListViewModel<Album> Albums { get; private set; }
+        public AlbumViewModel Selected { get; private set; }
 
-        public bool IsSelected(GalleryAlbum folder) {
-            return folder == this.SelectedAlbum;
+        public bool IsSelected(Album album) {
+            return this.Selected != null
+                && this.Selected.Album == album;
         }
     }
 }

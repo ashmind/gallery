@@ -7,22 +7,20 @@ using System.Collections.ObjectModel;
 using AshMind.Extensions;
 
 namespace AshMind.Web.Gallery.Core {
-    public class GalleryAlbum {
-        public static GalleryAlbum Empty { get; private set; }
+    public class Album {
+        public static Album Empty { get; private set; }
 
-        static GalleryAlbum() {
-            Empty = new GalleryAlbum(new GalleryItem[0], new string[0]);
+        static Album() {
+            Empty = new Album(new GalleryItem[0]);
         }
 
-        internal GalleryAlbum(IList<GalleryItem> items, IList<string> tags) {
+        internal Album(IList<GalleryItem> items) {
             this.Items = items.AsReadOnly();
-            this.Tags = tags.AsReadOnly();
         }
 
         public string ID                             { get; internal set; }
         public string Name                           { get; internal set; }
         public DateTimeOffset Date                   { get; internal set; }
         public ReadOnlyCollection<GalleryItem> Items { get; private set; }
-        public ReadOnlyCollection<string> Tags       { get; private set; }
     }
 }

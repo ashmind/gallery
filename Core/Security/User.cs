@@ -3,14 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using AshMind.Extensions;
+
 namespace AshMind.Web.Gallery.Core.Security {
-    public class User {
+    public class User : IUserGroup {
         public User(string email) {
             this.Email = email;
-            this.Permissions = new HashSet<Permission>();
         }
 
-        public string Email                    { get; private set; }
-        public HashSet<Permission> Permissions { get; private set; }
+        public string Email { get; private set; }
+
+        HashSet<User> IUserGroup.GetUsers() {
+            return new HashSet<User> { this };
+        }
+
+        string IUserGroup.Name {
+            get { return this.Email.SubstringBefore("@"); }
+        }
     }
 }

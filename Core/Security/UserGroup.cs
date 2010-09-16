@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 namespace AshMind.Web.Gallery.Core.Security {
-    public class UserGroup {
+    public class UserGroup : IUserGroup {
         public static string SuperName = "*Owners";
 
         public UserGroup() {
@@ -18,6 +18,10 @@ namespace AshMind.Web.Gallery.Core.Security {
 
         public bool IsSuper {
             get { return this.Name == SuperName; }
+        }
+
+        HashSet<User> IUserGroup.GetUsers() {
+            return this.Users;
         }
     }
 }

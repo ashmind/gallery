@@ -82,6 +82,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Album.cs" />
     <Compile Include="AlbumSupport\IAlbumFilter.cs" />
     <Compile Include="Comment.cs" />
     <Compile Include="Commenting\ICommentRepository.cs" />
@@ -92,12 +93,12 @@
     <Compile Include="Integration\Picasa\PicasaAlbumFilter.cs" />
     <Compile Include="IO\FileLockMode.cs" />
     <Compile Include="IO\FileSystemExtensions.cs" />
-    <Compile Include="Metadata\Internal\JsonFileBasedTagProvider.cs" />
-    <Compile Include="Metadata\ITagProvider.cs" />
+    <Compile Include="Security\Internal\JsonFileBasedPermissionProvider.cs" />
+    <Compile Include="Security\IPermissionProvider.cs" />
     <Compile Include="Security\AuthorizationService.cs" />
     <Compile Include="Security\Internal\JsonSecurityRepository.cs" />
+    <Compile Include="Security\IUserGroup.cs" />
     <Compile Include="Security\Permission.cs" />
-    <Compile Include="Security\PermissionStatus.cs" />
     <Compile Include="Security\SecurableAction.cs" />
     <Compile Include="Security\UserRepositoryExtensions.cs" />
     <Compile Include="IRepository.cs" />
@@ -108,7 +109,6 @@
     <Compile Include="GalleryItemType.cs" />
     <Compile Include="Internal\HashAlgorithmExtensions.cs" />
     <Compile Include="Argument.cs" />
-    <Compile Include="GalleryAlbum.cs" />
     <Compile Include="IO\FileSystem.cs" />
     <Compile Include="AlbumFacade.cs" />
     <Compile Include="IO\IFileSystem.cs" />

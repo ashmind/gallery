@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<GalleryAlbum>" %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<Album>" %>
 
 <% foreach (var item in Model.Items) { %>
   <span class="item">

@@ -8,8 +8,7 @@ namespace AshMind.Web.Gallery.Core.Security {
         public Permission() {
         }
 
-        public string TargetTag         { get; set; }
+        public IUserGroup Group         { get; set; }
         public SecurableAction Action   { get; set; }
-        public PermissionStatus Status  { get; set; }
     }
 }

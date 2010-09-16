@@ -5,6 +5,7 @@ using System.Text;
 
 namespace AshMind.Web.Gallery.Core.Security {
     public enum SecurableAction {
-        View
+        View,
+        ManageSecurity
     }
 }

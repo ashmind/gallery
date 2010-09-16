@@ -17,19 +17,29 @@ using AshMind.Web.Gallery.Core;
 using AshMind.Web.Gallery.Core.Security;
 using AshMind.Web.Gallery.Site.Models;
 using AshMind.Web.Gallery.Site.OpenIdAbstraction;
+using System.Collections.Generic;
 
 namespace AshMind.Web.Gallery.Site.Controllers {
     [HandleError]
     public class AccessController : Controller {
         private readonly IOpenIdAjaxRelyingParty openId;
         private readonly IRepository<User> userRepository;
+        private readonly IRepository<UserGroup> userGroupRepository;
+        private readonly AuthorizationService authorization;
+        private readonly AlbumFacade gallery;
 
         public AccessController(
             IOpenIdAjaxRelyingParty openId,
-            IRepository<User> userRepository
+            IRepository<User> userRepository,
+            IRepository<UserGroup> userGroupRepository,
+            AuthorizationService authorization,
+            AlbumFacade gallery
         ) {
             this.openId = openId;
             this.userRepository = userRepository;
+            this.userGroupRepository = userGroupRepository;
+            this.authorization = authorization;
+            this.gallery = gallery;
         }
       
         public ActionResult Login(string error) {
@@ -39,7 +49,7 @@ namespace AshMind.Web.Gallery.Site.Controllers {
                 identifier => openId.CreateRequests(identifier, Realm.AutoDetect, returnToUrl)
             ).ToArray();
             requests.ForEach(r => r.AddExtension(new ClaimsRequest {
-                Email = DemandLevel.Require
+                Email = DemandLevel.Require                
             }));
             var ajax = this.openId.AsAjaxPreloadedDiscoveryResult(requests);
 
@@ -95,6 +105,40 @@ namespace AshMind.Web.Gallery.Site.Controllers {
             }
 
             return RedirectToAction("Login");
+        }
+        
+        [HttpGet]
+        public ActionResult Grant(string albumID) {
+            if (!Request.IsAjaxRequest())
+                throw new NotImplementedException();
+
+            var token = this.gallery.GetAlbumToken(albumID);
+            return PartialView("GrantForm", new GrantViewModel(
+                albumID,
+                this.authorization.GetAuthorizedTo(SecurableAction.View, token).ToSet(),
+                this.GetAllGroups().ToList()
+            ));
+        }
+
+        [HttpPost]
+        public ActionResult Grant(string albumID, HashSet<string> groupKeys) {
+            if (!Request.IsAjaxRequest())
+                throw new NotImplementedException();
+
+            var token = this.gallery.GetAlbumToken(albumID);
+            var groups = this.GetAllGroups()
+                             .Where(g => groupKeys.Contains(g.Key))
+                             .Select(g => g.UserGroup);
+
+            this.authorization.MakeAuthorizedTo(SecurableAction.View, token, groups);
+            return new EmptyResult();
+        }
+
+        private IEnumerable<UserGroupViewModel> GetAllGroups() {
+            return Enumerable.Concat<IUserGroup>(
+                this.userRepository.Query().AsEnumerable(),
+                this.userGroupRepository.Query().AsEnumerable()
+            ).Select(g => new UserGroupViewModel(g));
         }
 
         private Uri MakeAbsolute(string uri) {

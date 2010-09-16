@@ -20,7 +20,6 @@ namespace AshMind.Web.Gallery.Core {
         private readonly AuthorizationService authorization;
         private readonly ICommentRepository commentRepository;
         private readonly IAlbumFilter[] albumFilters;
-        private readonly ITagProvider[] tagProviders;
 
         internal string RootPath { private set; get; }
 
@@ -31,8 +30,7 @@ namespace AshMind.Web.Gallery.Core {
             IAlbumIDProvider idProvider,
             AuthorizationService authorization,
             ICommentRepository commentRepository,
-            IAlbumFilter[] albumFilters,
-            ITagProvider[] tagProviders
+            IAlbumFilter[] albumFilters
         ) {
             this.RootPath = rootPath;
 
@@ -42,10 +40,9 @@ namespace AshMind.Web.Gallery.Core {
             this.authorization = authorization;
             this.commentRepository = commentRepository;
             this.albumFilters = albumFilters;
-            this.tagProviders = tagProviders;
         }
 
-        public IEnumerable<GalleryAlbum> GetAlbums(User user) {
+        public IEnumerable<Album> GetAlbums(User user) {
             var locations = this.fileSystem.GetLocations(this.RootPath);
             return from location in locations
                    where !this.albumFilters.Any(a => a.ShouldSkip(location))
@@ -55,16 +52,15 @@ namespace AshMind.Web.Gallery.Core {
                    select album;
         }
 
-        private GalleryAlbum GetAlbumAtLocation(string location, User user) {
-            var tags = this.tagProviders.SelectMany(p => p.GetTags(location)).ToArray();
-            if (!authorization.IsAuthorized(user, SecurableAction.View, tags))
+        private Album GetAlbumAtLocation(string location, User user) {
+            if (!authorization.IsAuthorized(user, SecurableAction.View, location))
                 return null;
 
             var items = this.GetItemsAtLocation(location, user).ToArray();
             if (items.Length == 0)
                 return null;
 
-            return new GalleryAlbum(items, tags) {
+            return new Album(items) {
                 ID   = idProvider.GetAlbumID(location),
                 Name = this.fileSystem.GetFileName(location),
                 Date = items.Min(item => item.Date)
@@ -73,11 +69,9 @@ namespace AshMind.Web.Gallery.Core {
         
         private IEnumerable<GalleryItem> GetItemsAtLocation(string location, User user) {
             return from file in this.fileSystem.GetFileNames(location)
-                   let tags = this.tagProviders.SelectMany(p => p.GetTags(location)).ToArray()
-                   where this.authorization.IsAuthorized(user, SecurableAction.View, tags)
                    let itemType = GuessItemType.Of(file)
                    where itemType != GalleryItemType.Unknown
-                   let item = GetItemAfterAuthorizationCheck(file, itemType)
+                   let item = GetItem(file, itemType)
                    orderby item.Date
                    select item;
         }
@@ -86,18 +80,17 @@ namespace AshMind.Web.Gallery.Core {
             var path = GetFullPath(albumID, itemName);
             var albumLocation = this.idProvider.GetAlbumLocation(albumID);
 
-            var tags = this.tagProviders.SelectMany(p => p.GetTags(albumLocation)).ToArray();
-            if (!this.authorization.IsAuthorized(user, SecurableAction.View, tags))
+            if (!this.authorization.IsAuthorized(user, SecurableAction.View, albumLocation))
                 throw new UnauthorizedAccessException();
 
             var type = GuessItemType.Of(path);
             if (type == GalleryItemType.Unknown)
                 throw new NotSupportedException("Item does not have a known type.");
 
-            return GetItemAfterAuthorizationCheck(path, type);
+            return GetItem(path, type);
         }
 
-        private GalleryItem GetItemAfterAuthorizationCheck(string filePath, GalleryItemType itemType) {            
+        private GalleryItem GetItem(string filePath, GalleryItemType itemType) {            
             return new GalleryItem(
                 this.fileSystem.GetFileName(filePath),
                 itemType,
@@ -115,9 +108,13 @@ namespace AshMind.Web.Gallery.Core {
             return fileSystem.BuildPath(path, itemName);
         }
 
-        public GalleryAlbum GetAlbum(string albumID, User user) {
+        public Album GetAlbum(string albumID, User user) {
             var location = this.idProvider.GetAlbumLocation(albumID);
             return this.GetAlbumAtLocation(location, user);
+        }
+
+        public string GetAlbumToken(string albumID) {
+            return this.idProvider.GetAlbumLocation(albumID);
         }
     }
 }

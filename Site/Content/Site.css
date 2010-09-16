@@ -183,6 +183,46 @@ a.block-link:hover {
     text-align: center;
 }
 
+a.album-visible-to {
+    text-decoration: none;
+    color: #FFF;
+}
+
+.album-visible-to {
+    position: fixed;
+    bottom: 2em;
+    right: 3em;
+    background-image: url('images/fancy_title_over.png');
+    color: #FFF;
+    padding: 0.5em;
+    opacity: 0.6;
+}
+
+.user-group {
+    display: inline-block;
+    border: 1px solid #EEEEEE;
+    padding: 2px;
+}
+
+.user-group * {
+    vertical-align: middle;
+}
+
+form.grant .user-group {
+    opacity: 0.4;
+    margin: 1px;
+}
+
+form.grant .user-group:hover {
+    opacity: 0.6;
+}
+
+form.grant .user-group.granted {
+    margin: 0px;
+    border: 2px solid #35A06A;    
+    opacity: 1;
+}
+
 #fancybox-title {
     display: none !important;
 }

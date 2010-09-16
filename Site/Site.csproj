@@ -80,15 +80,18 @@
     <Compile Include="Controllers\AccessController.cs" />
     <Compile Include="Controllers\GalleryController.cs" />
     <Compile Include="Controllers\ImageController.cs" />
-    <Compile Include="Controllers\SetupController.cs" />
     <Compile Include="Extensions\GravatarExtension.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\PagedListViewModel.cs" />
+    <Compile Include="Models\AlbumViewModel.cs" />
     <Compile Include="Models\GalleryViewModel.cs" />
+    <Compile Include="Models\GrantViewModel.cs" />
     <Compile Include="Models\ImageSize.cs" />
     <Compile Include="Models\ItemViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
+    <Compile Include="Models\UserGroupViewModel.cs" />
     <Compile Include="OpenIdAbstraction\IOpenIdAjaxRelyingParty.cs" />
     <Compile Include="OpenIdAbstraction\IOpenIdRelyingParty.cs" />
     <Compile Include="OpenIdAbstraction\OpenIdRelyingParty.cs" />
@@ -124,6 +127,7 @@
     <Content Include="Scripts\jquery.cookie.js" />
     <Content Include="Scripts\jquery.dragToSelect.js" />
     <Content Include="Scripts\jquery.fancybox-1.3.1.js" />
+    <Content Include="Scripts\jquery.form.js" />
     <Content Include="Scripts\jquery.lazyload.js" />
     <Content Include="Scripts\jquery.masonry.js" />
     <Content Include="Scripts\gallery.js" />
@@ -131,6 +135,8 @@
   <ItemGroup>
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Views\Shared\AlbumVisibleTo.ascx" />
+    <Content Include="Views\Access\GrantForm.ascx" />
     <Content Include="Views\Access\Login.aspx" />
     <Content Include="Views\Gallery\Album.ascx" />
     <Content Include="Views\Gallery\AlbumNames.ascx" />

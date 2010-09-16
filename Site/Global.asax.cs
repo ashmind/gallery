@@ -57,6 +57,13 @@ namespace AshMind.Web.Gallery.Site {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             
             routes.MapLowerCaseRoute(
+                "Access",
+                "access/{action}",
+                new { controller = "access" },
+                new { action = "(grant|revoke)" }
+            );
+
+            routes.MapLowerCaseRoute(
                 "Login",
                 "login/{action}",
                 new { controller = "access", action = "login" }

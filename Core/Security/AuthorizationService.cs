@@ -7,40 +7,57 @@ using AshMind.Extensions;
 
 namespace AshMind.Web.Gallery.Core.Security {
     public class AuthorizationService {
-        private readonly HashSet<User> superUsers = new HashSet<User>();
-        private readonly IDictionary<User, IList<Permission>> effectivePermissions = new Dictionary<User, IList<Permission>>();
+        private readonly HashSet<UserGroup> superGroups = new HashSet<UserGroup>();
+        private readonly IPermissionProvider[] providers;
 
-        public AuthorizationService(IRepository<UserGroup> userGroupRepository) {
-            foreach (var group in userGroupRepository.Query()) {
-                if (group.IsSuper) {
-                    superUsers.AddRange(group.Users);
-                    continue;
-                }
-
-                foreach (var user in group.Users) {
-                    var permissions = effectivePermissions.GetValueOrDefault(user);
-                    if (permissions == null) {
-                        permissions = new List<Permission>();
-                        permissions.AddRange(user.Permissions);
-                        effectivePermissions.Add(user, permissions);
-                    }
-
-                    permissions.AddRange(group.Permissions);
-                }
+        public AuthorizationService(
+            IRepository<UserGroup> userGroupRepository,
+            IPermissionProvider[] providers
+        ) {
+            superGroups.AddRange(userGroupRepository.Query().Where(g => g.IsSuper));
+            this.providers = providers;
+        }
+        
+        public IEnumerable<IUserGroup> GetAuthorizedTo(SecurableAction action, string target) {
+            foreach (var group in superGroups) {
+                yield return group;
             }
 
-            foreach (var pair in effectivePermissions) {
-                var denied = pair.Value.Where(p => p.Status == PermissionStatus.Deny).ToArray();
-                pair.Value.RemoveWhere(p => denied.Any(d => d.Action == p.Action && d.TargetTag == p.TargetTag));
+            if (action == SecurableAction.ManageSecurity)
+                yield break;
+            
+            var otherGroups = (
+                from provider in this.providers
+                from permission in provider.GetPermissions(target)
+                where permission.Action == action
+                    && !superGroups.Contains(permission.Group)
+                select permission.Group
+            ).Distinct();
+
+            foreach (var group in otherGroups) {
+                yield return group;
             }
         }
 
-        public bool IsAuthorized(User user, SecurableAction action, params string[] targetTags) {
-            var targetTagSet = targetTags.ToSet();
-            if (superUsers.Contains(user))
-                return true;
+        public bool IsAuthorized(User user, SecurableAction action, string target) {
+            return GetAuthorizedTo(action, target)
+                        .Any(g => g.GetUsers().Contains(user));
+        }
 
-            return effectivePermissions[user].Any(p => p.Action == action && targetTagSet.Contains(p.TargetTag));
+        public void MakeAuthorizedTo(SecurableAction action, string token, IEnumerable<IUserGroup> userGroups) {
+            var permissions = userGroups.Select(group => new Permission {
+                Action = action,
+                Group = group
+            });
+
+            var provider = this.providers.FirstOrDefault(
+                p => p.CanSetPermissions(token)
+            );
+
+            if (provider == null)
+                throw new NotSupportedException();
+
+            provider.SetPermissions(token, permissions);
         }
     }
 }
