@@ -70,7 +70,7 @@ namespace AshMind.Web.Gallery.Core {
         private IEnumerable<GalleryItem> GetItemsAtLocation(string location, User user) {
             return from file in this.fileSystem.GetFileNames(location)
                    let itemType = GuessItemType.Of(file)
-                   where itemType != GalleryItemType.Unknown
+                   where itemType == GalleryItemType.Image
                    let item = GetItem(file, itemType)
                    orderby item.Date
                    select item;
@@ -84,7 +84,7 @@ namespace AshMind.Web.Gallery.Core {
                 throw new UnauthorizedAccessException();
 
             var type = GuessItemType.Of(path);
-            if (type == GalleryItemType.Unknown)
+            if (type != GalleryItemType.Image)
                 throw new NotSupportedException("Item does not have a known type.");
 
             return GetItem(path, type);

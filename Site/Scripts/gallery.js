@@ -86,17 +86,17 @@ function loadAlbum(a) {
 $(function() {
     setupAlbum();
 
-    $("#left a.album-name").click(function(event) {
+    $("#left a.album-name").live('click', function(event) {
         event.preventDefault();
         loadAlbum($(this));
     });
 
-    $("#left a.more").click(function(event) {
+    $("#left a.more").live('click', function(event) {
         event.preventDefault();
 
-        var that = $(this);
-        $.get(that.attr('data-ajax'), {}, function(html) {
-            that.replaceWith(html);
+        var a = $(this);
+        $.get(a.attr('data-ajax'), {}, function(html) {
+            a.replaceWith(html);
         });
     });    
 });
