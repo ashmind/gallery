@@ -53,6 +53,19 @@ a.block-link:hover {
     background-color: #C3D9FF;
 }
 
+#left .year {
+    display: inline-block;
+    font-size: 110%;
+    color:  #AAA;
+    
+    text-align: center;
+    width: 100%;
+}
+
+#left a + .year {
+    margin-top: 0.4em;
+}
+
 #left a {
     display: block;
     position: relative;

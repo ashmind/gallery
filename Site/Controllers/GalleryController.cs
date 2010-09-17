@@ -39,7 +39,7 @@ namespace AshMind.Web.Gallery.Site.Controllers {
             var selected = albums.FirstOrDefault(f => f.ID == album);
 
             return View(new GalleryViewModel(
-                new PagedListViewModel<Album>(albums, 0),
+                new AlbumListViewModel(albums, 0, null),
                 ToViewModel(selected))
             );
         }
@@ -51,10 +51,15 @@ namespace AshMind.Web.Gallery.Site.Controllers {
 
         public ActionResult AlbumNames(int start, int count) {
             var user = GetCurrentUser();
-            var albums = this.gallery.GetAlbums(user).Skip(start - 1).Take(count).ToArray();
+            var albums = this.gallery.GetAlbums(user).Skip(start).Take(count + 1).ToArray();
 
             return PartialView(new GalleryViewModel(
-                new PagedListViewModel<Album>(albums, start), null
+                new AlbumListViewModel(
+                    count > 0 ? albums.Skip(1).ToArray() : albums,
+                    start,
+                    count > 0 ? (int?)albums[0].Date.Year : null
+                ),
+                null
             ));
         }
 
