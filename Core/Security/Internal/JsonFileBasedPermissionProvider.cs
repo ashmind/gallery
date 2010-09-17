@@ -42,15 +42,25 @@ namespace AshMind.Web.Gallery.Core.Metadata.Internal {
             var lazyUsers = new Lazy<IList<User>>(() => this.userRepository.Query().ToList());
             var lazyGroups = new Lazy<IDictionary<string, UserGroup>>(() => this.groupRepository.Query().ToDictionary(g => g.Name));
 
-            using (var md5 = MD5.Create()) {
-                return from pair in permissionSet
-                       from key in pair.Value
-                       let @group = ResolveGroup(key, md5, lazyUsers, lazyGroups)
-                       where @group != null
-                       select new Permission {
-                           Action = pair.Key,
-                           Group = @group
-                       };
+            return Using(MD5.Create(), md5 =>
+                from pair in permissionSet
+                from key in pair.Value
+                let @group = ResolveGroup(key, md5, lazyUsers, lazyGroups)
+                where @group != null
+                select new Permission {
+                    Action = pair.Key,
+                    Group = @group
+                }
+            );
+        }
+
+        private IEnumerable<T> Using<TDisposable, T>(TDisposable disposable, Func<TDisposable, IEnumerable<T>> enumerateWith) 
+            where TDisposable : IDisposable
+        {
+            using (disposable) {
+                foreach (var element in enumerateWith(disposable)) {
+                    yield return element;
+                }
             }
         }
        
@@ -91,7 +101,7 @@ namespace AshMind.Web.Gallery.Core.Metadata.Internal {
                 return userGroup.Name;
 
             var user = group as User;
-            if (user == null)
+            if (user != null)
                 return "u:" + md5.ComputeHashAsString(Encoding.UTF8.GetBytes(user.Email));
 
             throw new NotSupportedException();
