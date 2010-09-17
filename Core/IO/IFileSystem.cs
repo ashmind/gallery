@@ -16,7 +16,7 @@ namespace AshMind.Web.Gallery.Core.IO {
 
         string BuildPath(params string[] parts);
 
-        DateTimeOffset GetCreationTime(string location);
+        DateTimeOffset GetLastWriteTime(string path);
 
         bool FileExists(string path);
 

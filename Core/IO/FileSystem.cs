@@ -17,8 +17,8 @@ namespace AshMind.Web.Gallery.Core.IO {
             return Directory.GetDirectories(root, "*", SearchOption.AllDirectories);
         }
 
-        public DateTimeOffset GetCreationTime(string directory) {
-            return Directory.GetCreationTimeUtc(directory);
+        public DateTimeOffset GetLastWriteTime(string path) {
+            return File.GetLastWriteTimeUtc(path);
         }
 
         public bool FileExists(string file) {

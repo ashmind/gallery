@@ -94,7 +94,7 @@ namespace AshMind.Web.Gallery.Core {
             return new GalleryItem(
                 this.fileSystem.GetFileName(filePath),
                 itemType,
-                this.fileSystem.GetCreationTime(filePath),
+                this.fileSystem.GetLastWriteTime(filePath),
                 size => this.preview.GetPreviewMetadata(filePath, size),
                 () => this.commentRepository.LoadCommentsOf(filePath)
             );
