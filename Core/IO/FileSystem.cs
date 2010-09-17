@@ -65,5 +65,9 @@ namespace AshMind.Web.Gallery.Core.IO {
                 fileShare[lockMode]
             );
         }
+
+        public void MakeHidden(string path) {
+            File.SetAttributes(path, File.GetAttributes(path) | FileAttributes.Hidden);
+        }
     }
 }

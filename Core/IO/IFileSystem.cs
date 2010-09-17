@@ -25,5 +25,7 @@ namespace AshMind.Web.Gallery.Core.IO {
 
         Stream ReadFile(string path, FileLockMode lockMode);
         Stream OpenFile(string path, FileLockMode lockMode, bool overwrite);
+
+        void MakeHidden(string path);
     }
 }

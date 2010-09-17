@@ -82,6 +82,8 @@ namespace AshMind.Web.Gallery.Core.Metadata.Internal {
                 using (var jsonWriter = new JsonTextWriter(writer) { Formatting = Formatting.Indented }) {
                     new JsonSerializer().Serialize(jsonWriter, permissionSet);
                 }
+
+                this.fileSystem.MakeHidden(securityFile);
             }
         }
 
@@ -108,7 +110,7 @@ namespace AshMind.Web.Gallery.Core.Metadata.Internal {
         }
 
         private string GetSecurityFileName(string token) {
-            return fileSystem.BuildPath(token, "album.security");
+            return fileSystem.BuildPath(token, ".album.security");
         }
     }
 }
