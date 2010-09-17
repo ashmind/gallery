@@ -5,15 +5,22 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
+using AshMind.Web.Gallery.Core.IO;
+
+using File = System.IO.File;
+
 namespace AshMind.Web.Gallery.Core.AlbumSupport
 {
     internal class AlbumIDProvider : IAlbumIDProvider {
         private readonly string idMapFilePath;
         private readonly ConcurrentDictionary<string, string> idMap;
+        private readonly IFileSystem fileSystem;
 
-        public AlbumIDProvider(string dataRoot) {
+        public AlbumIDProvider(string dataRoot, IFileSystem fileSystem) {
             this.idMapFilePath = Path.Combine(dataRoot, "idmap");
             this.idMap = new ConcurrentDictionary<string,string>(this.LoadMap());
+
+            this.fileSystem = fileSystem;
         }
 
         private IEnumerable<KeyValuePair<string, string>> LoadMap() {
@@ -25,22 +32,22 @@ namespace AshMind.Web.Gallery.Core.AlbumSupport
                         .Select(parts => new KeyValuePair<string, string>(parts[0], parts[1]));
         }
 
-        public string GetAlbumID(string location) {
+        public string GetAlbumID(ILocation location) {
             var pair = this.idMap.Select(p => (KeyValuePair<string, string>?)p)
-                                 .SingleOrDefault(p => p.Value.Value == location);
+                                 .SingleOrDefault(p => p.Value.Value == location.Path);
 
             if (pair != null)
                 return pair.Value.Key;
 
-            var id = Path.GetFileName(location).Replace(" ", "_");
-            if (this.idMap.TryAdd(id, location))
+            var id = location.Name.Replace(" ", "_");
+            if (this.idMap.TryAdd(id, location.Path))
                 File.AppendAllText(this.idMapFilePath, id + "\t" + location + Environment.NewLine);
 
             return id;
         }
 
-        public string GetAlbumLocation(string albumID) {
-            return idMap[albumID];
+        public ILocation GetAlbumLocation(string albumID) {
+            return this.fileSystem.GetLocation(idMap[albumID]);
         }
     }
 }

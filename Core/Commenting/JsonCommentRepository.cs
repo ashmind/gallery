@@ -39,12 +39,12 @@ namespace AshMind.Web.Gallery.Core.Commenting {
         }
 
         public IList<Comment> LoadCommentsOf(string itemPath) {
-            var jsonFile = itemPath + ".comments";
-            if (!fileSystem.FileExists(jsonFile))
+            var jsonFile = fileSystem.GetFile(itemPath + ".comments");
+            if (jsonFile == null)
                 return new List<Comment>();
 
             var commentStore = (CommentStore)null;
-            using (var stream = this.fileSystem.ReadFile(jsonFile, FileLockMode.Write)) {
+            using (var stream = jsonFile.Read(FileLockMode.Write)) {
                 commentStore = LoadCommentStore(stream);
             }
 
@@ -73,7 +73,7 @@ namespace AshMind.Web.Gallery.Core.Commenting {
         }
 
         public void SaveComment(string itemPath, Comment comment) {
-            var jsonFile = itemPath + ".comments";
+            var jsonFile = this.fileSystem.GetFile(itemPath + ".comments", nullUnlessExists : false);
             var authorEmailHash = (string)null;
             using (var md5 = MD5.Create()) {
                 authorEmailHash = md5.ComputeHashAsString(Encoding.UTF8.GetBytes(comment.Author.Email));
@@ -85,7 +85,7 @@ namespace AshMind.Web.Gallery.Core.Commenting {
                 Text = comment.Text
             };
 
-            using (var stream = this.fileSystem.OpenFile(jsonFile, FileLockMode.ReadWrite, false)) {
+            using (var stream = jsonFile.Open(FileLockMode.ReadWrite, false)) {
                 var store = stream.Length > 0 ? LoadCommentStore(stream) : new CommentStore();
                 store.Comments.Add(raw);
 

@@ -30,7 +30,7 @@ namespace AshMind.Web.Gallery.Site.Controllers {
         //[OutputCache(Duration = 60, VaryByParam = "*")]
         public ActionResult Get(string album, string item, string size) {
             var imageSize = ImageSize.Parse(size);
-            var path = this.gallery.GetFullPath(album, item);
+            var path = this.gallery.GetItemFile(album, item).Path;
             if (imageSize != ImageSize.Original)
                 path = this.preview.GetPreviewPath(path, imageSize.Size);
 

@@ -52,8 +52,8 @@ namespace AshMind.Web.Gallery.Core {
                    select album;
         }
 
-        private Album GetAlbumAtLocation(string location, User user) {
-            if (!authorization.IsAuthorized(user, SecurableAction.View, location))
+        private Album GetAlbumAtLocation(ILocation location, User user) {
+            if (!authorization.IsAuthorized(user, SecurableAction.View, location.Path))
                 return null;
 
             var items = this.GetItemsAtLocation(location, user).ToArray();
@@ -62,14 +62,14 @@ namespace AshMind.Web.Gallery.Core {
 
             return new Album(items) {
                 ID   = idProvider.GetAlbumID(location),
-                Name = this.fileSystem.GetFileName(location),
+                Name = location.Name,
                 Date = items.Min(item => item.Date)
             };
         }
         
-        private IEnumerable<GalleryItem> GetItemsAtLocation(string location, User user) {
-            return from file in this.fileSystem.GetFileNames(location)
-                   let itemType = GuessItemType.Of(file)
+        private IEnumerable<GalleryItem> GetItemsAtLocation(ILocation location, User user) {
+            return from file in location.GetFiles()
+                   let itemType = GuessItemType.Of(file.Name)
                    where itemType == GalleryItemType.Image
                    let item = GetItem(file, itemType)
                    orderby item.Date
@@ -77,35 +77,35 @@ namespace AshMind.Web.Gallery.Core {
         }
 
         public GalleryItem GetItem(string albumID, string itemName, User user) {
-            var path = GetFullPath(albumID, itemName);
+            var file = GetItemFile(albumID, itemName);
             var albumLocation = this.idProvider.GetAlbumLocation(albumID);
 
-            if (!this.authorization.IsAuthorized(user, SecurableAction.View, albumLocation))
+            if (!this.authorization.IsAuthorized(user, SecurableAction.View, albumLocation.Path))
                 throw new UnauthorizedAccessException();
 
-            var type = GuessItemType.Of(path);
+            var type = GuessItemType.Of(file.Name);
             if (type != GalleryItemType.Image)
                 throw new NotSupportedException("Item does not have a known type.");
 
-            return GetItem(path, type);
+            return GetItem(file, type);
         }
 
-        private GalleryItem GetItem(string filePath, GalleryItemType itemType) {            
+        private GalleryItem GetItem(IFile file, GalleryItemType itemType) {
             return new GalleryItem(
-                this.fileSystem.GetFileName(filePath),
+                file.Name,
                 itemType,
-                this.fileSystem.GetLastWriteTime(filePath),
-                size => this.preview.GetPreviewMetadata(filePath, size),
-                () => this.commentRepository.LoadCommentsOf(filePath)
+                file.GetLastWriteTime(),
+                size => this.preview.GetPreviewMetadata(file, size),
+                () => this.commentRepository.LoadCommentsOf(file.Path)
             );
         }
 
-        public string GetFullPath(string albumID, string itemName) {
+        public IFile GetItemFile(string albumID, string itemName) {
             if (!this.fileSystem.IsFileName(itemName))
                 throw new InvalidOperationException(itemName + " is not a valid item name.");
 
-            var path = this.idProvider.GetAlbumLocation(albumID);
-            return fileSystem.BuildPath(path, itemName);
+            var location = this.idProvider.GetAlbumLocation(albumID);
+            return fileSystem.GetFile(fileSystem.BuildPath(location.Path, itemName));
         }
 
         public Album GetAlbum(string albumID, User user) {
@@ -114,7 +114,7 @@ namespace AshMind.Web.Gallery.Core {
         }
 
         public string GetAlbumToken(string albumID) {
-            return this.idProvider.GetAlbumLocation(albumID);
+            return this.idProvider.GetAlbumLocation(albumID).Path;
         }
     }
 }

@@ -6,7 +6,9 @@ using System.Text;
 using AshMind.Web.Gallery.Core.IO;
 
 namespace AshMind.Web.Gallery.Core.AlbumSupport {
-    public interface IAlbumFilter {
-        bool ShouldSkip(ILocation location);
+    public class HiddenAlbumFilter : IAlbumFilter {
+        public bool ShouldSkip(ILocation location) {
+            return location.IsHidden();
+        }
     }
 }

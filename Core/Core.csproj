@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Album.cs" />
+    <Compile Include="AlbumSupport\HiddenAlbumFilter.cs" />
     <Compile Include="AlbumSupport\IAlbumFilter.cs" />
     <Compile Include="Comment.cs" />
     <Compile Include="Commenting\ICommentRepository.cs" />
@@ -90,9 +91,13 @@
     <Compile Include="ImageProcessing\ImageMetadataExtractor.cs" />
     <Compile Include="ImageProcessing\ImageInfo.cs" />
     <Compile Include="ImageProcessing\ImageMetadata.cs" />
-    <Compile Include="Integration\Picasa\PicasaAlbumFilter.cs" />
+    <Compile Include="IO\IFileSystemElement.cs" />
+    <Compile Include="IO\Location.cs" />
+    <Compile Include="IO\File.cs" />
     <Compile Include="IO\FileLockMode.cs" />
-    <Compile Include="IO\FileSystemExtensions.cs" />
+    <Compile Include="IO\FileExtensions.cs" />
+    <Compile Include="IO\IFile.cs" />
+    <Compile Include="IO\ILocation.cs" />
     <Compile Include="Security\Internal\JsonFileBasedPermissionProvider.cs" />
     <Compile Include="Security\IPermissionProvider.cs" />
     <Compile Include="Security\AuthorizationService.cs" />
@@ -138,7 +143,9 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Integration\Picasa\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

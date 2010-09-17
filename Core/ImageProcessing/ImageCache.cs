@@ -8,6 +8,7 @@ using System.Text;
 using System.Web;
 
 using AshMind.Web.Gallery.Core.Internal;
+using AshMind.Web.Gallery.Core.IO;
 
 using Encoder = System.Drawing.Imaging.Encoder;
 using Newtonsoft.Json;
@@ -35,18 +36,18 @@ namespace AshMind.Web.Gallery.Core.ImageProcessing {
         public string GetTransformPath(string imagePath, int size, Func<Image, int, Image> transform) {
             var cachePath = GetCachePath(imagePath, size);
             
-            var cached = File.Exists(cachePath);
+            var cached = System.IO.File.Exists(cachePath);
             if (!cached)
                 return this.CacheTransform(imagePath, cachePath, image => transform(image, size));
 
             return cachePath;
         }
 
-        public ImageMetadata GetMetadata(string imagePath, Func<ImageMetadata> getMetadata, Func<ImageMetadata, ImageMetadata> adjustMetadata) {
-            var metadataPath = GetMetadataPath(imagePath);
+        public ImageMetadata GetMetadata(IFile image, Func<ImageMetadata> getMetadata, Func<ImageMetadata, ImageMetadata> adjustMetadata) {
+            var metadataPath = GetMetadataPath(image.Path);
             var metadata = (ImageMetadata)null;
 
-            if (File.Exists(metadataPath))
+            if (System.IO.File.Exists(metadataPath))
                 metadata = LoadMetadata(metadataPath);
 
             if (metadata == null) {
@@ -66,7 +67,7 @@ namespace AshMind.Web.Gallery.Core.ImageProcessing {
         }
 
         private void SaveMetadata(string metadataPath, ImageMetadata metadata) {
-            File.WriteAllText(
+            System.IO.File.WriteAllText(
                 metadataPath,
                 JsonConvert.SerializeObject(metadata)
             );
@@ -74,7 +75,7 @@ namespace AshMind.Web.Gallery.Core.ImageProcessing {
 
         private ImageMetadata LoadMetadata(string metadataPath) {
             return JsonConvert.DeserializeObject<ImageMetadata>(
-                File.ReadAllText(metadataPath)
+                System.IO.File.ReadAllText(metadataPath)
             );
         }
 

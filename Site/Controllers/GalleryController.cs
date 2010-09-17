@@ -73,7 +73,7 @@ namespace AshMind.Web.Gallery.Site.Controllers {
 
         public ActionResult Comment(string album, string item, string comment) {
             var author = GetCurrentUser();
-            var path = this.gallery.GetFullPath(album, item);
+            var path = this.gallery.GetItemFile(album, item).Path;
             commentRepository.SaveComment(
                 path, new Comment(author, DateTimeOffset.Now, comment)
             );

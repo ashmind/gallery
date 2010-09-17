@@ -5,6 +5,7 @@ using System.Text;
 using System.Drawing;
 
 using AshMind.Web.Gallery.Core.ImageProcessing;
+using AshMind.Web.Gallery.Core.IO;
 
 namespace AshMind.Web.Gallery.Core {
     public class PreviewFacade {
@@ -18,10 +19,14 @@ namespace AshMind.Web.Gallery.Core {
             return this.cache.GetTransformPath(originalPath, size, ImageProcessor.ReduceSize);
         }
 
-        public ImageMetadata GetPreviewMetadata(string originalPath, int size) {
+        public ImageMetadata GetPreviewMetadata(IFile originalFile, int size) {
             return this.cache.GetMetadata(
-                originalPath,
-                () => ImageMetadataExtractor.ReadMetadata(originalPath),
+                originalFile,
+                () => {
+                    using (var stream = originalFile.Read(FileLockMode.Write)) {
+                        return ImageMetadataExtractor.ReadMetadata(stream);
+                    }
+                },
                 metadata => new ImageMetadata(ImageProcessor.EstimateSize(metadata, size))
             );
         }

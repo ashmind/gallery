@@ -6,37 +6,18 @@ using System.IO;
 
 namespace AshMind.Web.Gallery.Core.IO {
     internal class FileSystem : IFileSystem {
-        private static IDictionary<FileLockMode, FileShare> fileShare = new Dictionary<FileLockMode, FileShare> {
-            { FileLockMode.None,        FileShare.ReadWrite },
-            { FileLockMode.Read,        FileShare.Write },
-            { FileLockMode.Write,       FileShare.Read },
-            { FileLockMode.ReadWrite,   FileShare.None },
-        };
-
-        public IEnumerable<string> GetLocations(string root) {
-            return Directory.GetDirectories(root, "*", SearchOption.AllDirectories);
+        public IEnumerable<Location> GetLocations(string root) {
+            return Directory.GetDirectories(root, "*", SearchOption.AllDirectories)
+                            .Select(GetLocation);
         }
 
-        public DateTimeOffset GetLastWriteTime(string path) {
-            return File.GetLastWriteTimeUtc(path);
-        }
+        public File GetFile(string path, bool nullUnlessExists = true) {
+            if (nullUnlessExists && !System.IO.File.Exists(path))
+                return null;
 
-        public bool FileExists(string file) {
-            return File.Exists(file);
+            return new File(path);
         }
-
-        public IEnumerable<string> GetFileNames(string location) {
-            return Directory.GetFiles(location);
-        }
-
-        public string GetFileName(string path) {
-            return Path.GetFileName(path);
-        }
-
-        public string GetLocationName(string location) {
-            return Path.GetFileName(location);
-        }
-
+       
         public string BuildPath(params string[] parts) {
             return Path.Combine(parts);
         }
@@ -49,25 +30,8 @@ namespace AshMind.Web.Gallery.Core.IO {
             return Directory.Exists(path);
         }
 
-        public string GetLocation(string path) {
-            return Path.GetDirectoryName(path);
-        }
-        
-        public Stream ReadFile(string path, FileLockMode lockMode) {
-            return File.Open(path, FileMode.Open, FileAccess.Read, fileShare[lockMode]);
-        }
-        
-        public Stream OpenFile(string path, FileLockMode lockMode, bool overwrite) {
-            return File.Open(
-                path,
-                overwrite ? FileMode.Create : FileMode.OpenOrCreate,
-                overwrite ? FileAccess.Write : FileAccess.ReadWrite,
-                fileShare[lockMode]
-            );
-        }
-
-        public void MakeHidden(string path) {
-            File.SetAttributes(path, File.GetAttributes(path) | FileAttributes.Hidden);
+        public Location GetLocation(string path) {
+            return new Location(path);
         }
     }
 }

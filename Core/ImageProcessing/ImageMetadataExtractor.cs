@@ -25,8 +25,8 @@ namespace AshMind.Web.Gallery.Core.ImageProcessing {
             { new byte[] { 0xff, 0xd8 },                                        DecodeJfif },
         };
 
-        public static ImageMetadata ReadMetadata(string path) {
-            using (var binaryReader = new BinaryReader(File.OpenRead(path))) {
+        public static ImageMetadata ReadMetadata(Stream stream) {
+            using (var binaryReader = new BinaryReader(stream)) {
                 return ReadMetadata(binaryReader);
             }
         }

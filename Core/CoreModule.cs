@@ -44,7 +44,7 @@ namespace AshMind.Web.Gallery.Core {
 
             builder.Register(new ImageCache(Path.Combine(this.storagePath, "images"), ImageCacheFormat.Jpeg));
 
-            builder.Register(c => new AlbumIDProvider(this.storagePath)).As<IAlbumIDProvider>();
+            builder.Register(c => new AlbumIDProvider(this.storagePath, c.Resolve<IFileSystem>())).As<IAlbumIDProvider>();
 
             builder.Register<AuthorizationService>();
 

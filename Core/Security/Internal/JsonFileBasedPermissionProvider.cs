@@ -30,11 +30,13 @@ namespace AshMind.Web.Gallery.Core.Metadata.Internal {
         }
 
         public IEnumerable<Permission> GetPermissions(string token) {
-            var securityFile = GetSecurityFileName(token);
-            if (!fileSystem.FileExists(securityFile))
+            var securityFilePath = GetSecurityFileName(token);
+            var securityFile = fileSystem.GetFile(securityFilePath);
+
+            if (securityFile == null)
                 return Enumerable.Empty<Permission>();
 
-            var json = fileSystem.ReadAllText(securityFile);
+            var json = securityFile.ReadAllText();
             var permissionSet = JsonConvert.DeserializeObject<
                 Dictionary<SecurableAction, IList<string>>
             >(json);
@@ -69,21 +71,23 @@ namespace AshMind.Web.Gallery.Core.Metadata.Internal {
         }
 
         public void SetPermissions(string token, IEnumerable<Permission> permissions) {
-            var securityFile = GetSecurityFileName(token);
+            var securityFilePath = GetSecurityFileName(token);
+            var securityFile = this.fileSystem.GetFile(securityFilePath, nullUnlessExists : false);
+
             using (var md5 = MD5.Create()) {
                 var permissionSet = permissions.GroupBy(p => p.Action)
                                                .ToDictionary(
                                                     g => g.Key,
                                                     g => g.Select(p => GetKey(p.Group, md5)).ToList()
-                                               );
+                                               );                
 
-                using (var stream = this.fileSystem.OpenFile(securityFile, FileLockMode.Write, true)) 
+                using (var stream = securityFile.Open(FileLockMode.Write, true)) 
                 using (var writer = new StreamWriter(stream))
                 using (var jsonWriter = new JsonTextWriter(writer) { Formatting = Formatting.Indented }) {
                     new JsonSerializer().Serialize(jsonWriter, permissionSet);
                 }
 
-                this.fileSystem.MakeHidden(securityFile);
+                securityFile.SetHidden(true);
             }
         }
 
