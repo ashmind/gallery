@@ -47,7 +47,8 @@ namespace AshMind.Web.Gallery.Core {
             var cacheRootPath = Path.Combine(this.storagePath, "images");
             if (!Directory.Exists(cacheRootPath))
                 Directory.CreateDirectory(cacheRootPath);
-            builder.Register(new ImageCache(new Location(cacheRootPath), ImageCacheFormat.Jpeg));
+            builder.Register(c => new ImageCache(new Location(cacheRootPath), ImageCacheFormat.Jpeg, c.Resolve<ICacheDependencyProvider[]>()))
+                   .SingletonScoped();
 
             builder.Register(c => new AlbumIDProvider(c.Resolve<IFileSystem>().GetLocation(this.storagePath), c.Resolve<IFileSystem>()))
                    .As<IAlbumIDProvider>();
@@ -75,7 +76,8 @@ namespace AshMind.Web.Gallery.Core {
         }
 
         private void RegisterPicasaIntegration(ContainerBuilder builder) {
-            builder.Register<PicasaIniLoader>();
+            builder.Register<PicasaIniFileFinder>();
+            builder.Register<PicasaIniParser>();
         }
 
         private void RegisterAllImplementationsOf<TService>(ContainerBuilder builder, IEnumerable<Type> types) {

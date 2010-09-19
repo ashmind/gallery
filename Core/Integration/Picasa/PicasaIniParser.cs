@@ -10,12 +10,10 @@ using AshMind.Web.Gallery.Core.IO;
 using AshMind.Web.Gallery.Core.Integration.Picasa.IniParts;
 
 namespace AshMind.Web.Gallery.Core.Integration.Picasa {
-    public class PicasaIniLoader {
-        public PicasaIni LoadFrom(ILocation location) {            
-            var file = location.GetFile(".picasa.ini");
-            if (file == null)
-                return null;
-
+    public class PicasaIniParser {
+        public PicasaIni Parse(IFile file) {
+            Argument.VerifyNotNull("file", file);
+            
             var lines = file.ReadAllLines();
             return Parse(lines);
         }

@@ -25,7 +25,7 @@ namespace AshMind.Web.Gallery.Core.ImageProcessing {
         private readonly ImageCodecInfo imageEncoder;
         private readonly EncoderParameters imageEncoderParameters;
 
-        public ImageCache(ILocation cacheRoot, ImageCacheFormat format, params ICacheDependencyProvider[] dependencyProviders) {
+        public ImageCache(ILocation cacheRoot, ImageCacheFormat format, ICacheDependencyProvider[] dependencyProviders) {
             this.CacheRoot = cacheRoot;
             this.Format = format;
 

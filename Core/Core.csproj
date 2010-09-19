@@ -100,8 +100,9 @@
     <Compile Include="Integration\Picasa\PicasaFaceProvider.cs" />
     <Compile Include="Integration\Picasa\PicasaIni.cs" />
     <Compile Include="Integration\Picasa\PicasaIniDependencyProvider.cs" />
-    <Compile Include="Integration\Picasa\PicasaIniLoader.cs" />
+    <Compile Include="Integration\Picasa\PicasaIniFileFinder.cs" />
     <Compile Include="Integration\Picasa\IniParts\PicasaIniContact.cs" />
+    <Compile Include="Integration\Picasa\PicasaIniParser.cs" />
     <Compile Include="Integration\Picasa\PicasaOrientationProvider.cs" />
     <Compile Include="IO\FileOpenMode.cs" />
     <Compile Include="IO\IFileSystemElement.cs" />

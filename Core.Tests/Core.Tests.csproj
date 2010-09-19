@@ -59,7 +59,7 @@
     <Compile Include="IO\MemoryLocation.cs" />
     <Compile Include="IO\Resource.cs" />
     <Compile Include="Of.AlbumSupport\AlbumIDProviderTest.cs" />
-    <Compile Include="Of.Integration\Picasa\PicasaIniLoaderTest.cs" />
+    <Compile Include="Of.Integration\Picasa\PicasaIniParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

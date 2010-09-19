@@ -11,17 +11,20 @@ using AshMind.Web.Gallery.Core.IO;
 
 namespace AshMind.Web.Gallery.Core.Integration.Picasa {
     public class PicasaOrientationProvider : IOrientationProvider {
-        private readonly PicasaIniLoader picasaIniLoader;
+        private readonly PicasaIniFileFinder picasaIniFileFinder;
+        private readonly PicasaIniParser picasaIniParser;
 
-        public PicasaOrientationProvider(PicasaIniLoader picasaIniLoader) {
-            this.picasaIniLoader = picasaIniLoader;
+        public PicasaOrientationProvider(PicasaIniFileFinder picasaIniFileFinder, PicasaIniParser picasaIniParser) {
+            this.picasaIniFileFinder = picasaIniFileFinder;
+            this.picasaIniParser = picasaIniParser;
         }
 
         public ImageOrientation GetOrientation(Image image, IFile imageFile) {
-            var picasaIni = this.picasaIniLoader.LoadFrom(imageFile.Location);
-            if (picasaIni == null)
+            var picasaIniFile = this.picasaIniFileFinder.FindIn(imageFile.Location);
+            if (picasaIniFile == null)
                 return null;
 
+            var picasaIni = this.picasaIniParser.Parse(picasaIniFile);
             var item = picasaIni.Items.GetValueOrDefault(imageFile.Name);
             if (item == null || item.Rotate == null)
                 return null;

@@ -8,20 +8,18 @@ using AshMind.Web.Gallery.Core.IO;
 namespace AshMind.Web.Gallery.Core.Integration.Picasa {
     public class PicasaFaceProvider : IFaceProvider {
         private readonly IFile contactsXml;
-        private readonly PicasaIniLoader loader;
+        private readonly PicasaIniParser parser;
 
         public PicasaFaceProvider(
             IFile contactsXml,
-            PicasaIniLoader loader
+            PicasaIniParser parser
         ) {
             this.contactsXml = contactsXml;
-            this.loader = loader;
+            this.parser = parser;
         }
 
         public IEnumerable<Face> GetFaces(Album album) {
-            var picasaIni = this.loader.LoadFrom(album.Location);
-            if (picasaIni == null)
-                yield break;
+            throw new NotImplementedException();
         }
     }
 }
