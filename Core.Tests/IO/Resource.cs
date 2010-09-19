@@ -7,7 +7,7 @@ using System.Text;
 
 using AshMind.Web.Gallery.Core.IO;
 
-namespace AshMind.Web.Gallery.Core.Tests.IO.Resources {
+namespace AshMind.Web.Gallery.Core.Tests.IO {
     public class Resource : IFile {
         private string resourcePath;
         private Assembly assembly;
@@ -25,7 +25,7 @@ namespace AshMind.Web.Gallery.Core.Tests.IO.Resources {
             return this.assembly.GetManifestResourceStream(this.resourcePath);
         }
 
-        public Stream Open(FileLockMode lockMode, bool overwrite) {
+        public Stream Open(FileLockMode lockMode, FileOpenMode openMode) {
             throw new NotImplementedException();
         }
         
@@ -43,6 +43,10 @@ namespace AshMind.Web.Gallery.Core.Tests.IO.Resources {
 
         public void SetHidden(bool value) {
             throw new NotImplementedException();
+        }
+
+        public bool Exists {
+            get { return true; }
         }
     }
 }

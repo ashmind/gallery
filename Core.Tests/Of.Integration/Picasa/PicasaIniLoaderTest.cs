@@ -11,7 +11,7 @@ using Moq;
 
 using AshMind.Web.Gallery.Core.IO;
 using AshMind.Web.Gallery.Core.Integration.Picasa;
-using AshMind.Web.Gallery.Core.Tests.IO.Resources;
+using AshMind.Web.Gallery.Core.Tests.IO;
 
 namespace AshMind.Web.Gallery.Core.Tests.Of.Integration.Picasa {
     [TestFixture]

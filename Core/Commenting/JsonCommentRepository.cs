@@ -85,7 +85,7 @@ namespace AshMind.Web.Gallery.Core.Commenting {
                 Text = comment.Text
             };
 
-            using (var stream = jsonFile.Open(FileLockMode.ReadWrite, false)) {
+            using (var stream = jsonFile.Open(FileLockMode.ReadWrite, FileOpenMode.ReadOrWrite)) {
                 var store = stream.Length > 0 ? LoadCommentStore(stream) : new CommentStore();
                 store.Comments.Add(raw);
 

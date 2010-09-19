@@ -32,6 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AshMind.Extensions, Version=1.0.1.0, Culture=neutral, PublicKeyToken=32a35e6126a2a893, processorArchitecture=MSIL" />
     <Reference Include="Gallio" />
     <Reference Include="MbUnit" />
     <Reference Include="Moq">
@@ -53,7 +54,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IO.Resources\Resource.cs" />
+    <Compile Include="IO\MemoryFile.cs" />
+    <Compile Include="IO\MemoryFileSystem.cs" />
+    <Compile Include="IO\MemoryLocation.cs" />
+    <Compile Include="IO\Resource.cs" />
+    <Compile Include="Of.AlbumSupport\AlbumIDProviderTest.cs" />
     <Compile Include="Of.Integration\Picasa\PicasaIniLoaderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -69,6 +74,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Of.Integration\Picasa\Resources\picasa.complex.ini" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

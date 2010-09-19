@@ -21,7 +21,7 @@ namespace AshMind.Web.Gallery.Core.IO.Implementation {
 
         public IFile GetFile(string name, bool nullUnlessExists = true) {
             var path = System.IO.Path.Combine(this.Path, name);
-            return this.fileSystem.GetFile(name, nullUnlessExists);
+            return this.fileSystem.GetFile(path, nullUnlessExists);
         }
 
         public bool IsHidden() {

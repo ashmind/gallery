@@ -23,5 +23,12 @@ namespace AshMind.Web.Gallery.Core.IO {
                 }
             }
         }
+
+        public static void AppendAllText(this IFile file, string contents) {
+            using (var stream = file.Open(FileLockMode.Write, FileOpenMode.ReadOrWrite))
+            using (var writer = new StreamWriter(stream, new UTF8Encoding(false, true))) {
+                writer.Write(contents);
+            }
+        }
     }
 }

@@ -102,6 +102,7 @@
     <Compile Include="Integration\Picasa\PicasaIni.cs" />
     <Compile Include="Integration\Picasa\PicasaIniLoader.cs" />
     <Compile Include="Integration\Picasa\IniParts\PicasaIniContact.cs" />
+    <Compile Include="IO\FileOpenMode.cs" />
     <Compile Include="IO\IFileSystemElement.cs" />
     <Compile Include="IO\FileLockMode.cs" />
     <Compile Include="IO\FileExtensions.cs" />

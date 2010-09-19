@@ -9,25 +9,24 @@ using AshMind.Web.Gallery.Core.IO;
 
 using File = System.IO.File;
 
-namespace AshMind.Web.Gallery.Core.AlbumSupport
-{
+namespace AshMind.Web.Gallery.Core.AlbumSupport {
     internal class AlbumIDProvider : IAlbumIDProvider {
-        private readonly string idMapFilePath;
+        private readonly IFile idMapFile;
         private readonly ConcurrentDictionary<string, string> idMap;
-        private readonly IFileSystem fileSystem;
+        private readonly IFileSystem albumFileSystem;
 
-        public AlbumIDProvider(string dataRoot, IFileSystem fileSystem) {
-            this.idMapFilePath = Path.Combine(dataRoot, "idmap");
-            this.idMap = new ConcurrentDictionary<string,string>(this.LoadMap());
+        public AlbumIDProvider(ILocation dataRoot, IFileSystem albumFileSystem) {
+            this.idMapFile = dataRoot.GetFile("idmap", false);
+            this.idMap = new ConcurrentDictionary<string, string>(this.LoadMap());
 
-            this.fileSystem = fileSystem;
+            this.albumFileSystem = albumFileSystem;
         }
 
         private IEnumerable<KeyValuePair<string, string>> LoadMap() {
-            if (!File.Exists(this.idMapFilePath))
+            if (!this.idMapFile.Exists)
                 return Enumerable.Empty<KeyValuePair<string, string>>();
 
-            var lines = File.ReadAllLines(this.idMapFilePath);
+            var lines = this.idMapFile.ReadAllLines();
             return lines.Select(line => line.Split('\t'))
                         .Select(parts => new KeyValuePair<string, string>(parts[0], parts[1]));
         }
@@ -41,13 +40,13 @@ namespace AshMind.Web.Gallery.Core.AlbumSupport
 
             var id = location.Name.Replace(" ", "_");
             if (this.idMap.TryAdd(id, location.Path))
-                File.AppendAllText(this.idMapFilePath, id + "\t" + location + Environment.NewLine);
+                this.idMapFile.AppendAllText(id + "\t" + location.Path + Environment.NewLine);
 
             return id;
         }
 
         public ILocation GetAlbumLocation(string albumID) {
-            return this.fileSystem.GetLocation(idMap[albumID]);
+            return this.albumFileSystem.GetLocation(idMap[albumID]);
         }
     }
 }

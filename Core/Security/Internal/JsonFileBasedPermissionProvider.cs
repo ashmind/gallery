@@ -78,7 +78,7 @@ namespace AshMind.Web.Gallery.Core.Metadata.Internal {
                                                     g => g.Select(p => GetKey(p.Group, md5)).ToList()
                                                );                
 
-                using (var stream = securityFile.Open(FileLockMode.Write, true)) 
+                using (var stream = securityFile.Open(FileLockMode.Write, FileOpenMode.Recreate)) 
                 using (var writer = new StreamWriter(stream))
                 using (var jsonWriter = new JsonTextWriter(writer) { Formatting = Formatting.Indented }) {
                     new JsonSerializer().Serialize(jsonWriter, permissionSet);

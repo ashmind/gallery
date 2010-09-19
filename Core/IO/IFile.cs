@@ -9,6 +9,8 @@ namespace AshMind.Web.Gallery.Core.IO {
         DateTimeOffset GetLastWriteTime();
 
         Stream Read(FileLockMode lockMode);
-        Stream Open(FileLockMode lockMode, bool overwrite);
+        Stream Open(FileLockMode lockMode, FileOpenMode openMode);
+
+        bool Exists { get; }
     }
 }
