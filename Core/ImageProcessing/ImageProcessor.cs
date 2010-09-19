@@ -5,34 +5,31 @@ using System.Linq;
 using System.Drawing.Imaging;
 using System.Collections.Generic;
 
+using AshMind.Web.Gallery.Core.Metadata;
+
 namespace AshMind.Web.Gallery.Core.ImageProcessing {
+    using OrientationTuple = Tuple<int, ImageMirroring>;
+
     internal static class ImageProcessor {
         private const int ExifOrientationId = 274;
 
         private static HashSet<RotateFlipType> flipsWidthHeight = new HashSet<RotateFlipType> {
             RotateFlipType.Rotate90FlipNone,
             RotateFlipType.Rotate90FlipX,
-            RotateFlipType.Rotate90FlipXY,
             RotateFlipType.Rotate90FlipY,
             RotateFlipType.Rotate270FlipNone,
             RotateFlipType.Rotate270FlipX,
-            RotateFlipType.Rotate270FlipXY,
             RotateFlipType.Rotate270FlipY
         };
 
-        private static IDictionary<int, RotateFlipType> ms_orientations = new Dictionary<int, RotateFlipType> {
-            { 1, RotateFlipType.RotateNoneFlipNone },
-            { 2, RotateFlipType.RotateNoneFlipX },
-            { 3, RotateFlipType.RotateNoneFlipXY },
-            { 4, RotateFlipType.RotateNoneFlipY },
-            { 5, RotateFlipType.Rotate270FlipY },
-            { 6, RotateFlipType.Rotate270FlipXY },
-            { 7, RotateFlipType.Rotate270FlipX },
-            { 8, RotateFlipType.Rotate270FlipNone },
+        private static IDictionary<OrientationTuple, RotateFlipType> rotateFlip = new Dictionary<OrientationTuple, RotateFlipType> {
+            { new OrientationTuple(0, ImageMirroring.None),   RotateFlipType.RotateNoneFlipNone },
+            { new OrientationTuple(90, ImageMirroring.None),  RotateFlipType.Rotate270FlipNone },
+            { new OrientationTuple(180, ImageMirroring.None), RotateFlipType.Rotate180FlipNone },
+            { new OrientationTuple(270, ImageMirroring.None), RotateFlipType.Rotate90FlipNone }
         };
 
         public static Image ReduceSize(Image image, int desiredSize) {
-            var orientation = image.GetOrientation();
             var targetSize = EstimateSize(image.Size, desiredSize);
 
             var resized = new Bitmap(targetSize.Width, targetSize.Height, image.PixelFormat);
@@ -41,11 +38,17 @@ namespace AshMind.Web.Gallery.Core.ImageProcessing {
             using (var g = Graphics.FromImage(resized)) {
                 g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 g.DrawImage(image, 0, 0, targetSize.Width, targetSize.Height);
-            }
-
-            ImageProcessor.CorrectOrientation(resized, orientation);
+            }            
 
             return resized;
+        }
+
+        public static Image CorrectOrientation(Image image, ImageOrientation orientation) {
+            if (orientation.Angle == 0 && orientation.Mirroring == ImageMirroring.None)
+                return image;
+            
+            image.RotateFlip(rotateFlip[new OrientationTuple(orientation.Angle, orientation.Mirroring)]);
+            return image;
         }
 
         public static Size EstimateSize(ImageMetadata metadata, int desiredSize) {
@@ -62,24 +65,6 @@ namespace AshMind.Web.Gallery.Core.ImageProcessing {
                 desiredSize,
                 (int)(size.Height * ratio)
             );
-        }
-
-        private static void CorrectOrientation(Bitmap bitmap, RotateFlipType? orientation) {
-            if (orientation == null || orientation.Value == RotateFlipType.RotateNoneFlipNone)
-                return;
-
-            bitmap.RotateFlip(orientation.Value);
-        }
-
-        public static RotateFlipType? GetOrientation(this Image image) {
-            if (!image.PropertyIdList.Contains(ExifOrientationId))
-                return null;
-
-            var exifOrientation = image.GetPropertyItem(ExifOrientationId).Value[0];
-            if (exifOrientation == 0)
-                return null;
-
-            return ms_orientations[exifOrientation];
         }
     }
 }

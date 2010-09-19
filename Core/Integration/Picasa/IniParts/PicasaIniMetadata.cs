@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 
 namespace AshMind.Web.Gallery.Core.Integration.Picasa.IniParts {
-    public class PicasaIniItem {
-        public PicasaIniItem(string fileName) {
-            this.FileName = fileName;
+    public class PicasaIniMetadata {
+        public PicasaIniMetadata() {
             this.Faces = new List<PicasaIniFace>();
         }
 
-        public string FileName { get; private set; }
+        public int? Rotate { get; set; }
         public bool Starred { get; set; }
         public IList<PicasaIniFace> Faces { get; private set; }
     }

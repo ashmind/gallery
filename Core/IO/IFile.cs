@@ -12,5 +12,7 @@ namespace AshMind.Web.Gallery.Core.IO {
         Stream Open(FileLockMode lockMode, FileOpenMode openMode);
 
         bool Exists { get; }
+
+        ILocation Location { get; }
     }
 }

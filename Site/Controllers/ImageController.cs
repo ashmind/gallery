@@ -30,12 +30,12 @@ namespace AshMind.Web.Gallery.Site.Controllers {
         //[OutputCache(Duration = 60, VaryByParam = "*")]
         public ActionResult Get(string album, string item, string size) {
             var imageSize = ImageSize.Parse(size);
-            var path = this.gallery.GetItemFile(album, item).Path;
+            var file = this.gallery.GetItemFile(album, item);
             if (imageSize != ImageSize.Original)
-                path = this.preview.GetPreviewPath(path, imageSize.Size);
+                file = this.preview.GetPreview(file, imageSize.Size);
 
             var ifModifiedSince = Request.Headers["If-Modified-Since"];
-            var lastModifiedDate = (DateTimeOffset)System.IO.File.GetLastWriteTimeUtc(path);
+            var lastModifiedDate = file.GetLastWriteTime();
             if (!string.IsNullOrEmpty(ifModifiedSince)) {
                 var ifModifiedSinceDate = DateTimeOffset.Parse(ifModifiedSince);
 
@@ -45,7 +45,7 @@ namespace AshMind.Web.Gallery.Site.Controllers {
                 }
             }
 
-            Response.AddFileDependency(path);
+            Response.AddFileDependency(file.Path);
             Response.Cache.SetCacheability(HttpCacheability.Private);
             Response.Cache.SetETagFromFileDependencies();
             Response.Cache.SetLastModifiedFromFileDependencies();
@@ -62,9 +62,9 @@ namespace AshMind.Web.Gallery.Site.Controllers {
             Response.Cache.SetMaxAge(maxAge);
 
             return File(
-                path,
-                knownMimeTypes[Path.GetExtension(path).ToLower()],
-                Path.GetFileName(path)
+                file.Path,
+                knownMimeTypes[Path.GetExtension(file.Name).ToLower()],
+                file.Name
             );
         }
     }

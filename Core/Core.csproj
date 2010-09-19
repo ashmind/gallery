@@ -90,6 +90,8 @@
     <Compile Include="Comment.cs" />
     <Compile Include="Commenting\ICommentRepository.cs" />
     <Compile Include="Commenting\JsonCommentRepository.cs" />
+    <Compile Include="ImageProcessing\ExifOrientationProvider.cs" />
+    <Compile Include="ImageProcessing\ICacheDependencyProvider.cs" />
     <Compile Include="ImageProcessing\ImageMetadataExtractor.cs" />
     <Compile Include="ImageProcessing\ImageInfo.cs" />
     <Compile Include="ImageProcessing\ImageMetadata.cs" />
@@ -97,11 +99,13 @@
     <Compile Include="Integration\IFaceProvider.cs" />
     <Compile Include="Integration\Person.cs" />
     <Compile Include="Integration\Picasa\IniParts\PicasaIniFace.cs" />
-    <Compile Include="Integration\Picasa\IniParts\PicasaIniItem.cs" />
+    <Compile Include="Integration\Picasa\IniParts\PicasaIniMetadata.cs" />
     <Compile Include="Integration\Picasa\PicasaFaceProvider.cs" />
     <Compile Include="Integration\Picasa\PicasaIni.cs" />
+    <Compile Include="Integration\Picasa\PicasaIniDependencyProvider.cs" />
     <Compile Include="Integration\Picasa\PicasaIniLoader.cs" />
     <Compile Include="Integration\Picasa\IniParts\PicasaIniContact.cs" />
+    <Compile Include="Integration\Picasa\PicasaOrientationProvider.cs" />
     <Compile Include="IO\FileOpenMode.cs" />
     <Compile Include="IO\IFileSystemElement.cs" />
     <Compile Include="IO\FileLockMode.cs" />
@@ -111,6 +115,9 @@
     <Compile Include="IO\Implementation\File.cs" />
     <Compile Include="IO\Implementation\FileSystem.cs" />
     <Compile Include="IO\Implementation\Location.cs" />
+    <Compile Include="Metadata\ImageMirroring.cs" />
+    <Compile Include="Metadata\ImageOrientation.cs" />
+    <Compile Include="Metadata\IOrientationProvider.cs" />
     <Compile Include="Security\Internal\JsonFileBasedPermissionProvider.cs" />
     <Compile Include="Security\IPermissionProvider.cs" />
     <Compile Include="Security\AuthorizationService.cs" />

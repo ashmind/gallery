@@ -10,7 +10,9 @@ using AshMind.Extensions;
 using AshMind.Web.Gallery.Core.AlbumSupport;
 using AshMind.Web.Gallery.Core.Commenting;
 using AshMind.Web.Gallery.Core.ImageProcessing;
+using AshMind.Web.Gallery.Core.Integration.Picasa;
 using AshMind.Web.Gallery.Core.IO;
+using AshMind.Web.Gallery.Core.IO.Implementation;
 using AshMind.Web.Gallery.Core.Metadata;
 using AshMind.Web.Gallery.Core.Security;
 using AshMind.Web.Gallery.Core.Security.Internal;
@@ -38,11 +40,14 @@ namespace AshMind.Web.Gallery.Core {
                    .As<ICommentRepository>()
                    .SingletonScoped();
 
-            builder.Register<IO.Implementation.FileSystem>()
+            builder.Register<FileSystem>()
                    .As<IFileSystem>()
                    .SingletonScoped();
 
-            builder.Register(new ImageCache(Path.Combine(this.storagePath, "images"), ImageCacheFormat.Jpeg));
+            var cacheRootPath = Path.Combine(this.storagePath, "images");
+            if (!Directory.Exists(cacheRootPath))
+                Directory.CreateDirectory(cacheRootPath);
+            builder.Register(new ImageCache(new Location(cacheRootPath), ImageCacheFormat.Jpeg));
 
             builder.Register(c => new AlbumIDProvider(c.Resolve<IFileSystem>().GetLocation(this.storagePath), c.Resolve<IFileSystem>()))
                    .As<IAlbumIDProvider>();
@@ -62,8 +67,16 @@ namespace AshMind.Web.Gallery.Core {
 
             builder.Register<PreviewFacade>().SingletonScoped();
 
+            RegisterPicasaIntegration(builder);
+
             RegisterAllImplementationsOf<IPermissionProvider>(builder, types);
+            RegisterAllImplementationsOf<IOrientationProvider>(builder, types);
+            RegisterAllImplementationsOf<ICacheDependencyProvider>(builder, types);
             RegisterAllImplementationsOf<IAlbumFilter>(builder, types);
+        }
+
+        private void RegisterPicasaIntegration(ContainerBuilder builder) {
+            builder.Register<PicasaIniLoader>();
         }
 
         private void RegisterAllImplementationsOf<TService>(ContainerBuilder builder, IEnumerable<Type> types) {

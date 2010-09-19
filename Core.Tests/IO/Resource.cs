@@ -48,5 +48,9 @@ namespace AshMind.Web.Gallery.Core.Tests.IO {
         public bool Exists {
             get { return true; }
         }
+
+        public ILocation Location {
+            get { throw new NotImplementedException(); }
+        }
     }
 }

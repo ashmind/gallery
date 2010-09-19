@@ -45,7 +45,7 @@ namespace AshMind.Web.Gallery.Core.Tests.Of.Integration.Picasa {
         public void TestLoadFromLoadsFacesCorrectly() {
             var picasaIni = new PicasaIniLoader().LoadFrom(LocationOfResource("picasa.simple.ini"));
             Assert.AreElementsEqual(
-                picasaIni.Items.Select(x => new { x.FileName, Faces = string.Join(";", x.Faces.Select(f => f.ContactHash)) }),
+                picasaIni.Items.Select(x => new { FileName = x.Key, Faces = string.Join(";", x.Value.Faces.Select(f => f.ContactHash)) }),
                 new[] { new { FileName = "DSC00369.JPG", Faces = "8f7eee7d92388080" } }
             );
         }

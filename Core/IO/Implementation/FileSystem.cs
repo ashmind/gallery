@@ -12,10 +12,8 @@ namespace AshMind.Web.Gallery.Core.IO.Implementation {
         }
 
         public IFile GetFile(string path, bool nullUnlessExists = true) {
-            if (nullUnlessExists && !System.IO.File.Exists(path))
-                return null;
-
-            return new File(path);
+            return this.GetLocation(Path.GetDirectoryName(path))
+                       .GetFile(Path.GetFileName(path), nullUnlessExists);
         }
        
         public string BuildPath(params string[] parts) {
@@ -31,7 +29,7 @@ namespace AshMind.Web.Gallery.Core.IO.Implementation {
         }
 
         public ILocation GetLocation(string path) {
-            return new Location(this, path);
+            return new Location(path);
         }
     }
 }

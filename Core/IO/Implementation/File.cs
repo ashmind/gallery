@@ -27,8 +27,9 @@ namespace AshMind.Web.Gallery.Core.IO.Implementation {
 
         private readonly string path;
 
-        public File(string path) {
+        public File(string path, Location location) {
             this.path = path;
+            this.Location = location;
         }
         
         public bool IsHidden() {
@@ -73,5 +74,7 @@ namespace AshMind.Web.Gallery.Core.IO.Implementation {
         public bool Exists {
             get { return System.IO.File.Exists(this.path); }
         }
+
+        public ILocation Location { get; private set; }
     }
 }

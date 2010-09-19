@@ -30,5 +30,12 @@ namespace AshMind.Web.Gallery.Core.IO {
                 writer.Write(contents);
             }
         }
+
+        public static void WriteAllText(this IFile file, string contents) {
+            using (var stream = file.Open(FileLockMode.Write, FileOpenMode.Recreate))
+            using (var writer = new StreamWriter(stream, new UTF8Encoding(false, true))) {
+                writer.Write(contents);
+            }
+        }
     }
 }

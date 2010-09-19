@@ -11,14 +11,12 @@ namespace AshMind.Web.Gallery.Core.Tests.IO {
     public class MemoryFile : IFile {
         private MemoryStream stream = new MemoryStream();
         
-        private MemoryLocation location;
-
         public MemoryFile() {
             this.Exists = true;
         }
 
         public MemoryFile(MemoryLocation location, string name, bool exists) {
-            this.location = location;
+            this.Location = location;
             this.Name = name;
             this.Exists = exists;
         }
@@ -82,5 +80,7 @@ namespace AshMind.Web.Gallery.Core.Tests.IO {
         public byte[] GetBytes() {
             return this.stream.ToArray();
         }
+
+        public ILocation Location { get; set; }
     }
 }

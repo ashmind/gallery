@@ -6,17 +6,37 @@ using System.Drawing;
 
 using AshMind.Web.Gallery.Core.ImageProcessing;
 using AshMind.Web.Gallery.Core.IO;
+using AshMind.Web.Gallery.Core.Metadata;
 
 namespace AshMind.Web.Gallery.Core {
     public class PreviewFacade {
         private readonly ImageCache cache;
+        private readonly IOrientationProvider[] orientationProviders;
 
-        public PreviewFacade(ImageCache cache) {
+        public PreviewFacade(
+            ImageCache cache,
+            IOrientationProvider[] orientationProviders
+        ) {
             this.cache = cache;
+            this.orientationProviders = orientationProviders;
         }
 
-        public string GetPreviewPath(string originalPath, int size) {
-            return this.cache.GetTransformPath(originalPath, size, ImageProcessor.ReduceSize);
+        public IFile GetPreview(IFile originalFile, int size) {
+            return this.cache.GetTransform(
+                originalFile, size,
+                (image, desiredSize) => {
+                    var orientation = this.orientationProviders
+                                          .OrderByDescending(p => p.Priority)
+                                          .Select(p => p.GetOrientation(image, originalFile))
+                                          .Where(o => o != null)
+                                          .FirstOrDefault();
+                    image = ImageProcessor.ReduceSize(image, desiredSize);
+                    if (orientation != null)
+                        image = ImageProcessor.CorrectOrientation(image, orientation);
+
+                    return image;
+                }
+            );
         }
 
         public ImageMetadata GetPreviewMetadata(IFile originalFile, int size) {

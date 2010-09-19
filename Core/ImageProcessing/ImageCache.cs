@@ -17,15 +17,19 @@ namespace AshMind.Web.Gallery.Core.ImageProcessing {
     public class ImageCache {
         private readonly object DiskAccessLock = new object();
 
-        public string CacheRoot { get; private set; }
+        public ILocation CacheRoot { get; private set; }
         public ImageCacheFormat Format { get; private set; }
+
+        private readonly ICacheDependencyProvider[] dependencyProviders;
 
         private readonly ImageCodecInfo imageEncoder;
         private readonly EncoderParameters imageEncoderParameters;
 
-        public ImageCache(string cacheRoot, ImageCacheFormat format) {
+        public ImageCache(ILocation cacheRoot, ImageCacheFormat format, params ICacheDependencyProvider[] dependencyProviders) {
             this.CacheRoot = cacheRoot;
             this.Format = format;
+
+            this.dependencyProviders = dependencyProviders;
 
             this.imageEncoder = ImageCodecInfo.GetImageEncoders().First(c => c.MimeType == format.MimeType);
             this.imageEncoderParameters = new EncoderParameters {
@@ -33,74 +37,81 @@ namespace AshMind.Web.Gallery.Core.ImageProcessing {
             };
         }
 
-        public string GetTransformPath(string imagePath, int size, Func<Image, int, Image> transform) {
-            var cachePath = GetCachePath(imagePath, size);
-            
-            var cached = System.IO.File.Exists(cachePath);
-            if (!cached)
-                return this.CacheTransform(imagePath, cachePath, image => transform(image, size));
+        public IFile GetTransform(IFile imageFile, int size, Func<Image, int, Image> transform) {
+            var cacheFile = GetCacheFile(imageFile, size);
+            if (!IsCachedAndUpToDate(imageFile, cacheFile))
+                return this.CacheTransform(imageFile, cacheFile, image => transform(image, size));
 
-            return cachePath;
+            return cacheFile;
+        }
+
+        private bool IsCachedAndUpToDate(IFile imageFile, IFile cacheFile) {
+            if (!cacheFile.Exists)
+                return false;
+
+            var cacheLastWriteTime = cacheFile.GetLastWriteTime();
+            if (imageFile.GetLastWriteTime() > cacheLastWriteTime)
+                return false;
+
+            var relatedChanges = this.dependencyProviders.SelectMany(p => p.GetRelatedChanges(imageFile));
+            return relatedChanges.All(change => change < cacheLastWriteTime);
         }
 
         public ImageMetadata GetMetadata(IFile image, Func<ImageMetadata> getMetadata, Func<ImageMetadata, ImageMetadata> adjustMetadata) {
-            var metadataPath = GetMetadataPath(image.Path);
+            var metadataFile = GetMetadataFile(image.Path);
             var metadata = (ImageMetadata)null;
 
-            if (System.IO.File.Exists(metadataPath))
-                metadata = LoadMetadata(metadataPath);
+            if (metadataFile.Exists)
+                metadata = LoadMetadata(metadataFile);
 
             if (metadata == null) {
                 metadata = getMetadata();
-                SaveMetadata(metadataPath, metadata);
+                SaveMetadata(metadataFile, metadata);
             }
 
             return adjustMetadata(metadata);
         }
         
-        private string CacheTransform(string imagePath, string cachePath, Converter<Image, Image> transform) {
-            using (var original = LoadOriginalImage(imagePath))
-            using (var result = transform(original)) {
-                result.Save(cachePath, this.imageEncoder, this.imageEncoderParameters);
-                return cachePath;
+        private IFile CacheTransform(IFile imageFile, IFile cacheFile, Converter<Image, Image> transform) {
+            using (var original = LoadOriginalImage(imageFile))
+            using (var result = transform(original)) 
+            using (var stream = cacheFile.Open(FileLockMode.ReadWrite, FileOpenMode.Recreate))
+            {
+                result.Save(stream, this.imageEncoder, this.imageEncoderParameters);                
             }
+
+            return cacheFile;
         }
 
-        private void SaveMetadata(string metadataPath, ImageMetadata metadata) {
-            System.IO.File.WriteAllText(
-                metadataPath,
+        private void SaveMetadata(IFile metadataFile, ImageMetadata metadata) {
+            metadataFile.WriteAllText(
                 JsonConvert.SerializeObject(metadata)
             );
         }
 
-        private ImageMetadata LoadMetadata(string metadataPath) {
+        private ImageMetadata LoadMetadata(IFile metadataFile) {
             return JsonConvert.DeserializeObject<ImageMetadata>(
-                System.IO.File.ReadAllText(metadataPath)
+                metadataFile.ReadAllText()
             );
         }
 
-        private Image LoadOriginalImage(string imagePath) {
+        private Image LoadOriginalImage(IFile imageFile) {
             lock (DiskAccessLock) {
-                return Image.FromFile(imagePath);
+                // using (var stream = imageFile.Read(FileLockMode.Write)) {
+                //     return Image.FromStream(stream);
+                // }
+                // TEMPHACK: for some reason above code does not load exif
+                return Image.FromFile(imageFile.Path);
             }
         }
 
-        private string GetCachePath(string imagePath, int size) {
-            if (!Directory.Exists(this.CacheRoot))
-                Directory.CreateDirectory(this.CacheRoot);
-
-            var cacheKey = this.GetCacheKey(imagePath, size);
-            return Path.Combine(this.CacheRoot, cacheKey);
+        private IFile GetCacheFile(IFile imageFile, int size) {
+            var cacheKey = this.GetCacheKey(imageFile.Path, size);
+            return this.CacheRoot.GetFile(cacheKey, false);
         }
 
-        private string GetMetadataPath(string imagePath) {
-            if (!Directory.Exists(this.CacheRoot))
-                Directory.CreateDirectory(this.CacheRoot);
-
-            return Path.Combine(
-                this.CacheRoot,
-                GetCacheKey(imagePath) + ".metadata"
-            );
+        private IFile GetMetadataFile(string imagePath) {
+            return this.CacheRoot.GetFile(GetCacheKey(imagePath) + ".metadata", false);
         }
 
         private string GetCacheKey(string imagePath, int size) {
