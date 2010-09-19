@@ -83,6 +83,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Album.cs" />
+    <Compile Include="AlbumItem.cs" />
+    <Compile Include="AlbumItemType.cs" />
     <Compile Include="AlbumSupport\HiddenAlbumFilter.cs" />
     <Compile Include="AlbumSupport\IAlbumFilter.cs" />
     <Compile Include="Comment.cs" />
@@ -91,13 +93,23 @@
     <Compile Include="ImageProcessing\ImageMetadataExtractor.cs" />
     <Compile Include="ImageProcessing\ImageInfo.cs" />
     <Compile Include="ImageProcessing\ImageMetadata.cs" />
+    <Compile Include="Integration\Face.cs" />
+    <Compile Include="Integration\IFaceProvider.cs" />
+    <Compile Include="Integration\Person.cs" />
+    <Compile Include="Integration\Picasa\IniParts\PicasaIniFace.cs" />
+    <Compile Include="Integration\Picasa\IniParts\PicasaIniItem.cs" />
+    <Compile Include="Integration\Picasa\PicasaFaceProvider.cs" />
+    <Compile Include="Integration\Picasa\PicasaIni.cs" />
+    <Compile Include="Integration\Picasa\PicasaIniLoader.cs" />
+    <Compile Include="Integration\Picasa\IniParts\PicasaIniContact.cs" />
     <Compile Include="IO\IFileSystemElement.cs" />
-    <Compile Include="IO\Location.cs" />
-    <Compile Include="IO\File.cs" />
     <Compile Include="IO\FileLockMode.cs" />
     <Compile Include="IO\FileExtensions.cs" />
     <Compile Include="IO\IFile.cs" />
     <Compile Include="IO\ILocation.cs" />
+    <Compile Include="IO\Implementation\File.cs" />
+    <Compile Include="IO\Implementation\FileSystem.cs" />
+    <Compile Include="IO\Implementation\Location.cs" />
     <Compile Include="Security\Internal\JsonFileBasedPermissionProvider.cs" />
     <Compile Include="Security\IPermissionProvider.cs" />
     <Compile Include="Security\AuthorizationService.cs" />
@@ -110,11 +122,8 @@
     <Compile Include="Security\User.cs" />
     <Compile Include="Security\UserGroup.cs" />
     <Compile Include="CoreModule.cs" />
-    <Compile Include="GalleryItem.cs" />
-    <Compile Include="GalleryItemType.cs" />
     <Compile Include="Internal\HashAlgorithmExtensions.cs" />
     <Compile Include="Argument.cs" />
-    <Compile Include="IO\FileSystem.cs" />
     <Compile Include="AlbumFacade.cs" />
     <Compile Include="IO\IFileSystem.cs" />
     <Compile Include="AlbumSupport\AlbumIDProvider.cs" />
@@ -143,9 +152,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Integration\Picasa\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

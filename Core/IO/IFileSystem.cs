@@ -6,15 +6,15 @@ using System.Text;
 
 namespace AshMind.Web.Gallery.Core.IO {
     public interface IFileSystem {
-        IEnumerable<Location> GetLocations(string root);        
+        IEnumerable<ILocation> GetLocations(string root);        
 
         bool IsFileName(string pathOrFileName);
         
         string BuildPath(params string[] parts);
 
-        File GetFile(string path, bool nullUnlessExists = true);
+        IFile GetFile(string path, bool nullUnlessExists = true);
 
         bool IsLocation(string path);
-        Location GetLocation(string path);
+        ILocation GetLocation(string path);
     }
 }

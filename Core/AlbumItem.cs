@@ -6,10 +6,10 @@ using System.Text;
 using AshMind.Web.Gallery.Core.ImageProcessing;
 
 namespace AshMind.Web.Gallery.Core {
-    public class GalleryItem {
+    public class AlbumItem {
         private Lazy<IList<Comment>> lazyComments;
 
-        internal GalleryItem(
+        internal AlbumItem(
             string name,
             GalleryItemType type,
             DateTimeOffset date,

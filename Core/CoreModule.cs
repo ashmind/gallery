@@ -38,7 +38,7 @@ namespace AshMind.Web.Gallery.Core {
                    .As<ICommentRepository>()
                    .SingletonScoped();
 
-            builder.Register<FileSystem>()
+            builder.Register<IO.Implementation.FileSystem>()
                    .As<IFileSystem>()
                    .SingletonScoped();
 

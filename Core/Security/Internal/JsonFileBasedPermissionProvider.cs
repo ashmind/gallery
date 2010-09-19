@@ -30,9 +30,7 @@ namespace AshMind.Web.Gallery.Core.Metadata.Internal {
         }
 
         public IEnumerable<Permission> GetPermissions(string token) {
-            var securityFilePath = GetSecurityFileName(token);
-            var securityFile = fileSystem.GetFile(securityFilePath);
-
+            var securityFile = GetSecurityFile(token, true);
             if (securityFile == null)
                 return Enumerable.Empty<Permission>();
 
@@ -71,8 +69,7 @@ namespace AshMind.Web.Gallery.Core.Metadata.Internal {
         }
 
         public void SetPermissions(string token, IEnumerable<Permission> permissions) {
-            var securityFilePath = GetSecurityFileName(token);
-            var securityFile = this.fileSystem.GetFile(securityFilePath, nullUnlessExists : false);
+            var securityFile = GetSecurityFile(token, false);
 
             using (var md5 = MD5.Create()) {
                 var permissionSet = permissions.GroupBy(p => p.Action)
@@ -113,8 +110,8 @@ namespace AshMind.Web.Gallery.Core.Metadata.Internal {
             throw new NotSupportedException();
         }
 
-        private string GetSecurityFileName(string token) {
-            return fileSystem.BuildPath(token, ".album.security");
+        private IFile GetSecurityFile(string token, bool nullUnlessExists) {
+            return fileSystem.GetLocation(token).GetFile(".album.security", nullUnlessExists);
         }
     }
 }

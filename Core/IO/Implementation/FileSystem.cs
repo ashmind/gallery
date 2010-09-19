@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace AshMind.Web.Gallery.Core.IO {
+namespace AshMind.Web.Gallery.Core.IO.Implementation {
     internal class FileSystem : IFileSystem {
-        public IEnumerable<Location> GetLocations(string root) {
-            return Directory.GetDirectories(root, "*", SearchOption.AllDirectories)
+        public IEnumerable<ILocation> GetLocations(string root) {
+            return Directory.EnumerateDirectories(root, "*", SearchOption.AllDirectories)
                             .Select(GetLocation);
         }
 
-        public File GetFile(string path, bool nullUnlessExists = true) {
+        public IFile GetFile(string path, bool nullUnlessExists = true) {
             if (nullUnlessExists && !System.IO.File.Exists(path))
                 return null;
 
@@ -30,8 +30,8 @@ namespace AshMind.Web.Gallery.Core.IO {
             return Directory.Exists(path);
         }
 
-        public Location GetLocation(string path) {
-            return new Location(path);
+        public ILocation GetLocation(string path) {
+            return new Location(this, path);
         }
     }
 }

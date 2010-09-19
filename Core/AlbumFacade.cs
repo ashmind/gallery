@@ -60,14 +60,14 @@ namespace AshMind.Web.Gallery.Core {
             if (items.Length == 0)
                 return null;
 
-            return new Album(items) {
+            return new Album(location, items) {
                 ID   = idProvider.GetAlbumID(location),
                 Name = location.Name,
                 Date = items.Min(item => item.Date)
             };
         }
         
-        private IEnumerable<GalleryItem> GetItemsAtLocation(ILocation location, User user) {
+        private IEnumerable<AlbumItem> GetItemsAtLocation(ILocation location, User user) {
             return from file in location.GetFiles()
                    let itemType = GuessItemType.Of(file.Name)
                    where itemType == GalleryItemType.Image
@@ -76,7 +76,7 @@ namespace AshMind.Web.Gallery.Core {
                    select item;
         }
 
-        public GalleryItem GetItem(string albumID, string itemName, User user) {
+        public AlbumItem GetItem(string albumID, string itemName, User user) {
             var file = GetItemFile(albumID, itemName);
             var albumLocation = this.idProvider.GetAlbumLocation(albumID);
 
@@ -90,8 +90,8 @@ namespace AshMind.Web.Gallery.Core {
             return GetItem(file, type);
         }
 
-        private GalleryItem GetItem(IFile file, GalleryItemType itemType) {
-            return new GalleryItem(
+        private AlbumItem GetItem(IFile file, GalleryItemType itemType) {
+            return new AlbumItem(
                 file.Name,
                 itemType,
                 file.GetLastWriteTime(),
@@ -105,7 +105,7 @@ namespace AshMind.Web.Gallery.Core {
                 throw new InvalidOperationException(itemName + " is not a valid item name.");
 
             var location = this.idProvider.GetAlbumLocation(albumID);
-            return fileSystem.GetFile(fileSystem.BuildPath(location.Path, itemName));
+            return location.GetFile(itemName);
         }
 
         public Album GetAlbum(string albumID, User user) {
