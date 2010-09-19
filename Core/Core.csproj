@@ -92,9 +92,6 @@
     <Compile Include="Commenting\JsonCommentRepository.cs" />
     <Compile Include="ImageProcessing\ExifOrientationProvider.cs" />
     <Compile Include="ImageProcessing\ICacheDependencyProvider.cs" />
-    <Compile Include="ImageProcessing\ImageMetadataExtractor.cs" />
-    <Compile Include="ImageProcessing\ImageInfo.cs" />
-    <Compile Include="ImageProcessing\ImageMetadata.cs" />
     <Compile Include="Integration\Face.cs" />
     <Compile Include="Integration\IFaceProvider.cs" />
     <Compile Include="Integration\Person.cs" />

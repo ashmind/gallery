@@ -13,13 +13,11 @@ namespace AshMind.Web.Gallery.Core {
             string name,
             GalleryItemType type,
             DateTimeOffset date,
-            Func<int, ImageMetadata> getMetadata,
             Func<IList<Comment>> getComments
         ) {
             this.Name = name;
             this.Type = type;
             this.Date = date;
-            this.GetMetadata = getMetadata;
             this.lazyComments = new Lazy<IList<Comment>>(getComments);
         }
 
@@ -30,7 +28,5 @@ namespace AshMind.Web.Gallery.Core {
         public IList<Comment> Comments {
             get { return lazyComments.Value; }
         }
-
-        public Func<int, ImageMetadata> GetMetadata { get; private set; }
     }
 }

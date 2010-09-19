@@ -56,7 +56,6 @@ namespace AshMind.Web.Gallery.Core {
 
             builder.Register(c => new AlbumFacade(
                         this.albumPath,
-                        c.Resolve<PreviewFacade>(),
                         c.Resolve<IFileSystem>(),
                         c.Resolve<IAlbumIDProvider>(),
                         c.Resolve<AuthorizationService>(),

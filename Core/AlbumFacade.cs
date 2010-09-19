@@ -15,7 +15,6 @@ using AshMind.Web.Gallery.Core.Security;
 namespace AshMind.Web.Gallery.Core {
     public class AlbumFacade {
         private readonly IFileSystem fileSystem;
-        private readonly PreviewFacade preview;
         private readonly IAlbumIDProvider idProvider;
         private readonly AuthorizationService authorization;
         private readonly ICommentRepository commentRepository;
@@ -24,8 +23,7 @@ namespace AshMind.Web.Gallery.Core {
         internal string RootPath { private set; get; }
 
         internal AlbumFacade(
-            string rootPath,
-            PreviewFacade preview,            
+            string rootPath,       
             IFileSystem fileSystem,
             IAlbumIDProvider idProvider,
             AuthorizationService authorization,
@@ -35,7 +33,6 @@ namespace AshMind.Web.Gallery.Core {
             this.RootPath = rootPath;
 
             this.fileSystem = fileSystem;
-            this.preview = preview;
             this.idProvider = idProvider;
             this.authorization = authorization;
             this.commentRepository = commentRepository;
@@ -95,7 +92,6 @@ namespace AshMind.Web.Gallery.Core {
                 file.Name,
                 itemType,
                 file.GetLastWriteTime(),
-                size => this.preview.GetPreviewMetadata(file, size),
                 () => this.commentRepository.LoadCommentsOf(file.Path)
             );
         }

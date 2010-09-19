@@ -51,14 +51,6 @@ namespace AshMind.Web.Gallery.Core.ImageProcessing {
             return image;
         }
 
-        public static Size EstimateSize(ImageMetadata metadata, int desiredSize) {
-            var size = EstimateSize(new Size(metadata.Width, metadata.Height), desiredSize);
-            if (metadata.Orientation != null && flipsWidthHeight.Contains(metadata.Orientation.Value))
-                size = new Size(size.Height, size.Width);
-
-            return size;
-        }
-
         private static Size EstimateSize(Size size, int desiredSize) {
             var ratio = ((double)desiredSize / size.Width);
             return new Size(

@@ -38,18 +38,6 @@ namespace AshMind.Web.Gallery.Core {
                 }
             );
         }
-
-        public ImageMetadata GetPreviewMetadata(IFile originalFile, int size) {
-            return this.cache.GetMetadata(
-                originalFile,
-                () => {
-                    using (var stream = originalFile.Read(FileLockMode.Write)) {
-                        return ImageMetadataExtractor.ReadMetadata(stream);
-                    }
-                },
-                metadata => new ImageMetadata(ImageProcessor.EstimateSize(metadata, size))
-            );
-        }
         
         public string ImageMimeType {
             get { return this.cache.Format.MimeType; }

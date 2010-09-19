@@ -56,22 +56,7 @@ namespace AshMind.Web.Gallery.Core.ImageProcessing {
             var relatedChanges = this.dependencyProviders.SelectMany(p => p.GetRelatedChanges(imageFile));
             return relatedChanges.All(change => change < cacheLastWriteTime);
         }
-
-        public ImageMetadata GetMetadata(IFile image, Func<ImageMetadata> getMetadata, Func<ImageMetadata, ImageMetadata> adjustMetadata) {
-            var metadataFile = GetMetadataFile(image.Path);
-            var metadata = (ImageMetadata)null;
-
-            if (metadataFile.Exists)
-                metadata = LoadMetadata(metadataFile);
-
-            if (metadata == null) {
-                metadata = getMetadata();
-                SaveMetadata(metadataFile, metadata);
-            }
-
-            return adjustMetadata(metadata);
-        }
-        
+                
         private IFile CacheTransform(IFile imageFile, IFile cacheFile, Converter<Image, Image> transform) {
             using (var original = LoadOriginalImage(imageFile))
             using (var result = transform(original)) 
@@ -81,18 +66,6 @@ namespace AshMind.Web.Gallery.Core.ImageProcessing {
             }
 
             return cacheFile;
-        }
-
-        private void SaveMetadata(IFile metadataFile, ImageMetadata metadata) {
-            metadataFile.WriteAllText(
-                JsonConvert.SerializeObject(metadata)
-            );
-        }
-
-        private ImageMetadata LoadMetadata(IFile metadataFile) {
-            return JsonConvert.DeserializeObject<ImageMetadata>(
-                metadataFile.ReadAllText()
-            );
         }
 
         private Image LoadOriginalImage(IFile imageFile) {
@@ -109,11 +82,7 @@ namespace AshMind.Web.Gallery.Core.ImageProcessing {
             var cacheKey = this.GetCacheKey(imageFile.Path, size);
             return this.CacheRoot.GetFile(cacheKey, false);
         }
-
-        private IFile GetMetadataFile(string imagePath) {
-            return this.CacheRoot.GetFile(GetCacheKey(imagePath) + ".metadata", false);
-        }
-
+        
         private string GetCacheKey(string imagePath, int size) {
             return string.Format(
                 "{0}-x{1}.{2}",
