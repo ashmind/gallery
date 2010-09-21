@@ -29,8 +29,14 @@ namespace AshMind.Web.Gallery.Site.Controllers {
             this.userRepository = userRepository;
         }
 
-        public ActionResult Home(string album, int albumCount = 20) {
+        public ActionResult Home(string album, int albumCount = 20, string @as = null) {
             var user = GetCurrentUser();
+            if (@as != null) {
+                if (!this.authorization.IsAuthorized(user, SecurableAction.ManageSecurity, null))
+                    return new HttpUnauthorizedResult();
+
+                user = this.userRepository.Load(@as);
+            }
 
             if (Request.IsAjaxRequest())
                 return AjaxAlbum(album, user);

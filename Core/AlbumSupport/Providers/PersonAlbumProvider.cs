@@ -31,7 +31,7 @@ namespace AshMind.Web.Gallery.Core.AlbumSupport.Providers {
             var albumsCacheKey = "faces:all_albums";
             var cached = this.faceCache.Get(albumsCacheKey);
             if (cached != null)
-                return (Album[])cached;
+                return FilterByAuthorization((Album[])cached, user);
 
             var albums = (
                 from location in locations
