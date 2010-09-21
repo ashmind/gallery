@@ -1,6 +1,6 @@
-﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<Album>" %>
+﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<AlbumViewModel>" %>
 
-<% foreach (var item in Model.Items) { %>
+<% foreach (var item in Model.Album.Items.OrderBy(i => i.Date)) { %>
   <span class="item">
     <a rel="gallery-item"
        href="<%= Url.Action("Get", "Image", new { album = Model.ID, item = item.Name, size = ImageSize.Large.Name.ToLowerInvariant() }) %>"

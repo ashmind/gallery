@@ -6,8 +6,6 @@ using System.Text;
 
 namespace AshMind.Web.Gallery.Core.IO {
     public interface IFileSystem {
-        IEnumerable<ILocation> GetLocations(string root);        
-
         bool IsFileName(string pathOrFileName);
         
         string BuildPath(params string[] parts);

@@ -9,9 +9,9 @@ using AshMind.Extensions;
 using AshMind.Web.Gallery.Core;
 
 namespace AshMind.Web.Gallery.Site.Models {
-    public class AlbumListViewModel : PagedListViewModel<Album> {
+    public class AlbumListViewModel : PagedListViewModel<AlbumViewModel> {
         public AlbumListViewModel(
-            IList<Album> albums,
+            IList<AlbumViewModel> albums,
             int start,
             int? yearBeforeStart
         ) : base(albums, start) {

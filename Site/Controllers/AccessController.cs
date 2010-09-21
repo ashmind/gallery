@@ -96,7 +96,7 @@ namespace AshMind.Web.Gallery.Site.Controllers {
                 if (user == null)
                     return RedirectToAction("Login", new { error = "User is not known." });
 
-                FormsAuthentication.SetAuthCookie(user.Email, false);
+                FormsAuthentication.SetAuthCookie((string)this.userRepository.GetKey(user), false);
                 return Redirect(returnUrl);
             }
 

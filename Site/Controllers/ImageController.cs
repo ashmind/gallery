@@ -9,6 +9,7 @@ using System.Net.Mime;
 using AshMind.Web.Gallery.Core;
 using AshMind.Web.Gallery.Site.Models;
 using AshMind.Web.Gallery.Core.IO;
+using AshMind.Web.Gallery.Core.Security;
 
 namespace AshMind.Web.Gallery.Site.Controllers {
     [Authorize]
@@ -21,16 +22,19 @@ namespace AshMind.Web.Gallery.Site.Controllers {
 
         private readonly AlbumFacade gallery;
         private readonly PreviewFacade preview;
+        private readonly IRepository<User> userRepository;
 
-        public ImageController(AlbumFacade gallery, PreviewFacade preview) {
+        public ImageController(AlbumFacade gallery, PreviewFacade preview, IRepository<User> userRepository) {
             this.gallery = gallery;
             this.preview = preview;
+            this.userRepository = userRepository;
         }
 
         //[OutputCache(Duration = 60, VaryByParam = "*")]
         public ActionResult Get(string album, string item, string size) {
             var imageSize = ImageSize.Parse(size);
-            var file = this.gallery.GetItemFile(album, item);
+
+            var file = this.gallery.GetItem(album, item, this.userRepository.FindByEmail(User.Identity.Name)).File;
             if (imageSize != ImageSize.Original)
                 file = this.preview.GetPreview(file, imageSize.Size);
 

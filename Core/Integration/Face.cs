@@ -7,12 +7,15 @@ using AshMind.Web.Gallery.Core.IO;
 
 namespace AshMind.Web.Gallery.Core.Integration {
     public class Face {
-        public Face(Person person, AlbumItem item) {
+        public Face(Person person, IFile file) {
+            Argument.VerifyNotNull("person", person);
+            Argument.VerifyNotNull("file", file);
+
             this.Person = person;
-            this.Item = item;
+            this.File = file;
         }
 
-        public Person Person    { get; private set; }
-        public AlbumItem Item   { get; private set; }
+        public Person Person { get; private set; }
+        public IFile File    { get; private set; }
     }
 }

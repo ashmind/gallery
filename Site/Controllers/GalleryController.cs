@@ -35,32 +35,66 @@ namespace AshMind.Web.Gallery.Site.Controllers {
             if (Request.IsAjaxRequest())
                 return AjaxAlbum(album, user);
 
-            var albums = this.gallery.GetAlbums(user).Take(albumCount).ToArray();
-            var selected = albums.FirstOrDefault(f => f.ID == album);
+            var standardAlbums = this.GetStandardAlbums(user).Take(albumCount).ToArray();
+            var peopleAlbumsAndCurrentPerson = this.GetPeopleAlbumsAndCurrentUserAlbum(user);
+
+            var selected = standardAlbums.FirstOrDefault(f => f.ID == album)
+                        ?? peopleAlbumsAndCurrentPerson.Item1.FirstOrDefault(f => f.ID == album);
+
+            if (selected == null && peopleAlbumsAndCurrentPerson.Item2.ID == album)
+                selected = peopleAlbumsAndCurrentPerson.Item2;
 
             return View(new GalleryViewModel(
-                new AlbumListViewModel(albums, 0, null),
-                ToViewModel(selected))
-            );
+                peopleAlbumsAndCurrentPerson.Item2,
+                peopleAlbumsAndCurrentPerson.Item1,
+                new AlbumListViewModel(standardAlbums, 0, null),
+                selected != null ? ToViewModel(selected.Album, true) : null
+            ));
         }
 
         private ActionResult AjaxAlbum(string albumID, User user) {
             var album = this.gallery.GetAlbum(albumID, user) ?? Album.Empty;
-            return PartialView("Album", ToViewModel(album));
+            return PartialView("Album", ToViewModel(album, true));
         }
 
         public ActionResult AlbumNames(int start, int count) {
             var user = GetCurrentUser();
-            var albums = this.gallery.GetAlbums(user).Skip(start).Take(count + 1).ToArray();
+            var albums = GetStandardAlbums(user)
+                                     .Skip(start).Take(count + 1)
+                                     .ToArray();
 
             return PartialView(new GalleryViewModel(
+                null,
+                new AlbumViewModel[0],
                 new AlbumListViewModel(
                     count > 0 ? albums.Skip(1).ToArray() : albums,
                     start,
-                    count > 0 ? (int?)albums[0].Date.Year : null
+                    count > 0 ? (int?)albums[0].Album.Date.Year : null
                 ),
                 null
             ));
+        }
+
+        private IEnumerable<AlbumViewModel> GetStandardAlbums(User user) {
+            return this.gallery.GetAlbums(AlbumProviderKeys.Default, user)
+                               .OrderByDescending(a => a.Date)
+                               .Select(a => ToViewModel(a, false));
+        }
+
+        private Tuple<IList<AlbumViewModel>, AlbumViewModel> GetPeopleAlbumsAndCurrentUserAlbum(User user) {
+            var personAlbums = this.gallery.GetAlbums(AlbumProviderKeys.People, user)
+                                           .OrderBy(p => p.Name)
+                                           .Select(a => ToViewModel(a, false))
+                                           .ToList();
+
+            var indexOfUserAlbum = personAlbums.FindIndex(m => m.Album.Descriptor.ProviderSpecificPath == user.Email);
+            var userAlbum = (AlbumViewModel)null;
+            if (indexOfUserAlbum >= 0) {
+                userAlbum = personAlbums[indexOfUserAlbum];
+                personAlbums.RemoveAt(indexOfUserAlbum);
+            }
+
+            return new Tuple<IList<AlbumViewModel>, AlbumViewModel>(personAlbums, userAlbum);
         }
 
         public new ActionResult View(string album, string item) {
@@ -73,7 +107,7 @@ namespace AshMind.Web.Gallery.Site.Controllers {
 
         public ActionResult Comment(string album, string item, string comment) {
             var author = GetCurrentUser();
-            var path = this.gallery.GetItemFile(album, item).Path;
+            var path = this.gallery.GetItem(album, item, author).File.Path;
             commentRepository.SaveComment(
                 path, new Comment(author, DateTimeOffset.Now, comment)
             );
@@ -85,16 +119,17 @@ namespace AshMind.Web.Gallery.Site.Controllers {
             return this.userRepository.FindByEmail(User.Identity.Name);
         }
 
-        private AlbumViewModel ToViewModel(Album album) {
+        private AlbumViewModel ToViewModel(Album album, bool manageSecurity) {
             if (album == null)
                 return null;
 
-            if (!authorization.IsAuthorized(GetCurrentUser(), SecurableAction.ManageSecurity, null))
-                return new AlbumViewModel(album);
+            var id = this.gallery.GetAlbumID(album);
+            if (!manageSecurity || !authorization.IsAuthorized(GetCurrentUser(), SecurableAction.ManageSecurity, null))
+                return new AlbumViewModel(album, id);
 
-            var token = this.gallery.GetAlbumToken(album.ID);
+            var token = this.gallery.GetAlbumToken(id);
             return new AlbumViewModel(
-                album, true, (
+                album, id, true, (
                     from @group in this.authorization.GetAuthorizedTo(SecurableAction.View, token)
                     select new UserGroupViewModel(@group)
                 ).ToList()

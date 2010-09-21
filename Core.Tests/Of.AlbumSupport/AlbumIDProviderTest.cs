@@ -16,15 +16,15 @@ namespace AshMind.Web.Gallery.Core.Tests.Of.AlbumSupport {
         [Test]
         public void TestGetAlbumIDIsConsistent() {
             var idmap = new MemoryFile();
-            
-            var albumPath = "testpath";
+
+            var testDescriptor = new AlbumDescriptor("testKey", "testPath");
 
             var firstProvider = CreateProvider(idmap);
-            var id = firstProvider.GetAlbumID(new MemoryLocation { Path = albumPath });
+            var id = firstProvider.GetAlbumID("test", testDescriptor);
             var secondProvider = CreateProvider(idmap);
-            var result = secondProvider.GetAlbumLocation(id);
+            var resultDescriptor = secondProvider.GetAlbumDescriptor(id);
 
-            Assert.AreEqual(albumPath, result.Path);
+            Assert.AreEqual(testDescriptor, resultDescriptor);
         }
 
         private AlbumIDProvider CreateProvider(IFile idmap) {

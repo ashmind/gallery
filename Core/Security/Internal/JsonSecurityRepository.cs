@@ -18,7 +18,6 @@ namespace AshMind.Web.Gallery.Core.Security.Internal {
 
             public IList<User> Users              { get; private set; }
             public IList<UserGroup> Groups        { get; private set; }
-            public IList<Permission> Permissions  { get; private set; }
         }
 
         #endregion
@@ -43,9 +42,25 @@ namespace AshMind.Web.Gallery.Core.Security.Internal {
         public IQueryable<User> Query() {
             return this.store.Users.AsQueryable();
         }
+                
+        public object GetKey(User user) {
+            return user.Email;
+        }
+
+        public User Load(object key) {
+            return this.store.Users.SingleOrDefault(u => u.Email == (string)key);
+        }
 
         IQueryable<UserGroup> IRepository<UserGroup>.Query() {
             return this.store.Groups.AsQueryable();
+        }
+
+        object IRepository<UserGroup>.GetKey(UserGroup entity) {
+            return entity.Name;
+        }
+
+        UserGroup IRepository<UserGroup>.Load(object key) {
+            return this.store.Groups.SingleOrDefault(g => g.Name == (string)key);
         }
     }
 }

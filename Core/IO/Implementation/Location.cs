@@ -10,6 +10,11 @@ namespace AshMind.Web.Gallery.Core.IO.Implementation {
             this.Path = path;            
         }
 
+        public IEnumerable<ILocation> GetLocations(bool recursive) {
+            return Directory.EnumerateDirectories(this.Path, "*", recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
+                            .Select(GetLocation);
+        }
+
         public IEnumerable<IFile> GetFiles() {
             return Directory.EnumerateFiles(this.Path)
                             .Select(name => new File(name, this));
@@ -21,6 +26,11 @@ namespace AshMind.Web.Gallery.Core.IO.Implementation {
                 return null;
 
             return new File(path, this);
+        }
+
+        public ILocation GetLocation(string name) {
+            var path = System.IO.Path.Combine(this.Path, name);
+            return new Location(path);
         }
 
         public bool IsHidden() {

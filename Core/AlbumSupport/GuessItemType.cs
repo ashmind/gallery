@@ -4,27 +4,23 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace AshMind.Web.Gallery.Core.AlbumSupport
-{
-    internal static class GuessItemType
-    {
-        private static class FileExtensions
-        {
-            public static readonly HashSet<string> OfVideo = new HashSet<string> { ".mov", ".avi", ".mpg" };
-            public static readonly HashSet<string> OfImage = new HashSet<string> { ".jpg", ".jpeg", ".png", ".gif" };
+namespace AshMind.Web.Gallery.Core.AlbumSupport {
+    internal static class GuessItemType {
+        private static class FileExtensions {
+            public static readonly HashSet<string> OfVideo = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase) { ".mov", ".avi", ".mpg" };
+            public static readonly HashSet<string> OfImage = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase) { ".jpg", ".jpeg", ".png", ".gif" };
         }
 
-        public static GalleryItemType Of(string path)
-        {
-            string extension = Path.GetExtension(path);
+        public static AlbumItemType Of(string path) {
+            var extension = Path.GetExtension(path);
 
-            if (FileExtensions.OfVideo.Contains(extension, StringComparer.InvariantCultureIgnoreCase))
-                return GalleryItemType.Video;
+            if (FileExtensions.OfVideo.Contains(extension))
+                return AlbumItemType.Video;
 
-            if (FileExtensions.OfImage.Contains(extension, StringComparer.InvariantCultureIgnoreCase))
-                return GalleryItemType.Image;
+            if (FileExtensions.OfImage.Contains(extension))
+                return AlbumItemType.Image;
 
-            return GalleryItemType.Unknown;
+            return AlbumItemType.Unknown;
         }
     }
 }

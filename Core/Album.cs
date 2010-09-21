@@ -5,6 +5,8 @@ using System.Text;
 using System.Collections.ObjectModel;
 
 using AshMind.Extensions;
+
+using AshMind.Web.Gallery.Core.AlbumSupport;
 using AshMind.Web.Gallery.Core.IO;
 
 namespace AshMind.Web.Gallery.Core {
@@ -12,18 +14,19 @@ namespace AshMind.Web.Gallery.Core {
         public static Album Empty { get; private set; }
 
         static Album() {
-            Empty = new Album(null, new AlbumItem[0]);
+            Empty = new Album(new AlbumDescriptor("", ""), "", new AlbumItem[0]);
         }
 
-        internal Album(ILocation location, IList<AlbumItem> items) {
-            this.Location = location;
+        public Album(AlbumDescriptor descriptor, string name, IList<AlbumItem> items) {
+            this.Descriptor = descriptor;
+            this.Name = name;
             this.Items = items.AsReadOnly();
+            this.Date = items.Min(i => (DateTimeOffset?)i.Date) ?? DateTime.Now;
         }
 
-        public string ID                           { get; internal set; }
-        public string Name                         { get; internal set; }
-        public ILocation Location                  { get; private set; }
-        public DateTimeOffset Date                 { get; internal set; }
+        public AlbumDescriptor Descriptor          { get; private set; }
+        public string Name                         { get; private set; }
+        public DateTimeOffset Date                 { get; private set; }
         public ReadOnlyCollection<AlbumItem> Items { get; private set; }
     }
 }

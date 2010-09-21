@@ -6,11 +6,6 @@ using System.IO;
 
 namespace AshMind.Web.Gallery.Core.IO.Implementation {
     internal class FileSystem : IFileSystem {
-        public IEnumerable<ILocation> GetLocations(string root) {
-            return Directory.EnumerateDirectories(root, "*", SearchOption.AllDirectories)
-                            .Select(GetLocation);
-        }
-
         public IFile GetFile(string path, bool nullUnlessExists = true) {
             return this.GetLocation(Path.GetDirectoryName(path))
                        .GetFile(Path.GetFileName(path), nullUnlessExists);

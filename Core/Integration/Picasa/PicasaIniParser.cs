@@ -58,7 +58,11 @@ namespace AshMind.Web.Gallery.Core.Integration.Picasa {
 
         private void MoveOverItem(PicasaIni ini, string firstLine, IEnumerator<string> linesIterator, out bool linesIteratorEnded) {
             var fileName = firstLine.RemoveStart("[").RemoveEnd("]");
-            var metadata = new PicasaIniMetadata();
+            var metadata = ini.Items.GetValueOrDefault(fileName);
+            if (metadata == null) {
+                metadata = new PicasaIniMetadata();
+                ini.Items.Add(fileName, metadata);
+            }
 
             MoveOver(linesIterator, line => {
                 if (line.StartsWith("rotate=")) {
@@ -67,13 +71,12 @@ namespace AshMind.Web.Gallery.Core.Integration.Picasa {
                 }
                 else if (line.StartsWith("faces=")) {
                     var faces = line.SubstringAfter("faces=").Split(';');
+                    metadata.Faces.Clear();
                     foreach (var face in faces) {
                         metadata.Faces.Add(new PicasaIniFace(face.SubstringAfter(",")));
                     }
                 }
-            }, out linesIteratorEnded);
-
-            ini.Items.Add(fileName, metadata);
+            }, out linesIteratorEnded);            
         }
 
         private void MoveOver(IEnumerator<string> linesIterator, Action<string> action, out bool linesIteratorEnded) {

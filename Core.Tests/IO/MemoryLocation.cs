@@ -33,6 +33,10 @@ namespace AshMind.Web.Gallery.Core.Tests.IO {
             return file;
         }
 
+        public ILocation GetLocation(string path) {
+            return new MemoryLocation { Path = this.Path + "/" + path };
+        }
+
         public IEnumerable<IFile> GetFiles() {
             return this.files.Values;
         }
@@ -50,6 +54,10 @@ namespace AshMind.Web.Gallery.Core.Tests.IO {
         
         IEnumerator IEnumerable.GetEnumerator() {
             return this.files.GetEnumerator();
+        }
+        
+        public IEnumerable<ILocation> GetLocations(bool recursive) {
+            throw new NotImplementedException();
         }
     }
 }

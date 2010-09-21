@@ -113,10 +113,13 @@ namespace AshMind.Web.Gallery.Site {
             var albumsRoot = ConfigurationManager.AppSettings["Albums"]
                           ?? Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
 
+            var localAppDataPath = ConfigurationManager.AppSettings["LocalAppData"]
+                                ?? Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
             var dataRoot = Path.Combine(Server.MapPath("~"), ".Store");
             Directory.CreateDirectory(dataRoot);
 
-            builder.RegisterModule(new CoreModule(albumsRoot, dataRoot));
+            builder.RegisterModule(new CoreModule(albumsRoot, dataRoot, localAppDataPath));
             builder.RegisterModule(new WebModule());
 
             containerProvider = new ContainerProvider(builder.Build());

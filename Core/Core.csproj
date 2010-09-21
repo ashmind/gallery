@@ -72,6 +72,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -85,11 +86,17 @@
     <Compile Include="Album.cs" />
     <Compile Include="AlbumItem.cs" />
     <Compile Include="AlbumItemType.cs" />
+    <Compile Include="AlbumProviderKeys.cs" />
+    <Compile Include="AlbumSupport\AlbumDescriptor.cs" />
+    <Compile Include="AlbumSupport\AlbumItemFactory.cs" />
+    <Compile Include="AlbumSupport\Providers\FileSystemAlbumProvider.cs" />
     <Compile Include="AlbumSupport\HiddenAlbumFilter.cs" />
     <Compile Include="AlbumSupport\IAlbumFilter.cs" />
+    <Compile Include="AlbumSupport\Providers\PersonAlbumProvider.cs" />
     <Compile Include="Comment.cs" />
     <Compile Include="Commenting\ICommentRepository.cs" />
     <Compile Include="Commenting\JsonCommentRepository.cs" />
+    <Compile Include="AlbumSupport\IAlbumProvider.cs" />
     <Compile Include="ImageProcessing\ExifOrientationProvider.cs" />
     <Compile Include="ImageProcessing\ICacheDependencyProvider.cs" />
     <Compile Include="Integration\Face.cs" />
@@ -97,6 +104,7 @@
     <Compile Include="Integration\Person.cs" />
     <Compile Include="Integration\Picasa\IniParts\PicasaIniFace.cs" />
     <Compile Include="Integration\Picasa\IniParts\PicasaIniMetadata.cs" />
+    <Compile Include="Integration\Picasa\PicasaDatabase.cs" />
     <Compile Include="Integration\Picasa\PicasaFaceProvider.cs" />
     <Compile Include="Integration\Picasa\PicasaIni.cs" />
     <Compile Include="Integration\Picasa\PicasaIniDependencyProvider.cs" />

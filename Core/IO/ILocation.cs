@@ -6,6 +6,10 @@ using System.Text;
 namespace AshMind.Web.Gallery.Core.IO {
     public interface ILocation : IFileSystemElement {
         IFile GetFile(string name, bool nullUnlessExists = true);
-        IEnumerable<IFile> GetFiles();
+
+        ILocation GetLocation(string path);
+        IEnumerable<ILocation> GetLocations(bool recursive);
+
+        IEnumerable<IFile> GetFiles();        
     }
 }

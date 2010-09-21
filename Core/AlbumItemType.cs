@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AshMind.Web.Gallery.Core
 {
-    public enum GalleryItemType
+    public enum AlbumItemType
     {
         Unknown,
         Image,
