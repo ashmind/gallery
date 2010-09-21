@@ -45,7 +45,7 @@ namespace AshMind.Web.Gallery.Core.AlbumSupport {
             if (pair != null)
                 return pair.Value.Key;
 
-            var id = Regex.Replace(name, @"[\s'""]", "_");
+            var id = Regex.Replace(name, @"(:?[\s'""]|:)", "_");
             if (this.idMap.TryAdd(id, descriptor))
                 this.idMapFile.AppendAllText(id + "\t" + descriptor.ProviderKey + "\t" + descriptor.ProviderSpecificPath + Environment.NewLine);
 

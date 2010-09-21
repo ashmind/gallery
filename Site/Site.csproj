@@ -137,6 +137,7 @@
   <ItemGroup>
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Views\Gallery\StandardAlbumNames.ascx" />
     <Content Include="Views\Shared\AlbumVisibleTo.ascx" />
     <Content Include="Views\Access\GrantForm.ascx" />
     <Content Include="Views\Access\Login.aspx" />

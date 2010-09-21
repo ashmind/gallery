@@ -18,7 +18,7 @@ namespace AshMind.Web.Gallery.Core.Security {
             this.providers = providers;
         }
         
-        public IEnumerable<IUserGroup> GetAuthorizedTo(SecurableAction action, string target) {
+        public IEnumerable<IUserGroup> GetAuthorizedTo(SecurableAction action, object target) {
             foreach (var group in superGroups) {
                 yield return group;
             }
@@ -28,6 +28,7 @@ namespace AshMind.Web.Gallery.Core.Security {
             
             var otherGroups = (
                 from provider in this.providers
+                where provider.CanGetOrSetPermissions(target)
                 from permission in provider.GetPermissions(target)
                 where permission.Action == action
                     && !superGroups.Contains(permission.Group)
@@ -39,25 +40,23 @@ namespace AshMind.Web.Gallery.Core.Security {
             }
         }
 
-        public bool IsAuthorized(User user, SecurableAction action, string target) {
+        public bool IsAuthorized(User user, SecurableAction action, object target) {
             return GetAuthorizedTo(action, target)
-                        .Any(g => g.GetUsers().Contains(user));
+                        .Any(g => g.GetUsers().Contains(user)) || user.IsSystem;
         }
 
-        public void MakeAuthorizedTo(SecurableAction action, string token, IEnumerable<IUserGroup> userGroups) {
+        public void MakeAuthorizedTo(SecurableAction action, object target, IEnumerable<IUserGroup> userGroups) {
             var permissions = userGroups.Select(group => new Permission {
                 Action = action,
                 Group = group
             });
 
-            var provider = this.providers.FirstOrDefault(
-                p => p.CanSetPermissions(token)
-            );
+            var provider = this.providers.FirstOrDefault(p => p.CanGetOrSetPermissions(target));
 
             if (provider == null)
                 throw new NotSupportedException();
 
-            provider.SetPermissions(token, permissions);
+            provider.SetPermissions(target, permissions);
         }
     }
 }

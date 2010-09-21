@@ -27,7 +27,7 @@ namespace AshMind.Web.Gallery.Core.Tests.IO {
             throw new NotImplementedException();
         }
 
-        public ILocation GetLocation(string path) {
+        public ILocation GetLocation(string path, ActionIfMissing actionIfMissing) {
             return new MemoryLocation { Path = path };
         }
     }

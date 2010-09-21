@@ -27,6 +27,9 @@ namespace AshMind.Web.Gallery.Core.Integration.Picasa {
         }
 
         private IDictionary<ContactKey, Person> LoadContacts(IFile contactsFile) {
+            if (contactsFile == null)
+                return new Dictionary<ContactKey, Person>();
+
             var contactsContent = contactsFile.ReadAllText();
             var contactPairs = (
                 from element in XDocument.Parse(contactsContent).Descendants("contact")
@@ -46,6 +49,9 @@ namespace AshMind.Web.Gallery.Core.Integration.Picasa {
         }
 
         public IEnumerable<Face> GetFaces(ILocation location) {
+            if (this.contacts.Count == 0) // contacts.xml not loaded for some reason
+                yield break;
+
             var ini = this.iniFileFinder.FindIn(location);
             if (ini == null)
                 yield break;

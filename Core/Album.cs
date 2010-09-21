@@ -14,17 +14,19 @@ namespace AshMind.Web.Gallery.Core {
         public static Album Empty { get; private set; }
 
         static Album() {
-            Empty = new Album(new AlbumDescriptor("", ""), "", new AlbumItem[0]);
+            Empty = new Album(new AlbumDescriptor("", ""), "", new AlbumItem[0], null);
         }
 
-        public Album(AlbumDescriptor descriptor, string name, IList<AlbumItem> items) {
+        public Album(AlbumDescriptor descriptor, string name, IList<AlbumItem> items, object securableToken) {
             this.Descriptor = descriptor;
             this.Name = name;
             this.Items = items.AsReadOnly();
+            this.SecurableToken = securableToken;
             this.Date = items.Min(i => (DateTimeOffset?)i.Date) ?? DateTime.Now;
         }
 
         public AlbumDescriptor Descriptor          { get; private set; }
+        public object SecurableToken               { get; private set; }
         public string Name                         { get; private set; }
         public DateTimeOffset Date                 { get; private set; }
         public ReadOnlyCollection<AlbumItem> Items { get; private set; }

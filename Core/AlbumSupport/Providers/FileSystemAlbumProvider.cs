@@ -35,7 +35,7 @@ namespace AshMind.Web.Gallery.Core.AlbumSupport.Providers {
         }
 
         private Album GetAlbumAtLocation(ILocation location, User user) {
-            if (!authorization.IsAuthorized(user, SecurableAction.View, location.Path))
+            if (!authorization.IsAuthorized(user, SecurableAction.View, location))
                 return null;
 
             var items = this.GetItemsAtLocation(location, user).ToArray();
@@ -44,7 +44,8 @@ namespace AshMind.Web.Gallery.Core.AlbumSupport.Providers {
 
             return new Album(
                 new AlbumDescriptor(this.ProviderKey, location.Path),
-                location.Name, items
+                location.Name, items,
+                location
             );
         }
 
@@ -55,7 +56,7 @@ namespace AshMind.Web.Gallery.Core.AlbumSupport.Providers {
                    let item = this.itemFactory.CreateFrom(file, itemType)
                    select item;
         }
-
+        
         public string ProviderKey {
             get { return AlbumProviderKeys.Default; }
         }

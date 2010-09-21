@@ -13,24 +13,21 @@ using AshMind.Web.Gallery.Core.IO;
 using AshMind.Web.Gallery.Core.Security;
 using System.IO;
 
-namespace AshMind.Web.Gallery.Core.Metadata.Internal {
-    internal class JsonFileBasedFilePermissionProvider : IPermissionProvider {
-        private readonly IFileSystem fileSystem;
+namespace AshMind.Web.Gallery.Core.Security.Internal {
+    internal class JsonLocationPermissionProvider : AbstractPermissionProvider<ILocation> {
         private readonly IRepository<User> userRepository;
         private readonly IRepository<UserGroup> groupRepository;
 
-        public JsonFileBasedFilePermissionProvider(
-            IFileSystem fileSystem,
+        public JsonLocationPermissionProvider(
             IRepository<User> userRepository,
             IRepository<UserGroup> groupRepository
         ) {
-            this.fileSystem = fileSystem;
             this.userRepository = userRepository;
             this.groupRepository = groupRepository;
         }
 
-        public IEnumerable<Permission> GetPermissions(string token) {
-            var securityFile = GetSecurityFile(token, true);
+        public override IEnumerable<Permission> GetPermissions(ILocation location) {
+            var securityFile = GetSecurityFile(location, true);
             if (securityFile == null)
                 return Enumerable.Empty<Permission>();
 
@@ -64,12 +61,8 @@ namespace AshMind.Web.Gallery.Core.Metadata.Internal {
             }
         }
        
-        public bool CanSetPermissions(string token) {
-            return this.fileSystem.IsLocation(token);
-        }
-
-        public void SetPermissions(string token, IEnumerable<Permission> permissions) {
-            var securityFile = GetSecurityFile(token, false);
+        public override void SetPermissions(ILocation location, IEnumerable<Permission> permissions) {
+            var securityFile = GetSecurityFile(location, false);
 
             using (var md5 = MD5.Create()) {
                 var permissionSet = permissions.GroupBy(p => p.Action)
@@ -110,8 +103,8 @@ namespace AshMind.Web.Gallery.Core.Metadata.Internal {
             throw new NotSupportedException();
         }
 
-        private IFile GetSecurityFile(string token, bool nullUnlessExists) {
-            return fileSystem.GetLocation(token).GetFile(".album.security", nullUnlessExists);
+        private IFile GetSecurityFile(ILocation location, bool nullUnlessExists) {
+            return location.GetFile(".album.security", nullUnlessExists);
         }
     }
 }

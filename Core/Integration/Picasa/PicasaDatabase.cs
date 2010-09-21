@@ -7,9 +7,8 @@ using AshMind.Web.Gallery.Core.IO;
 
 namespace AshMind.Web.Gallery.Core.Integration.Picasa {
     public class PicasaDatabase {
-        public PicasaDatabase(ILocation localAppData) {
-            var root = localAppData.GetLocation("Google").GetLocation("Picasa2");
-            this.ContactsXml = root.GetLocation("contacts").GetFile("contacts.xml");
+        public PicasaDatabase(IFile contactsXml) {
+            this.ContactsXml = contactsXml;
         }
 
         public IFile ContactsXml { get; private set; }

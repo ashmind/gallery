@@ -23,7 +23,19 @@ namespace AshMind.Web.Gallery.Core.IO.Implementation {
             return Directory.Exists(path);
         }
 
-        public ILocation GetLocation(string path) {
+        public ILocation GetLocation(string path, ActionIfMissing actionIfMissing = ActionIfMissing.ThrowException) {
+            if (!Directory.Exists(path) && actionIfMissing != ActionIfMissing.ReturnAsIs) {
+                if (actionIfMissing == ActionIfMissing.CreateNew) {
+                    Directory.CreateDirectory(path);
+                }
+                else if (actionIfMissing == ActionIfMissing.ReturnNull) {
+                    return null;
+                }
+                else if (actionIfMissing == ActionIfMissing.ThrowException) {
+                    throw new FileNotFoundException("Location was not found.", path);
+                }
+            }
+
             return new Location(path);
         }
     }

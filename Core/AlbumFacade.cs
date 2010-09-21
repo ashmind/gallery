@@ -21,7 +21,7 @@ namespace AshMind.Web.Gallery.Core {
 
         internal ILocation Root { private set; get; }
 
-        internal AlbumFacade(
+        public AlbumFacade(
             ILocation root,
             IAlbumIDProvider idProvider,
             IAlbumProvider[] albumProviders,
@@ -58,10 +58,6 @@ namespace AshMind.Web.Gallery.Core {
             var provider = this.albumProviders[descriptor.ProviderKey];
 
             return provider.GetAlbum(GetAlbumLocations(), descriptor.ProviderSpecificPath, user);
-        }
-
-        public string GetAlbumToken(string albumID) {
-            return this.idProvider.GetAlbumDescriptor(albumID).ProviderSpecificPath;
         }
     }
 }

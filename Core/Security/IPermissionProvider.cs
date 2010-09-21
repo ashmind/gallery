@@ -5,9 +5,9 @@ using System.Text;
 
 namespace AshMind.Web.Gallery.Core.Security {
     public interface IPermissionProvider {
-        IEnumerable<Permission> GetPermissions(string token);
+        bool CanGetOrSetPermissions(object target);
 
-        bool CanSetPermissions(string token);
-        void SetPermissions(string token, IEnumerable<Permission> permissions);
+        IEnumerable<Permission> GetPermissions(object target);
+        void SetPermissions(object target, IEnumerable<Permission> permissions);
     }
 }

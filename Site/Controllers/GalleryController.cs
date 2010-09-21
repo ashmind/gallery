@@ -37,16 +37,18 @@ namespace AshMind.Web.Gallery.Site.Controllers {
 
             var standardAlbums = this.GetStandardAlbums(user).Take(albumCount).ToArray();
             var peopleAlbumsAndCurrentPerson = this.GetPeopleAlbumsAndCurrentUserAlbum(user);
+            var peopleAlbums = peopleAlbumsAndCurrentPerson.Item1;
+            var currentUserAlbum = peopleAlbumsAndCurrentPerson.Item2;
 
             var selected = standardAlbums.FirstOrDefault(f => f.ID == album)
-                        ?? peopleAlbumsAndCurrentPerson.Item1.FirstOrDefault(f => f.ID == album);
+                        ?? peopleAlbums.FirstOrDefault(f => f.ID == album);
 
-            if (selected == null && peopleAlbumsAndCurrentPerson.Item2.ID == album)
-                selected = peopleAlbumsAndCurrentPerson.Item2;
+            if (selected == null && currentUserAlbum != null && currentUserAlbum.ID == album)
+                selected = currentUserAlbum;
 
             return View(new GalleryViewModel(
-                peopleAlbumsAndCurrentPerson.Item2,
-                peopleAlbumsAndCurrentPerson.Item1,
+                currentUserAlbum,
+                peopleAlbums,
                 new AlbumListViewModel(standardAlbums, 0, null),
                 selected != null ? ToViewModel(selected.Album, true) : null
             ));
@@ -57,7 +59,7 @@ namespace AshMind.Web.Gallery.Site.Controllers {
             return PartialView("Album", ToViewModel(album, true));
         }
 
-        public ActionResult AlbumNames(int start, int count) {
+        public ActionResult StandardAlbumNames(int start, int count) {
             var user = GetCurrentUser();
             var albums = GetStandardAlbums(user)
                                      .Skip(start).Take(count + 1)
@@ -116,7 +118,7 @@ namespace AshMind.Web.Gallery.Site.Controllers {
         }
 
         private User GetCurrentUser() {
-            return this.userRepository.FindByEmail(User.Identity.Name);
+            return this.userRepository.Load(User.Identity.Name);
         }
 
         private AlbumViewModel ToViewModel(Album album, bool manageSecurity) {
@@ -124,13 +126,13 @@ namespace AshMind.Web.Gallery.Site.Controllers {
                 return null;
 
             var id = this.gallery.GetAlbumID(album);
-            if (!manageSecurity || !authorization.IsAuthorized(GetCurrentUser(), SecurableAction.ManageSecurity, null))
+            var user = GetCurrentUser();
+            if (!manageSecurity || !authorization.IsAuthorized(user, SecurableAction.ManageSecurity, null))
                 return new AlbumViewModel(album, id);
 
-            var token = this.gallery.GetAlbumToken(id);
             return new AlbumViewModel(
                 album, id, true, (
-                    from @group in this.authorization.GetAuthorizedTo(SecurableAction.View, token)
+                    from @group in this.authorization.GetAuthorizedTo(SecurableAction.View, album.SecurableToken)
                     select new UserGroupViewModel(@group)
                 ).ToList()
             );

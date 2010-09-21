@@ -7,7 +7,7 @@ using AshMind.Web.Gallery.Core.IO;
 
 namespace AshMind.Web.Gallery.Core.AlbumSupport
 {
-    internal interface IAlbumIDProvider {
+    public interface IAlbumIDProvider {
         string GetAlbumID(string name, AlbumDescriptor descriptor);
         AlbumDescriptor GetAlbumDescriptor(string albumID);
     }

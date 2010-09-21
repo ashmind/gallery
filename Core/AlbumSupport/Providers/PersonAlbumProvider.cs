@@ -12,15 +12,18 @@ namespace AshMind.Web.Gallery.Core.AlbumSupport.Providers {
     public class PersonAlbumProvider : IAlbumProvider {
         private readonly AlbumItemFactory itemFactory;
         private readonly IFaceProvider[] faceProviders;
+        private readonly AuthorizationService authorization;
         private readonly ObjectCache faceCache;
 
         public PersonAlbumProvider(
             AlbumItemFactory itemFactory,
             IFaceProvider[] faceProviders,
+            AuthorizationService authorization,
             ObjectCache faceCache
         ) {
             this.itemFactory = itemFactory;
             this.faceProviders = faceProviders;
+            this.authorization = authorization;
             this.faceCache = faceCache;
         }
 
@@ -34,15 +37,17 @@ namespace AshMind.Web.Gallery.Core.AlbumSupport.Providers {
                 from location in locations
                 from face in GetFaces(location)
                 group face by face.Person into personFaces
+                let uniqueKey = personFaces.Key.Email ?? personFaces.Key.Name
                 select new Album(
-                    new AlbumDescriptor(this.ProviderKey, personFaces.Key.Email ?? personFaces.Key.Name),
+                    new AlbumDescriptor(this.ProviderKey, uniqueKey),
                     personFaces.Key.Name,
                     (
                         from face in personFaces
                         let itemType = GuessItemType.Of(face.File.Name)
                         where itemType == AlbumItemType.Image
                         select this.itemFactory.CreateFrom(face.File, itemType)
-                    ).ToList()
+                    ).ToList(),
+                    new SecurableUniqueKey(uniqueKey)
                 )
             ).ToArray();
 
@@ -50,11 +55,25 @@ namespace AshMind.Web.Gallery.Core.AlbumSupport.Providers {
                 AbsoluteExpiration = DateTimeOffset.Now.AddDays(3)
             });
 
-            return albums;
+            return FilterByAuthorization(albums, user);
         }
 
         public Album GetAlbum(IEnumerable<ILocation> locations, string providerSpecificPath, User user) {
             return this.GetAllAlbums(locations, user).Single(a => a.Descriptor.ProviderSpecificPath == providerSpecificPath);
+        }
+
+        private IEnumerable<Album> FilterByAuthorization(IEnumerable<Album> albums, User user) {
+            return albums.Where(
+                album => album.Descriptor.ProviderSpecificPath == user.Email
+                      || IsAuthorizedTo(album, user)
+            );
+        }
+
+        private bool IsAuthorizedTo(Album album, User user) {
+            return this.authorization.IsAuthorized(
+                user, SecurableAction.View,
+                new SecurableUniqueKey(album.Descriptor.ProviderSpecificPath)
+            );
         }
 
         private IEnumerable<Face> GetFaces(ILocation location) {

@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 
 using Newtonsoft.Json;
 
+using AshMind.Extensions;
+
+using AshMind.Web.Gallery.Core.IO;
+
 namespace AshMind.Web.Gallery.Core.Security.Internal {
-    internal class JsonSecurityRepository : IRepository<User>, IRepository<UserGroup> {
+    internal class JsonSecurityRepository : IRepository<User>, IRepository<UserGroup>, IRepository<IUserGroup> {
         #region UserStore class
 
         private class UserStore {
@@ -22,20 +26,20 @@ namespace AshMind.Web.Gallery.Core.Security.Internal {
 
         #endregion
 
-        private readonly string path;
+        private readonly IFile file;
         private readonly UserStore store;
 
-        public JsonSecurityRepository(string path) {
-            this.path = path;
+        public JsonSecurityRepository(IFile file) {
+            this.file = file;
             
-            if (File.Exists(path)) {
-                this.store = JsonConvert.DeserializeObject<UserStore>(File.ReadAllText(path));
+            if (this.file.Exists) {
+                this.store = JsonConvert.DeserializeObject<UserStore>(this.file.ReadAllText());
             }
             else {
                 this.store = new UserStore {
                     Groups = { new UserGroup { Name = UserGroup.SuperName } }
                 };
-                File.WriteAllText(path, JsonConvert.SerializeObject(this.store));
+                this.file.WriteAllText(JsonConvert.SerializeObject(this.store));
             }
         }
 
@@ -51,6 +55,8 @@ namespace AshMind.Web.Gallery.Core.Security.Internal {
             return this.store.Users.SingleOrDefault(u => u.Email == (string)key);
         }
 
+        #region IRepository<UserGroup> Members
+
         IQueryable<UserGroup> IRepository<UserGroup>.Query() {
             return this.store.Groups.AsQueryable();
         }
@@ -62,5 +68,39 @@ namespace AshMind.Web.Gallery.Core.Security.Internal {
         UserGroup IRepository<UserGroup>.Load(object key) {
             return this.store.Groups.SingleOrDefault(g => g.Name == (string)key);
         }
+
+        #endregion
+
+        #region IRepository<IUserGroup> Members
+
+        IQueryable<IUserGroup> IRepository<IUserGroup>.Query() {
+            return Enumerable.Concat<IUserGroup>(
+                this.store.Users,
+                this.store.Groups
+            ).AsQueryable();
+        }
+
+        object IRepository<IUserGroup>.GetKey(IUserGroup entity) {
+            if (entity is User)
+                return "user:" + (this as IRepository<User>).GetKey(entity as User);
+
+            if (entity is UserGroup)
+                return "group:" + (this as IRepository<UserGroup>).GetKey(entity as UserGroup);
+
+            throw new NotSupportedException();
+        }
+
+        IUserGroup IRepository<IUserGroup>.Load(object key) {
+            var keyString = (string)key;
+            if (keyString.StartsWith("user:"))
+                return (this as IRepository<User>).Load(keyString.RemoveStart("user:"));
+
+            if (keyString.StartsWith("group:"))
+                return (this as IRepository<UserGroup>).Load(keyString.RemoveStart("group:"));
+
+            throw new NotSupportedException();
+        }
+
+        #endregion
     }
 }

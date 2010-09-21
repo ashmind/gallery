@@ -112,10 +112,10 @@ namespace AshMind.Web.Gallery.Site.Controllers {
             if (!Request.IsAjaxRequest())
                 throw new NotImplementedException();
 
-            var token = this.gallery.GetAlbumToken(albumID);
+            var album = this.gallery.GetAlbum(albumID, GetCurrentUser());
             return PartialView("GrantForm", new GrantViewModel(
                 albumID,
-                this.authorization.GetAuthorizedTo(SecurableAction.View, token).ToSet(),
+                this.authorization.GetAuthorizedTo(SecurableAction.View, album.SecurableToken).ToSet(),
                 this.GetAllGroups().ToList()
             ));
         }
@@ -125,12 +125,12 @@ namespace AshMind.Web.Gallery.Site.Controllers {
             if (!Request.IsAjaxRequest())
                 throw new NotImplementedException();
 
-            var token = this.gallery.GetAlbumToken(albumID);
+            var album = this.gallery.GetAlbum(albumID, GetCurrentUser());
             var groups = this.GetAllGroups()
                              .Where(g => groupKeys.Contains(g.Key))
                              .Select(g => g.UserGroup);
 
-            this.authorization.MakeAuthorizedTo(SecurableAction.View, token, groups);
+            this.authorization.MakeAuthorizedTo(SecurableAction.View, album.SecurableToken, groups);
             return new EmptyResult();
         }
 
@@ -143,6 +143,10 @@ namespace AshMind.Web.Gallery.Site.Controllers {
 
         private Uri MakeAbsolute(string uri) {
             return new Uri(Request.Url, uri);
+        }
+
+        private User GetCurrentUser() {
+            return this.userRepository.Load(User.Identity.Name);
         }
     }
 }

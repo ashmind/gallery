@@ -13,6 +13,6 @@ namespace AshMind.Web.Gallery.Core.IO {
         IFile GetFile(string path, bool nullUnlessExists = true);
 
         bool IsLocation(string path);
-        ILocation GetLocation(string path);
+        ILocation GetLocation(string path, ActionIfMissing actionIfMissing = ActionIfMissing.ThrowException);
     }
 }

@@ -33,7 +33,7 @@ namespace AshMind.Web.Gallery.Core.Tests.IO {
             return file;
         }
 
-        public ILocation GetLocation(string path) {
+        public ILocation GetLocation(string path, ActionIfMissing actionIfMissing = ActionIfMissing.ReturnNull) {
             return new MemoryLocation { Path = this.Path + "/" + path };
         }
 
