@@ -73,7 +73,7 @@ namespace AshMind.Web.Gallery.Site {
                 "Ajax",
                 "ajax/{action}",
                 new { controller = "gallery" },
-                new { action = "(albumnames)" }
+                new { action = "(standardalbumnames)" }
             );
 
             routes.MapRoute(

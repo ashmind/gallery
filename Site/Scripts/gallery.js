@@ -33,14 +33,19 @@
         $.history.load("\\" + $(this).attr('data-id'));
     });
 
-    $("#left a.more").live('click', function(event) {
+    $("#left section.folders a.more").live('click', function(event) {
         event.preventDefault();
 
         var a = $(this);
         $.get(a.attr('data-ajax'), {}, function(html) {
             a.replaceWith(html);
         });
-    });    
+    });
+
+    $("#left section.people a.more").click(function() {
+        $(this).remove();
+        $("#left section.people div.more").show();        
+    });
 });
 
 function loadAlbum(a, onsuccess) {

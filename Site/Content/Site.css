@@ -113,6 +113,11 @@ a.block-link:hover {
 
 #left a.more {
     text-align: center;
+    cursor: pointer;
+}
+
+#left div.more {
+    display: none;
 }
 
 #main
