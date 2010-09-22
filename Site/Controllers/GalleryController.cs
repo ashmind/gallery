@@ -109,7 +109,7 @@ namespace AshMind.Web.Gallery.Site.Controllers {
             var user = GetCurrentUser();
             var albumItem = this.gallery.GetItem(album, item, user);
             return View(
-                new ItemViewModel(album, albumItem, user)
+                new ItemDetailsViewModel(album, albumItem, user)
             );
         }
 
@@ -140,7 +140,8 @@ namespace AshMind.Web.Gallery.Site.Controllers {
                 album, id, true, (
                     from @group in this.authorization.GetAuthorizedTo(SecurableAction.View, album.SecurableToken)
                     select new UserGroupViewModel(@group)
-                ).ToList()
+                ).ToList(),
+                this.gallery.GetAlbumID
             );
         }
     }

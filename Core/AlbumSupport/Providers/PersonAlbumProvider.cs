@@ -12,16 +12,19 @@ namespace AshMind.Web.Gallery.Core.AlbumSupport.Providers {
     public class PersonAlbumProvider : IAlbumProvider {
         private readonly AlbumItemFactory itemFactory;
         private readonly IFaceProvider[] faceProviders;
+        private readonly FileSystemAlbumProvider primaryAlbumProvider;
         private readonly AuthorizationService authorization;
         private readonly ObjectCache faceCache;
 
         public PersonAlbumProvider(
             AlbumItemFactory itemFactory,
+            FileSystemAlbumProvider primaryAlbumProvider,
             IFaceProvider[] faceProviders,
             AuthorizationService authorization,
             ObjectCache faceCache
         ) {
             this.itemFactory = itemFactory;
+            this.primaryAlbumProvider = primaryAlbumProvider;
             this.faceProviders = faceProviders;
             this.authorization = authorization;
             this.faceCache = faceCache;
@@ -41,11 +44,11 @@ namespace AshMind.Web.Gallery.Core.AlbumSupport.Providers {
                 select new Album(
                     new AlbumDescriptor(this.ProviderKey, uniqueKey),
                     personFaces.Key.Name,
-                    (
+                    () => (
                         from face in personFaces
                         let itemType = GuessItemType.Of(face.File.Name)
                         where itemType == AlbumItemType.Image
-                        select this.itemFactory.CreateFrom(face.File, itemType)
+                        select CreateAlbumItem(face, itemType)
                     ).ToList(),
                     new SecurableUniqueKey(uniqueKey)
                 )
@@ -56,6 +59,15 @@ namespace AshMind.Web.Gallery.Core.AlbumSupport.Providers {
             });
 
             return FilterByAuthorization(albums, user);
+        }
+
+        private AlbumItem CreateAlbumItem(Face face, AlbumItemType itemType) {
+            var item = this.itemFactory.CreateFrom(face.File, itemType);
+            item.LazyPrimaryAlbum = new Lazy<Album>(
+                () => this.primaryAlbumProvider.GetAlbum(face.File.Location, User.System, ensureNonEmpty: false)
+            );
+
+            return item;
         }
 
         public Album GetAlbum(IEnumerable<ILocation> locations, string providerSpecificPath, User user) {

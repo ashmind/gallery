@@ -90,7 +90,7 @@
     <Compile Include="Models\GalleryViewModel.cs" />
     <Compile Include="Models\GrantViewModel.cs" />
     <Compile Include="Models\ImageSize.cs" />
-    <Compile Include="Models\ItemViewModel.cs" />
+    <Compile Include="Models\ItemDetailsViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\UserGroupViewModel.cs" />
     <Compile Include="OpenIdAbstraction\IOpenIdAjaxRelyingParty.cs" />

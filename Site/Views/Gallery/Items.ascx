@@ -5,6 +5,9 @@
     <a rel="gallery-item"
        href="<%= Url.Action("Get", "Image", new { album = Model.ID, item = item.Name, size = ImageSize.Large.Name.ToLowerInvariant() }) %>"
        data-name="<%= item.Name %>"
+       <% if (item.PrimaryAlbum != null) { %>
+       data-primaryAlbumID="<%= Model.GetAdditionalAlbumID(item.PrimaryAlbum) %>"
+       <% } %>
        data-action-download="<%= Url.Action("Get", "Image", new { album = Model.ID, item = item.Name }) %>"
        data-action-comment="<%= Url.Action("View", "Gallery", new { album = Model.ID, item = item.Name }) %>"
        class="image-view"> 

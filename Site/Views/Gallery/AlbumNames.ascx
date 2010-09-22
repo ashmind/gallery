@@ -19,7 +19,7 @@
   <% foreach (var albumModel in Model.OtherPeopleAlbums) { %>
     <% index += 1; %>
 
-    <% if (index == 5) { %>
+    <% if (index == 6) { %>
       <a class="block-link more">All</a>
       <div class="more">
     <% } %>
@@ -30,7 +30,7 @@
         </a>
   <% } %>
 
-  <% if (index >= 5) { %>
+  <% if (index >= 6) { %>
       </div>
   <% } %>
 </section>

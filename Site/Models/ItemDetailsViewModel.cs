@@ -7,8 +7,8 @@ using AshMind.Web.Gallery.Core;
 using AshMind.Web.Gallery.Core.Security;
 
 namespace AshMind.Web.Gallery.Site.Models {
-    public class ItemViewModel {
-        public ItemViewModel(string albumID, AlbumItem item, User currentUser) {
+    public class ItemDetailsViewModel {
+        public ItemDetailsViewModel(string albumID, AlbumItem item, User currentUser) {
             this.AlbumID = albumID;
             this.Item = item;
             this.CurrentUser = currentUser;

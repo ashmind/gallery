@@ -12,10 +12,12 @@
         var selectItem = function() {
             if (parts.length == 1)
                 return;
-
-            $.history.noaction = true;
-            $(".wall a[data-name='" + parts[1] + "']")
-                .click();
+            
+            var a = $(".wall a[data-name='" + parts[1] + "']");
+            $("#main").scrollTop(a.position().top);
+            
+            $.history.noaction = true;       
+            a.click();
             $.history.noaction = false;
         };
 
@@ -52,7 +54,7 @@ function loadAlbum(a, onsuccess) {
     $.get(a.attr('href'), {}, function(html) {
         $('#main').html(html);
 
-        a.parent().find('.selected').removeClass('selected');
+        $('#left').find('.selected').removeClass('selected');
         a.addClass('selected');
 
         setupAlbum();
@@ -74,7 +76,17 @@ function setupAlbum() {
         titlePosition   : 'over',
         titleFormat     : function(title, currentArray, currentIndex) {
             var a = currentArray.eq(currentIndex);
+
+            var locate = "";
+            var primaryAlbumID = a.attr('data-primaryAlbumID');
+            if (primaryAlbumID) {
+                locate = "<a href='" +
+                    window.location.href.replace(/#.+/, '#\\' + primaryAlbumID + '\\' + a.attr('data-name'))
+                + "'>Locate</a>";
+            }
+
             return "<span id='fancybox-title-over' class='image-actions'>" +
+                locate +
                 "<a href='" + a.attr('data-action-download') + "'>Download</a>" +
                 "<a href='" + a.attr('data-action-comment') + "'>Comment</a>"
             "</span>";

@@ -1,11 +1,11 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Main.Master" Inherits="System.Web.Mvc.ViewPage<ItemViewModel>" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Main.Master" Inherits="ViewPage<ItemDetailsViewModel>" %>
 
 <asp:Content ContentPlaceHolderID="head" runat="server">
   <link rel="stylesheet" type="text/css" href="<%= Url.Content("~/content/item-details.css") %>" />
 </asp:Content>
 
 <asp:Content ContentPlaceHolderID="title" runat="server">
-  <%= Model.Item.Name%>
+  <%= Model.Item.Name %>
 </asp:Content>
 
 <asp:Content ContentPlaceHolderID="content" runat="server">

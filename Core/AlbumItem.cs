@@ -29,6 +29,12 @@ namespace AshMind.Web.Gallery.Core {
         public AlbumItemType Type { get; private set; }
         public DateTimeOffset Date { get; private set; }
 
+        public Album PrimaryAlbum {
+            get { return this.LazyPrimaryAlbum != null ? this.LazyPrimaryAlbum.Value : null; }
+        }
+
+        internal Lazy<Album> LazyPrimaryAlbum { get; set; }
+
         public IList<Comment> Comments {
             get { return lazyComments.Value; }
         }

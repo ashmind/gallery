@@ -24,27 +24,32 @@ namespace AshMind.Web.Gallery.Core.AlbumSupport.Providers {
 
         public IEnumerable<Album> GetAllAlbums(IEnumerable<ILocation> locations, User user) {
             return from location in locations
-                   let album = GetAlbumAtLocation(location, user)
+                   let album = GetAlbum(location, user)
                    where album != null
                    orderby album.Date descending
                    select album;
         }
 
         public Album GetAlbum(IEnumerable<ILocation> locations, string providerSpecificPath, User user) {
-            return GetAlbumAtLocation(this.fileSystem.GetLocation(providerSpecificPath), user);
+            return GetAlbum(this.fileSystem.GetLocation(providerSpecificPath), user);
         }
 
-        private Album GetAlbumAtLocation(ILocation location, User user) {
+        public Album GetAlbum(ILocation location, User user, bool ensureNonEmpty = true) {
             if (!authorization.IsAuthorized(user, SecurableAction.View, location))
                 return null;
 
-            var items = this.GetItemsAtLocation(location, user).ToArray();
-            if (items.Length == 0)
-                return null;
+            Func<AlbumItem[]> itemFactory = () => this.GetItemsAtLocation(location, user).ToArray();
+            if (ensureNonEmpty) {
+                var items = itemFactory();
+                if (items.Length == 0)
+                    return null;
+
+                itemFactory = () => items;
+            }
 
             return new Album(
                 new AlbumDescriptor(this.ProviderKey, location.Path),
-                location.Name, items,
+                location.Name, itemFactory,
                 location
             );
         }
