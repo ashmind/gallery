@@ -1,4 +1,9 @@
-﻿$(function() {
+﻿global = {
+    lightboxNotYetShown : true,
+    noHistoryRecordWhileClosingLightbox : false
+};
+
+$(function() {
     $.history.init(function(hash) {
         if ($.history.noaction)
             return;
@@ -16,15 +21,23 @@
             var a = $(".wall a[data-name='" + parts[1] + "']");
             $("#main").scrollTop(a.position().top);
             
-            $.history.noaction = true;       
-            a.click();
+            $.history.noaction = true;
+            if (global.lightboxNotYetShown) {
+                a.click();
+            }
+            else {                
+                a.parent().toggleClass('selected');
+            }
             $.history.noaction = false;
         };
+
+        global.noHistoryRecordWhileClosingLightbox = true;
+        $.fancybox.close();
 
         if (!albumLink.hasClass('selected')) {
             loadAlbum(albumLink, selectItem);
         }
-        else {
+        else {            
             selectItem();
         }
     });
@@ -80,9 +93,11 @@ function setupAlbum() {
             var locate = "";
             var primaryAlbumID = a.attr('data-primaryAlbumID');
             if (primaryAlbumID) {
-                locate = "<a href='" +
-                    window.location.href.replace(/#.+/, '#\\' + primaryAlbumID + '\\' + a.attr('data-name'))
-                + "'>Locate</a>";
+                locate = "<a class='locate' " +
+                    "data-albumID='" + primaryAlbumID + "' " +
+                    "data-itemname='" + a.attr('data-name') + "' " +
+                    "href='javascript:void(\"locate\")'" +
+                ">Locate</a>";
             }
 
             return "<span id='fancybox-title-over' class='image-actions'>" +
@@ -92,6 +107,8 @@ function setupAlbum() {
             "</span>";
         },
         onComplete      : function(currentArray, currentIndex) {
+            global.lightboxNotYetShown = false;
+
             var a = currentArray.eq(currentIndex);
             a.parent().toggleClass('selected');
             if (!$.history.noaction) {
@@ -99,12 +116,21 @@ function setupAlbum() {
                 $.history.load("\\" + a.parents('.album-view').attr('data-id') + '\\' + a.attr('data-name'));
                 $.history.noaction = false;
             }
+
+            $("#fancybox-wrap .locate").click(function(event) {
+                event.preventDefault();                
+                $.history.load("\\" + $(this).attr('data-albumid') + '\\' + $(this).attr('data-itemname'));
+            });
         },
         onClosed        : function(currentArray, currentIndex) {
             var a = currentArray.eq(currentIndex);
-            $.history.noaction = true;
-            $.history.load("\\" + a.parents('.album-view').attr('data-id'));
-            $.history.noaction = false;
+
+            if (!global.noHistoryRecordWhileClosingLightbox) {
+                $.history.noaction = true;
+                $.history.load("\\" + a.parents('.album-view').attr('data-id'));
+                $.history.noaction = false;
+            }
+            global.noHistoryRecordWhileClosingLightbox = true;
         }
     });
 
