@@ -11,33 +11,24 @@ using AshMind.Gallery.Core.Commenting;
 
 namespace AshMind.Gallery.Site.Controllers {
     [Authorize]
-    public class GalleryController : Controller {
+    public class GalleryController : ControllerBase {
         private readonly AlbumFacade gallery;
         private readonly AuthorizationService authorization;
         private readonly ICommentRepository commentRepository;
-        private readonly IRepository<User> userRepository;
 
         public GalleryController(
             AlbumFacade gallery,
             AuthorizationService authorization,
             ICommentRepository commentRepository,
             IRepository<User> userRepository
-        ) {
+        ) : base(userRepository) {
             this.gallery = gallery;
             this.authorization = authorization;
             this.commentRepository = commentRepository;
-            this.userRepository = userRepository;
         }
 
-        public ActionResult Home(string album, int albumCount = 20, string @as = null) {
-            var user = GetCurrentUser();
-            if (@as != null) {
-                if (!this.authorization.IsAuthorized(user, SecurableAction.ManageSecurity, null))
-                    return new HttpUnauthorizedResult();
-
-                user = this.userRepository.Load(@as);
-            }
-
+        public ActionResult Home(string album, int albumCount = 20) {
+            var user = this.User;
             if (Request.IsAjaxRequest())
                 return AjaxAlbum(album, user);
 
@@ -66,8 +57,7 @@ namespace AshMind.Gallery.Site.Controllers {
         }
 
         public ActionResult StandardAlbumNames(int start, int count) {
-            var user = GetCurrentUser();
-            var albums = GetStandardAlbums(user)
+            var albums = GetStandardAlbums(this.User)
                                      .Skip(start).Take(count + 1)
                                      .ToArray();
 
@@ -106,15 +96,14 @@ namespace AshMind.Gallery.Site.Controllers {
         }
 
         public new ActionResult View(string album, string item) {
-            var user = GetCurrentUser();
-            var albumItem = this.gallery.GetItem(album, item, user);
+            var albumItem = this.gallery.GetItem(album, item, this.User);
             return View(
-                new ItemDetailsViewModel(album, albumItem, user)
+                new ItemDetailsViewModel(album, albumItem, this.User)
             );
         }
 
         public ActionResult Comment(string album, string item, string comment) {
-            var author = GetCurrentUser();
+            var author = this.User;
             var path = this.gallery.GetItem(album, item, author).File.Path;
             commentRepository.SaveComment(
                 path, new Comment(author, DateTimeOffset.Now, comment)
@@ -123,25 +112,20 @@ namespace AshMind.Gallery.Site.Controllers {
             return RedirectToAction("View", new { album, item });
         }
 
-        private User GetCurrentUser() {
-            return this.userRepository.Load(User.Identity.Name);
-        }
-
         private AlbumViewModel ToViewModel(Album album, bool manageSecurity) {
             if (album == null)
                 return null;
 
             var id = this.gallery.GetAlbumID(album);
-            var user = GetCurrentUser();
-            if (!manageSecurity || !authorization.IsAuthorized(user, SecurableAction.ManageSecurity, null))
-                return new AlbumViewModel(album, id);
+            if (!manageSecurity || !authorization.IsAuthorized(this.User, SecurableAction.ManageSecurity, null))
+                return new AlbumViewModel(album, this.gallery.GetAlbumID);
 
             return new AlbumViewModel(
-                album, id, true, (
+                album, this.gallery.GetAlbumID,
+                true, (
                     from @group in this.authorization.GetAuthorizedTo(SecurableAction.View, album.SecurableToken)
                     select new UserGroupViewModel(@group)
-                ).ToList(),
-                this.gallery.GetAlbumID
+                ).ToList()                
             );
         }
     }

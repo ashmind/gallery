@@ -62,7 +62,8 @@ a.block-link:hover {
     width: 100%;
 }
 
-#left a + .year {
+#left * + .album-name-section,
+#left section + section .album-name-section {
     margin-top: 0.4em;
 }
 

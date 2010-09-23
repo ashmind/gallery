@@ -21,7 +21,7 @@ using System.Collections.Generic;
 
 namespace AshMind.Gallery.Site.Controllers {
     [HandleError]
-    public class AccessController : Controller {
+    public class AccessController : ControllerBase {
         private readonly IOpenIdAjaxRelyingParty openId;
         private readonly IRepository<User> userRepository;
         private readonly IRepository<UserGroup> userGroupRepository;
@@ -34,7 +34,7 @@ namespace AshMind.Gallery.Site.Controllers {
             IRepository<UserGroup> userGroupRepository,
             AuthorizationService authorization,
             AlbumFacade gallery
-        ) {
+        ) : base(userRepository) {
             this.openId = openId;
             this.userRepository = userRepository;
             this.userGroupRepository = userGroupRepository;
@@ -57,6 +57,14 @@ namespace AshMind.Gallery.Site.Controllers {
                 ModelState.AddModelError("Login", error);
 
             return View(new LoginViewModel { PreloadedDiscoveryResults = ajax });
+        }
+
+        public ActionResult Impersonate(string key) {
+            if (!this.authorization.IsAuthorized(this.User, SecurableAction.ManageSecurity, null))
+                return new HttpUnauthorizedResult();
+
+            FormsAuthentication.SetAuthCookie(key, false);
+            return new RedirectResult(Url.Content("~"));
         }
 
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post), ValidateInput(false)]
@@ -112,7 +120,7 @@ namespace AshMind.Gallery.Site.Controllers {
             if (!Request.IsAjaxRequest())
                 throw new NotImplementedException();
 
-            var album = this.gallery.GetAlbum(albumID, GetCurrentUser());
+            var album = this.gallery.GetAlbum(albumID, this.User);
             return PartialView("GrantForm", new GrantViewModel(
                 albumID,
                 this.authorization.GetAuthorizedTo(SecurableAction.View, album.SecurableToken).ToSet(),
@@ -125,7 +133,7 @@ namespace AshMind.Gallery.Site.Controllers {
             if (!Request.IsAjaxRequest())
                 throw new NotImplementedException();
 
-            var album = this.gallery.GetAlbum(albumID, GetCurrentUser());
+            var album = this.gallery.GetAlbum(albumID, this.User);
             var groups = this.GetAllGroups()
                              .Where(g => groupKeys.Contains(g.Key))
                              .Select(g => g.UserGroup);
@@ -143,10 +151,6 @@ namespace AshMind.Gallery.Site.Controllers {
 
         private Uri MakeAbsolute(string uri) {
             return new Uri(Request.Url, uri);
-        }
-
-        private User GetCurrentUser() {
-            return this.userRepository.Load(User.Identity.Name);
         }
     }
 }

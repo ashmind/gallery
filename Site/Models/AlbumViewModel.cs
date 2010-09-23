@@ -11,25 +11,25 @@ using AshMind.Gallery.Core.Security;
 
 namespace AshMind.Gallery.Site.Models {
     public class AlbumViewModel {
-        public AlbumViewModel(Album album, string id) {
-            this.ID = id;
+        public AlbumViewModel(Album album, Func<Album, string> getAlbumID) {
+            this.ID = getAlbumID(album);
             this.Album = album;
+            this.GetAdditionalAlbumID = getAlbumID;
             this.VisibleToGroups = new UserGroupViewModel[0].AsReadOnly();
         }
 
         public AlbumViewModel(
-            Album album, string id, bool canManageSecurity,
-            IList<UserGroupViewModel> visibleToGroups,
-            Func<Album, string> getAdditionalAlbumID
+            Album album, Func<Album, string> getAlbumID,
+            bool canManageSecurity, IList<UserGroupViewModel> visibleToGroups            
         ) {
             if (!canManageSecurity)
                 throw new ArgumentException();
 
-            this.ID = id;
+            this.ID = getAlbumID(album);
             this.Album = album;
+            this.GetAdditionalAlbumID = getAlbumID;
             this.CanManageSecurity = canManageSecurity;
             this.VisibleToGroups = visibleToGroups.AsReadOnly();
-            this.GetAdditionalAlbumID = getAdditionalAlbumID;
         }
 
         public string ID { get; private set; }

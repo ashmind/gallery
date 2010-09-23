@@ -58,9 +58,9 @@ namespace AshMind.Gallery.Site {
             
             routes.MapLowerCaseRoute(
                 "Access",
-                "access/{action}",
+                "access/{action}/{key}",
                 new { controller = "access" },
-                new { action = "(grant|revoke)" }
+                new { action = "(grant|revoke|impersonate)", key = "" }
             );
 
             routes.MapLowerCaseRoute(

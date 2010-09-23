@@ -13,7 +13,7 @@ using AshMind.Gallery.Core.Security;
 
 namespace AshMind.Gallery.Site.Controllers {
     [Authorize]
-    public class ImageController : Controller {
+    public class ImageController : ControllerBase {
         private IDictionary<string, string> knownMimeTypes = new Dictionary<string, string> {
             {".jpg",    MediaTypeNames.Image.Jpeg},
             {".jpeg",   MediaTypeNames.Image.Jpeg},
@@ -22,19 +22,19 @@ namespace AshMind.Gallery.Site.Controllers {
 
         private readonly AlbumFacade gallery;
         private readonly PreviewFacade preview;
-        private readonly IRepository<User> userRepository;
 
-        public ImageController(AlbumFacade gallery, PreviewFacade preview, IRepository<User> userRepository) {
+        public ImageController(AlbumFacade gallery, PreviewFacade preview, IRepository<User> userRepository)
+            : base(userRepository)
+        {
             this.gallery = gallery;
             this.preview = preview;
-            this.userRepository = userRepository;
         }
 
         //[OutputCache(Duration = 60, VaryByParam = "*")]
         public ActionResult Get(string album, string item, string size) {
             var imageSize = ImageSize.Parse(size);
 
-            var file = this.gallery.GetItem(album, item, this.userRepository.FindByEmail(User.Identity.Name)).File;
+            var file = this.gallery.GetItem(album, item, this.User).File;
             if (imageSize != ImageSize.Original)
                 file = this.preview.GetPreview(file, imageSize.Size);
 

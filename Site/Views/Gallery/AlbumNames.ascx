@@ -20,7 +20,7 @@
     <% index += 1; %>
 
     <% if (index == 6) { %>
-      <a class="block-link more">All</a>
+      <a class="block-link more">Show All</a>
       <div class="more">
     <% } %>
 
