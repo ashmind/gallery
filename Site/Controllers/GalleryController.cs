@@ -4,12 +4,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-using AshMind.Web.Gallery.Core;
-using AshMind.Web.Gallery.Site.Models;
-using AshMind.Web.Gallery.Core.Security;
-using AshMind.Web.Gallery.Core.Commenting;
+using AshMind.Gallery.Core;
+using AshMind.Gallery.Site.Models;
+using AshMind.Gallery.Core.Security;
+using AshMind.Gallery.Core.Commenting;
 
-namespace AshMind.Web.Gallery.Site.Controllers {
+namespace AshMind.Gallery.Site.Controllers {
     [Authorize]
     public class GalleryController : Controller {
         private readonly AlbumFacade gallery;

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using AshMind.Web.Gallery.Core.IO;
+using AshMind.Gallery.Core.IO;
 
-namespace AshMind.Web.Gallery.Core.Tests.IO {
+namespace AshMind.Gallery.Core.Tests.IO {
     public class MemoryFileSystem : IFileSystem {
         public IEnumerable<ILocation> GetLocations(string root) {
             throw new NotImplementedException();

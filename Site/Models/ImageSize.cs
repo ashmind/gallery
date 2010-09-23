@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 
-namespace AshMind.Web.Gallery.Site.Models {
+namespace AshMind.Gallery.Site.Models {
     public sealed class ImageSize {
         public static ImageSize Small       { get; private set; }
         public static ImageSize Medium      { get; private set; }

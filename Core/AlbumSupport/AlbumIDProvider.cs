@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using AshMind.Web.Gallery.Core.IO;
+using AshMind.Gallery.Core.IO;
 
 using File = System.IO.File;
 
-namespace AshMind.Web.Gallery.Core.AlbumSupport {
+namespace AshMind.Gallery.Core.AlbumSupport {
     internal class AlbumIDProvider : IAlbumIDProvider {
         private readonly IFile idMapFile;
         private readonly ConcurrentDictionary<string, AlbumDescriptor> idMap;

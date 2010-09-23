@@ -5,9 +5,9 @@ using System.Linq;
 using System.Drawing.Imaging;
 using System.Collections.Generic;
 
-using AshMind.Web.Gallery.Core.Metadata;
+using AshMind.Gallery.Core.Metadata;
 
-namespace AshMind.Web.Gallery.Core.ImageProcessing {
+namespace AshMind.Gallery.Core.ImageProcessing {
     using OrientationTuple = Tuple<int, ImageMirroring>;
 
     internal static class ImageProcessor {

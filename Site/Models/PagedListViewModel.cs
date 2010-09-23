@@ -6,9 +6,9 @@ using System.Web;
 
 using AshMind.Extensions;
 
-using AshMind.Web.Gallery.Core;
+using AshMind.Gallery.Core;
 
-namespace AshMind.Web.Gallery.Site.Models {
+namespace AshMind.Gallery.Site.Models {
     public class PagedListViewModel<T> {
         public PagedListViewModel(
             IList<T> items, int start

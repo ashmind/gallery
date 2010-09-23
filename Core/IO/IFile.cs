@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace AshMind.Web.Gallery.Core.IO {
+namespace AshMind.Gallery.Core.IO {
     public interface IFile : IFileSystemElement {
         DateTimeOffset GetLastWriteTime();
 

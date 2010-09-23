@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace AshMind.Web.Gallery.Core.AlbumSupport {
+namespace AshMind.Gallery.Core.AlbumSupport {
     internal static class GuessItemType {
         private static class FileExtensions {
             public static readonly HashSet<string> OfVideo = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase) { ".mov", ".avi", ".mpg" };

@@ -9,11 +9,11 @@ using MbUnit.Framework.ContractVerifiers;
 
 using Moq;
 
-using AshMind.Web.Gallery.Core.IO;
-using AshMind.Web.Gallery.Core.Integration.Picasa;
-using AshMind.Web.Gallery.Core.Tests.IO;
+using AshMind.Gallery.Core.IO;
+using AshMind.Gallery.Core.Integration.Picasa;
+using AshMind.Gallery.Core.Tests.IO;
 
-namespace AshMind.Web.Gallery.Core.Tests.Of.Integration.Picasa {
+namespace AshMind.Gallery.Core.Tests.Of.Integration.Picasa {
     [TestFixture]
     public class PicasaIniParserTest {
         [Test]

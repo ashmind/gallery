@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using AshMind.Web.Gallery.Core.IO;
+using AshMind.Gallery.Core.IO;
 
-namespace AshMind.Web.Gallery.Core.AlbumSupport {
+namespace AshMind.Gallery.Core.AlbumSupport {
     public interface IAlbumFilter {
         bool ShouldSkip(ILocation location);
     }

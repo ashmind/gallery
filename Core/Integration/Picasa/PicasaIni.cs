@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using AshMind.Web.Gallery.Core.Integration.Picasa.IniParts;
+using AshMind.Gallery.Core.Integration.Picasa.IniParts;
 
-namespace AshMind.Web.Gallery.Core.Integration.Picasa {
+namespace AshMind.Gallery.Core.Integration.Picasa {
     public class PicasaIni {
         public PicasaIni() {
             this.Contacts = new List<PicasaIniContact>();

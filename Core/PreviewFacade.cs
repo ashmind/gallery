@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-using AshMind.Web.Gallery.Core.ImageProcessing;
-using AshMind.Web.Gallery.Core.IO;
-using AshMind.Web.Gallery.Core.Metadata;
+using AshMind.Gallery.Core.ImageProcessing;
+using AshMind.Gallery.Core.IO;
+using AshMind.Gallery.Core.Metadata;
 
-namespace AshMind.Web.Gallery.Core {
+namespace AshMind.Gallery.Core {
     public class PreviewFacade {
         private readonly ImageCache cache;
         private readonly IOrientationProvider[] orientationProviders;

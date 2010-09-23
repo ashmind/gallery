@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using AshMind.Web.Gallery.Core.IO;
-using AshMind.Web.Gallery.Core.Security;
+using AshMind.Gallery.Core.IO;
+using AshMind.Gallery.Core.Security;
 
-namespace AshMind.Web.Gallery.Core.AlbumSupport.Providers {
+namespace AshMind.Gallery.Core.AlbumSupport.Providers {
     public class FileSystemAlbumProvider : IAlbumProvider {
         private readonly IFileSystem fileSystem;
         private readonly AlbumItemFactory itemFactory;

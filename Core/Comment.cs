@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using AshMind.Web.Gallery.Core.Security;
+using AshMind.Gallery.Core.Security;
 
-namespace AshMind.Web.Gallery.Core {
+namespace AshMind.Gallery.Core {
     public class Comment {
         public Comment(User author, DateTimeOffset date, string text) {
             this.Author = author;

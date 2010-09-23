@@ -6,10 +6,10 @@ using System.Collections.ObjectModel;
 
 using AshMind.Extensions;
 
-using AshMind.Web.Gallery.Core.AlbumSupport;
-using AshMind.Web.Gallery.Core.IO;
+using AshMind.Gallery.Core.AlbumSupport;
+using AshMind.Gallery.Core.IO;
 
-namespace AshMind.Web.Gallery.Core {
+namespace AshMind.Gallery.Core {
     public class Album {
         public static Album Empty { get; private set; }
 

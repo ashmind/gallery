@@ -1,8 +1,8 @@
 ﻿using Autofac.Builder;
 
-using AshMind.Web.Gallery.Site.OpenIdAbstraction;
+using AshMind.Gallery.Site.OpenIdAbstraction;
 
-namespace AshMind.Web.Gallery.Site {
+namespace AshMind.Gallery.Site {
     public class WebModule : Module {
         protected override void Load(ContainerBuilder builder) {
             base.Load(builder);

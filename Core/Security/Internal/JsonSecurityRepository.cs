@@ -8,9 +8,9 @@ using Newtonsoft.Json;
 
 using AshMind.Extensions;
 
-using AshMind.Web.Gallery.Core.IO;
+using AshMind.Gallery.Core.IO;
 
-namespace AshMind.Web.Gallery.Core.Security.Internal {
+namespace AshMind.Gallery.Core.Security.Internal {
     internal class JsonSecurityRepository : IRepository<User>, IRepository<UserGroup>, IRepository<IUserGroup> {
         #region UserStore class
 

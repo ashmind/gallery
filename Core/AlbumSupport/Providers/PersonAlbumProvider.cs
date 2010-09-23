@@ -4,11 +4,11 @@ using System.Linq;
 using System.Runtime.Caching;
 using System.Text;
 
-using AshMind.Web.Gallery.Core.Integration;
-using AshMind.Web.Gallery.Core.IO;
-using AshMind.Web.Gallery.Core.Security;
+using AshMind.Gallery.Core.Integration;
+using AshMind.Gallery.Core.IO;
+using AshMind.Gallery.Core.Security;
 
-namespace AshMind.Web.Gallery.Core.AlbumSupport.Providers {
+namespace AshMind.Gallery.Core.AlbumSupport.Providers {
     public class PersonAlbumProvider : IAlbumProvider {
         private readonly AlbumItemFactory itemFactory;
         private readonly IFaceProvider[] faceProviders;

@@ -5,7 +5,7 @@ using System.Text;
 
 using AshMind.Extensions;
 
-namespace AshMind.Web.Gallery.Core.Security {
+namespace AshMind.Gallery.Core.Security {
     public class AuthorizationService {
         private readonly HashSet<UserGroup> superGroups = new HashSet<UserGroup>();
         private readonly IPermissionProvider[] providers;

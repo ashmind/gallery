@@ -6,11 +6,11 @@ using Gallio.Framework;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 
-using AshMind.Web.Gallery.Core.AlbumSupport;
-using AshMind.Web.Gallery.Core.IO;
-using AshMind.Web.Gallery.Core.Tests.IO;
+using AshMind.Gallery.Core.AlbumSupport;
+using AshMind.Gallery.Core.IO;
+using AshMind.Gallery.Core.Tests.IO;
 
-namespace AshMind.Web.Gallery.Core.Tests.Of.AlbumSupport {
+namespace AshMind.Gallery.Core.Tests.Of.AlbumSupport {
     [TestFixture]
     public class AlbumIDProviderTest {
         [Test]

@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace AshMind.Web.Gallery.Core.IO {
+namespace AshMind.Gallery.Core.IO {
     public interface IFileSystem {
         bool IsFileName(string pathOrFileName);
         

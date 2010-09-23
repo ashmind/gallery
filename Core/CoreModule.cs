@@ -9,18 +9,18 @@ using Autofac.Builder;
 
 using AshMind.Extensions;
 
-using AshMind.Web.Gallery.Core.AlbumSupport;
-using AshMind.Web.Gallery.Core.Commenting;
-using AshMind.Web.Gallery.Core.ImageProcessing;
-using AshMind.Web.Gallery.Core.Integration;
-using AshMind.Web.Gallery.Core.Integration.Picasa;
-using AshMind.Web.Gallery.Core.IO;
-using AshMind.Web.Gallery.Core.IO.Implementation;
-using AshMind.Web.Gallery.Core.Metadata;
-using AshMind.Web.Gallery.Core.Security;
-using AshMind.Web.Gallery.Core.Security.Internal;
+using AshMind.Gallery.Core.AlbumSupport;
+using AshMind.Gallery.Core.Commenting;
+using AshMind.Gallery.Core.ImageProcessing;
+using AshMind.Gallery.Core.Integration;
+using AshMind.Gallery.Core.Integration.Picasa;
+using AshMind.Gallery.Core.IO;
+using AshMind.Gallery.Core.IO.Implementation;
+using AshMind.Gallery.Core.Metadata;
+using AshMind.Gallery.Core.Security;
+using AshMind.Gallery.Core.Security.Internal;
 
-namespace AshMind.Web.Gallery.Core {
+namespace AshMind.Gallery.Core {
     public class CoreModule : Module {
         private readonly IFileSystem fileSystem;
         private readonly ILocation albumLocation;

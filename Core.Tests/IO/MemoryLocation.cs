@@ -6,9 +6,9 @@ using System.Text;
 
 using AshMind.Extensions;
 
-using AshMind.Web.Gallery.Core.IO;
+using AshMind.Gallery.Core.IO;
 
-namespace AshMind.Web.Gallery.Core.Tests.IO {
+namespace AshMind.Gallery.Core.Tests.IO {
     public class MemoryLocation : ILocation, IEnumerable {
         private readonly IDictionary<string, IFile> files = new Dictionary<string, IFile>();
 

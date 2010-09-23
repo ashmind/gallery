@@ -4,16 +4,16 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-using AshMind.Web.Gallery.Core.AlbumSupport;
-using AshMind.Web.Gallery.Core.Commenting;
-using AshMind.Web.Gallery.Core.ImageProcessing;
-using AshMind.Web.Gallery.Core.Internal;
-using AshMind.Web.Gallery.Core.IO;
-using AshMind.Web.Gallery.Core.Metadata;
-using AshMind.Web.Gallery.Core.Security;
-using AshMind.Web.Gallery.Core.Integration;
+using AshMind.Gallery.Core.AlbumSupport;
+using AshMind.Gallery.Core.Commenting;
+using AshMind.Gallery.Core.ImageProcessing;
+using AshMind.Gallery.Core.Internal;
+using AshMind.Gallery.Core.IO;
+using AshMind.Gallery.Core.Metadata;
+using AshMind.Gallery.Core.Security;
+using AshMind.Gallery.Core.Integration;
 
-namespace AshMind.Web.Gallery.Core {
+namespace AshMind.Gallery.Core {
     public class AlbumFacade {
         private readonly IAlbumIDProvider idProvider;
         private readonly IDictionary<string, IAlbumProvider> albumProviders;

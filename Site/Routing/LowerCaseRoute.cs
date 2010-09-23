@@ -2,7 +2,7 @@
 
 // http://goneale.wordpress.com/2008/12/19/lowercase-route-urls-in-aspnet-mvc/
 
-namespace AshMind.Web.Gallery.Site.Routing { 
+namespace AshMind.Gallery.Site.Routing { 
     public class LowerCaseRoute : Route {
         public LowerCaseRoute(string url, IRouteHandler routeHandler)  : base(url, routeHandler) { }  
         public LowerCaseRoute(string url, RouteValueDictionary defaults, IRouteHandler routeHandler)  

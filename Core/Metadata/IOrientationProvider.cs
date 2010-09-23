@@ -4,9 +4,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 
-using AshMind.Web.Gallery.Core.IO;
+using AshMind.Gallery.Core.IO;
 
-namespace AshMind.Web.Gallery.Core.Metadata {
+namespace AshMind.Gallery.Core.Metadata {
     public interface IOrientationProvider {
         ImageOrientation GetOrientation(Image image, IFile imageFile);
 

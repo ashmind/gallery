@@ -8,8 +8,8 @@
     <ProjectGuid>{BF5A70D6-912D-472E-A1F7-607B88F062BB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AshMind.Web.Gallery.Core</RootNamespace>
-    <AssemblyName>AshMind.Web.Gallery.Core</AssemblyName>
+    <RootNamespace>AshMind.Gallery.Core</RootNamespace>
+    <AssemblyName>AshMind.Gallery.Core</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>

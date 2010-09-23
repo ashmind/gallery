@@ -6,10 +6,10 @@ using System.Text.RegularExpressions;
 
 using AshMind.Extensions;
 
-using AshMind.Web.Gallery.Core.IO;
-using AshMind.Web.Gallery.Core.Integration.Picasa.IniParts;
+using AshMind.Gallery.Core.IO;
+using AshMind.Gallery.Core.Integration.Picasa.IniParts;
 
-namespace AshMind.Web.Gallery.Core.Integration.Picasa {
+namespace AshMind.Gallery.Core.Integration.Picasa {
     public class PicasaIniParser {
         public PicasaIni Parse(IFile file) {
             Argument.VerifyNotNull("file", file);

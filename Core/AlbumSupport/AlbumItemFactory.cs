@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using AshMind.Web.Gallery.Core.IO;
-using AshMind.Web.Gallery.Core.Commenting;
+using AshMind.Gallery.Core.IO;
+using AshMind.Gallery.Core.Commenting;
 
-namespace AshMind.Web.Gallery.Core.AlbumSupport {
+namespace AshMind.Gallery.Core.AlbumSupport {
     public class AlbumItemFactory {
         private readonly ICommentRepository commentRepository;
 

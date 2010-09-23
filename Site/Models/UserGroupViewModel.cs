@@ -6,9 +6,9 @@ using System.Web;
 
 using AshMind.Extensions;
 
-using AshMind.Web.Gallery.Core.Security;
+using AshMind.Gallery.Core.Security;
 
-namespace AshMind.Web.Gallery.Site.Models {
+namespace AshMind.Gallery.Site.Models {
     public class UserGroupViewModel {
         public UserGroupViewModel(IUserGroup userGroup) {
             var user = userGroup as User;

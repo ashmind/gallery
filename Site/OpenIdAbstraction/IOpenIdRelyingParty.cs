@@ -5,7 +5,7 @@ using DotNetOpenAuth.Messaging;
 using DotNetOpenAuth.OpenId;
 using DotNetOpenAuth.OpenId.RelyingParty;
 
-namespace AshMind.Web.Gallery.Site.OpenIdAbstraction {
+namespace AshMind.Gallery.Site.OpenIdAbstraction {
     public interface IOpenIdRelyingParty {
         Channel Channel { get; }
 

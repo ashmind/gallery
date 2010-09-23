@@ -9,11 +9,11 @@ using Newtonsoft.Json;
 
 using AshMind.Extensions;
 
-using AshMind.Web.Gallery.Core.Internal;
-using AshMind.Web.Gallery.Core.IO;
-using AshMind.Web.Gallery.Core.Security;
+using AshMind.Gallery.Core.Internal;
+using AshMind.Gallery.Core.IO;
+using AshMind.Gallery.Core.Security;
 
-namespace AshMind.Web.Gallery.Core.Security.Internal {
+namespace AshMind.Gallery.Core.Security.Internal {
     internal class JsonKeyPermissionProvider : AbstractPermissionProvider<SecurableUniqueKey> {
         private readonly IFile permissionStore;
         private readonly IRepository<IUserGroup> userGroupRepository;

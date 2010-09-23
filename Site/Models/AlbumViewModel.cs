@@ -6,10 +6,10 @@ using System.Web;
 
 using AshMind.Extensions;
 
-using AshMind.Web.Gallery.Core;
-using AshMind.Web.Gallery.Core.Security;
+using AshMind.Gallery.Core;
+using AshMind.Gallery.Core.Security;
 
-namespace AshMind.Web.Gallery.Site.Models {
+namespace AshMind.Gallery.Site.Models {
     public class AlbumViewModel {
         public AlbumViewModel(Album album, string id) {
             this.ID = id;

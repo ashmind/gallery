@@ -6,12 +6,12 @@ using System.Web;
 using System.Web.Mvc;
 using System.Net.Mime;
 
-using AshMind.Web.Gallery.Core;
-using AshMind.Web.Gallery.Site.Models;
-using AshMind.Web.Gallery.Core.IO;
-using AshMind.Web.Gallery.Core.Security;
+using AshMind.Gallery.Core;
+using AshMind.Gallery.Site.Models;
+using AshMind.Gallery.Core.IO;
+using AshMind.Gallery.Core.Security;
 
-namespace AshMind.Web.Gallery.Site.Controllers {
+namespace AshMind.Gallery.Site.Controllers {
     [Authorize]
     public class ImageController : Controller {
         private IDictionary<string, string> knownMimeTypes = new Dictionary<string, string> {

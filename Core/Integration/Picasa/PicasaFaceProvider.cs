@@ -6,9 +6,9 @@ using System.Text;
 
 using AshMind.Extensions;
 
-using AshMind.Web.Gallery.Core.IO;
+using AshMind.Gallery.Core.IO;
 
-namespace AshMind.Web.Gallery.Core.Integration.Picasa {
+namespace AshMind.Gallery.Core.Integration.Picasa {
     using ContactKey = Tuple<string, string>;    
 
     public class PicasaFaceProvider : IFaceProvider {

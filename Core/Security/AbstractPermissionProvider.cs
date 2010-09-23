@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AshMind.Web.Gallery.Core.Security {
+namespace AshMind.Gallery.Core.Security {
     public abstract class AbstractPermissionProvider<TTarget> : IPermissionProvider {
         public abstract IEnumerable<Permission> GetPermissions(TTarget target);
         public abstract void SetPermissions(TTarget target, IEnumerable<Permission> permissions);

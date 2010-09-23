@@ -8,12 +8,12 @@ using Newtonsoft.Json;
 
 using AshMind.Extensions;
 
-using AshMind.Web.Gallery.Core.IO;
-using AshMind.Web.Gallery.Core.Internal;
-using AshMind.Web.Gallery.Core.Security;
+using AshMind.Gallery.Core.IO;
+using AshMind.Gallery.Core.Internal;
+using AshMind.Gallery.Core.Security;
 using System.IO;
 
-namespace AshMind.Web.Gallery.Core.Commenting {
+namespace AshMind.Gallery.Core.Commenting {
     public class JsonCommentRepository : ICommentRepository {
         private class CommentStore {
             public CommentStore() {

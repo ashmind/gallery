@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AshMind.Web.Gallery.Core.Metadata {
+namespace AshMind.Gallery.Core.Metadata {
     public class ImageOrientation {
         public ImageOrientation(int angle) : this(angle, ImageMirroring.None) {
         }

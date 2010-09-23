@@ -11,9 +11,9 @@ using System.IO;
 
 using AshMind.Extensions;
 
-using AshMind.Web.Gallery.Core;
-using AshMind.Web.Gallery.Site.Models;
-using AshMind.Web.Gallery.Site.Routing;
+using AshMind.Gallery.Core;
+using AshMind.Gallery.Site.Models;
+using AshMind.Gallery.Site.Routing;
 
 using Autofac;
 using Autofac.Builder;
@@ -21,7 +21,7 @@ using Autofac.Modules;
 using Autofac.Integration.Web;
 using Autofac.Integration.Web.Mvc;
 
-namespace AshMind.Web.Gallery.Site {
+namespace AshMind.Gallery.Site {
     public class MvcApplication : System.Web.HttpApplication {
         private static ContainerProvider containerProvider;
         private static Exception startFailure;

@@ -7,13 +7,13 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 
-using AshMind.Web.Gallery.Core.Internal;
-using AshMind.Web.Gallery.Core.IO;
+using AshMind.Gallery.Core.Internal;
+using AshMind.Gallery.Core.IO;
 
 using Encoder = System.Drawing.Imaging.Encoder;
 using Newtonsoft.Json;
 
-namespace AshMind.Web.Gallery.Core.ImageProcessing {
+namespace AshMind.Gallery.Core.ImageProcessing {
     public class ImageCache {
         private readonly object DiskAccessLock = new object();
 

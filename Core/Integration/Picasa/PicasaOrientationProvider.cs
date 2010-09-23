@@ -6,10 +6,10 @@ using System.Text;
 
 using AshMind.Extensions;
 
-using AshMind.Web.Gallery.Core.Metadata;
-using AshMind.Web.Gallery.Core.IO;
+using AshMind.Gallery.Core.Metadata;
+using AshMind.Gallery.Core.IO;
 
-namespace AshMind.Web.Gallery.Core.Integration.Picasa {
+namespace AshMind.Gallery.Core.Integration.Picasa {
     public class PicasaOrientationProvider : IOrientationProvider {
         private readonly PicasaIniFileFinder picasaIniFileFinder;
         private readonly PicasaIniParser picasaIniParser;

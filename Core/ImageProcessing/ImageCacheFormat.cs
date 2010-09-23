@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Net.Mime;
 
-namespace AshMind.Web.Gallery.Core.ImageProcessing {
+namespace AshMind.Gallery.Core.ImageProcessing {
     public class ImageCacheFormat {
         public string MimeType      { get; private set; }
         public string FileExtension { get; private set; }

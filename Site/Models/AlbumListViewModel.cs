@@ -6,9 +6,9 @@ using System.Web;
 
 using AshMind.Extensions;
 
-using AshMind.Web.Gallery.Core;
+using AshMind.Gallery.Core;
 
-namespace AshMind.Web.Gallery.Site.Models {
+namespace AshMind.Gallery.Site.Models {
     public class AlbumListViewModel : PagedListViewModel<AlbumViewModel> {
         public AlbumListViewModel(
             IList<AlbumViewModel> albums,

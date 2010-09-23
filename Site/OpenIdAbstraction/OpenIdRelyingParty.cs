@@ -7,7 +7,7 @@ using DotNetOpenAuth.Messaging;
 using DotNetOpenAuth.OpenId;
 using DotNetOpenAuth.OpenId.RelyingParty;
 
-namespace AshMind.Web.Gallery.Site.OpenIdAbstraction {
+namespace AshMind.Gallery.Site.OpenIdAbstraction {
     public class OpenIdAjaxRelyingParty : IOpenIdAjaxRelyingParty {
         private readonly DotNetOpenAuth.OpenId.RelyingParty.OpenIdAjaxRelyingParty actual;
 

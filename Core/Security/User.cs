@@ -5,7 +5,7 @@ using System.Text;
 
 using AshMind.Extensions;
 
-namespace AshMind.Web.Gallery.Core.Security {
+namespace AshMind.Gallery.Core.Security {
     public class User : IUserGroup {
         public static User System { get; private set; }
 

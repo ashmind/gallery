@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using AshMind.Web.Gallery.Core.IO;
-using AshMind.Web.Gallery.Core.Security;
+using AshMind.Gallery.Core.IO;
+using AshMind.Gallery.Core.Security;
 
-namespace AshMind.Web.Gallery.Core {
+namespace AshMind.Gallery.Core {
     public interface IAlbumProvider {
         IEnumerable<Album> GetAllAlbums(IEnumerable<ILocation> locations, User user);
         Album GetAlbum(IEnumerable<ILocation> locations, string providerSpecificPath, User user);

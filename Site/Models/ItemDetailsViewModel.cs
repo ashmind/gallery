@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-using AshMind.Web.Gallery.Core;
-using AshMind.Web.Gallery.Core.Security;
+using AshMind.Gallery.Core;
+using AshMind.Gallery.Core.Security;
 
-namespace AshMind.Web.Gallery.Site.Models {
+namespace AshMind.Gallery.Site.Models {
     public class ItemDetailsViewModel {
         public ItemDetailsViewModel(string albumID, AlbumItem item, User currentUser) {
             this.AlbumID = albumID;

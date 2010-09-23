@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using AshMind.Web.Gallery.Core.ImageProcessing;
-using AshMind.Web.Gallery.Core.IO;
+using AshMind.Gallery.Core.ImageProcessing;
+using AshMind.Gallery.Core.IO;
 
-namespace AshMind.Web.Gallery.Core {
+namespace AshMind.Gallery.Core {
     public class AlbumItem {
         private Lazy<IList<Comment>> lazyComments;
 

@@ -6,7 +6,7 @@ using System.Web.Routing;
 
 using AshMind.Extensions;
 
-namespace AshMind.Web.Gallery.Site.Extensions {
+namespace AshMind.Gallery.Site.Extensions {
     public static class GravatarExtension {
         public static string Gravatar(this HtmlHelper html, string email) {
             return GetImageTag(GetGravatar(email), new RouteValueDictionary(), null);

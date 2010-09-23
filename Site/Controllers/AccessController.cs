@@ -13,13 +13,13 @@ using DotNetOpenAuth.OpenId.RelyingParty;
 
 using AshMind.Extensions;
 
-using AshMind.Web.Gallery.Core;
-using AshMind.Web.Gallery.Core.Security;
-using AshMind.Web.Gallery.Site.Models;
-using AshMind.Web.Gallery.Site.OpenIdAbstraction;
+using AshMind.Gallery.Core;
+using AshMind.Gallery.Core.Security;
+using AshMind.Gallery.Site.Models;
+using AshMind.Gallery.Site.OpenIdAbstraction;
 using System.Collections.Generic;
 
-namespace AshMind.Web.Gallery.Site.Controllers {
+namespace AshMind.Gallery.Site.Controllers {
     [HandleError]
     public class AccessController : Controller {
         private readonly IOpenIdAjaxRelyingParty openId;

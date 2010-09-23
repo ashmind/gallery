@@ -4,10 +4,10 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 
-using AshMind.Web.Gallery.Core.Metadata;
-using AshMind.Web.Gallery.Core.IO;
+using AshMind.Gallery.Core.Metadata;
+using AshMind.Gallery.Core.IO;
 
-namespace AshMind.Web.Gallery.Core.ImageProcessing {
+namespace AshMind.Gallery.Core.ImageProcessing {
     public class ExifOrientationProvider : IOrientationProvider {
         private const int ExifOrientationId = 274;
 

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-using AshMind.Web.Gallery.Core.IO;
+using AshMind.Gallery.Core.IO;
 
-namespace AshMind.Web.Gallery.Core.Tests.IO {
+namespace AshMind.Gallery.Core.Tests.IO {
     public class MemoryFile : IFile {
         private MemoryStream stream = new MemoryStream();
         

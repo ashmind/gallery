@@ -5,9 +5,9 @@ using System.Linq;
 using System.Web;
 
 using AshMind.Extensions;
-using AshMind.Web.Gallery.Core.Security;
+using AshMind.Gallery.Core.Security;
 
-namespace AshMind.Web.Gallery.Site.Models {
+namespace AshMind.Gallery.Site.Models {
     public class GrantViewModel {
         private readonly HashSet<IUserGroup> grantedUserGroups;
 

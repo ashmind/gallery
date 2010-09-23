@@ -2,7 +2,7 @@
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace AshMind.Web.Gallery.Site.Routing {
+namespace AshMind.Gallery.Site.Routing {
     public static class RouteCollectionExtensions {
         public static void MapLowerCaseRoute(this RouteCollection routes, string name, string url, object defaults) {
             routes.MapLowerCaseRoute(name, url, defaults, null);

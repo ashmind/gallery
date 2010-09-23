@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AshMind.Web.Gallery.Core.AlbumSupport {
+namespace AshMind.Gallery.Core.AlbumSupport {
     public class AlbumDescriptor {
         public AlbumDescriptor(string providerKey, string providerSpecificPath) {
             this.ProviderKey = providerKey;

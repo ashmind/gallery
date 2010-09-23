@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using AshMind.Web.Gallery.Core.IO;
+using AshMind.Gallery.Core.IO;
 
-namespace AshMind.Web.Gallery.Core.Integration.Picasa {
+namespace AshMind.Gallery.Core.Integration.Picasa {
     public class PicasaIniFileFinder {
         private static readonly string[] fileNames = { ".picasa.ini", "picasa.ini" };
 
