@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using AshMind.Extensions;
+
 using AshMind.Gallery.Core.ImageProcessing;
 using AshMind.Gallery.Core.IO;
+using AshMind.Gallery.Core.Security;
 
 namespace AshMind.Gallery.Core {
-    public class AlbumItem {
+    public class AlbumItem : IReadOnlySupport<AlbumItem> {
+        private bool readOnly;
         private Lazy<IList<Comment>> lazyComments;
+        private Lazy<Album> lazyPrimaryAlbum;
 
         internal AlbumItem(
             IFile file,
@@ -22,6 +27,7 @@ namespace AshMind.Gallery.Core {
             this.Type = type;
             this.Date = date;
             this.lazyComments = new Lazy<IList<Comment>>(getComments);
+            this.DeleteProposals = new List<User>();
         }
 
         public IFile File { get; private set; }
@@ -33,10 +39,53 @@ namespace AshMind.Gallery.Core {
             get { return this.LazyPrimaryAlbum != null ? this.LazyPrimaryAlbum.Value : null; }
         }
 
-        internal Lazy<Album> LazyPrimaryAlbum { get; set; }
+        public IList<User> DeleteProposals { get; private set; }
+        internal Lazy<Album> LazyPrimaryAlbum {
+            get { return this.lazyPrimaryAlbum; }
+            set {
+                if (this.readOnly)
+                    throw new InvalidOperationException("The AlbumItem is read-only.");
+
+                this.lazyPrimaryAlbum = value;
+            }
+        }
 
         public IList<Comment> Comments {
-            get { return lazyComments.Value; }
+            get { return this.lazyComments.Value; }
         }
+
+        public bool IsProposedToBeDeleted {
+            get { return this.DeleteProposals.Count > 0; }
+        }
+
+        #region IReadOnlySupport<AlbumItem> Members
+
+        public void MakeReadOnly() {
+            if (this.readOnly)
+                return;
+
+            this.readOnly = true;
+            this.lazyPrimaryAlbum = this.lazyPrimaryAlbum.Apply(album => album.MakeReadOnly());
+            this.lazyComments = this.lazyComments.Apply(comments => comments.AsReadOnly());
+            this.DeleteProposals = this.DeleteProposals.AsReadOnly();
+        }
+
+        public bool IsReadOnly {
+            get { return this.readOnly; }
+        }
+
+        public AlbumItem AsWritable() {
+            if (!this.IsReadOnly)
+                return this;
+
+            var item = new AlbumItem(
+                this.File, this.Name, this.Type, this.Date,
+                () => this.Comments
+            );
+            item.DeleteProposals.AddRange(this.DeleteProposals);
+            return item;
+        }
+
+        #endregion
     }
 }

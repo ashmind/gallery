@@ -10,10 +10,11 @@ using AshMind.Gallery.Core.AlbumSupport;
 using AshMind.Gallery.Core.IO;
 
 namespace AshMind.Gallery.Core {
-    public class Album {
+    public class Album : IReadOnlySupport<Album> {
         public static Album Empty { get; private set; }
 
-        private readonly Lazy<ReadOnlyCollection<AlbumItem>> lazyItems;
+        private bool readOnly = false;
+        private Lazy<ReadOnlyCollection<AlbumItem>> lazyItems;
         private readonly Lazy<DateTimeOffset> lazyDate;
 
         static Album() {
@@ -25,13 +26,19 @@ namespace AshMind.Gallery.Core {
         {
         }
 
-        public Album(AlbumDescriptor descriptor, string name, Func<IList<AlbumItem>> getItems, object securableToken) {
+        public Album(AlbumDescriptor descriptor, string name, Func<IList<AlbumItem>> getItems, object securableToken)
+            : this(descriptor, name, new Lazy<ReadOnlyCollection<AlbumItem>>(() => getItems().AsReadOnly(), true), securableToken)
+        {
+        }
+
+        private Album(AlbumDescriptor descriptor, string name, Lazy<ReadOnlyCollection<AlbumItem>> items, object securableToken) {
             this.Descriptor = descriptor;
             this.Name = name;
-            this.lazyItems = new Lazy<ReadOnlyCollection<AlbumItem>>(() => getItems().AsReadOnly());
+            this.lazyItems = items;
             this.SecurableToken = securableToken;
             this.lazyDate = new Lazy<DateTimeOffset>(
-                () => Items.Min(i => (DateTimeOffset?)i.Date) ?? DateTimeOffset.Now
+                () => Items.Min(i => (DateTimeOffset?)i.Date) ?? DateTimeOffset.Now,
+                true
             );
         }
 
@@ -46,5 +53,38 @@ namespace AshMind.Gallery.Core {
         public ReadOnlyCollection<AlbumItem> Items {
             get { return this.lazyItems.Value; }
         }
+
+        #region IReadOnlySupport<Album> Members
+
+        public void MakeReadOnly() {
+            if (this.readOnly)
+                return;
+
+            this.readOnly = true;
+            this.lazyItems = this.lazyItems.Apply(items => MakeReadOnly(items));
+        }
+
+        private void MakeReadOnly(IEnumerable<AlbumItem> items) {
+            foreach (var item in items) {
+                item.MakeReadOnly();
+            }
+        }
+        
+        public bool IsReadOnly {
+            get { return this.readOnly; }
+        }
+
+        public Album AsWritable() {
+            if (!this.readOnly)
+                return this;
+
+            return new Album(
+                this.Descriptor, this.Name,
+                () => this.lazyItems.Value.Select(item => item.AsWritable()).ToArray(),
+                this.SecurableToken
+            );
+        }
+
+        #endregion
     }
 }

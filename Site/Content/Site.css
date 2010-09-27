@@ -197,6 +197,10 @@ a.block-link:hover {
     margin: 0;
 }
 
+.album-view .wall .item.to-delete {
+    opacity: 0.1;
+}
+
 .image-view {
     /*display: block;*/
     text-align: center;

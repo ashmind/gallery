@@ -25,7 +25,7 @@ $(function() {
             if (global.lightboxNotYetShown) {
                 a.click();
             }
-            else {                
+            else {
                 a.parent().toggleClass('selected');
             }
             $.history.noaction = false;
@@ -100,8 +100,15 @@ function setupAlbum() {
                 ">Locate</a>";
             }
 
+            var _delete = "";
+            var deleteAction = a.attr('data-action-delete')
+            if (deleteAction) {
+                _delete = "<a class='delete' href='" + a.attr('data-action-delete') + "'>Propose to delete</a>";
+            }
+
             return "<span id='fancybox-title-over' class='image-actions'>" +
                 locate +
+                _delete +
                 "<a href='" + a.attr('data-action-download') + "'>Download</a>" +
                 "<a href='" + a.attr('data-action-comment') + "'>Comment</a>"
             "</span>";
@@ -120,6 +127,13 @@ function setupAlbum() {
             $("#fancybox-wrap .locate").click(function(event) {
                 event.preventDefault();                
                 $.history.load("\\" + $(this).attr('data-albumid') + '\\' + $(this).attr('data-itemname'));
+            });
+
+            $("#fancybox-wrap .delete").click(function(event) {
+                event.preventDefault();                
+                $.get($(this).attr('href'), {}, function(html) {
+                    $.fancybox.close();
+                });
             });
         },
         onClosed        : function(currentArray, currentIndex) {

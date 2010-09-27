@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Caching;
+using System.Security.Cryptography;
 
 using Autofac;
 using Autofac.Builder;
@@ -27,10 +28,13 @@ namespace AshMind.Gallery.Core {
         private readonly ILocation storageLocation;
         private readonly IFile picasaContactsXmlFile;
 
+        private readonly Func<ObjectCache> cacheFactory;
+
         public CoreModule(
             string albumPath,
             string storagePath,
-            string picasaContactsXmlPath
+            string picasaContactsXmlPath,
+            Func<ObjectCache> cacheFactory
         ) {
             this.fileSystem = new FileSystem();
 
@@ -39,6 +43,8 @@ namespace AshMind.Gallery.Core {
 
             if (picasaContactsXmlPath != null)
                 this.picasaContactsXmlFile = fileSystem.GetFile(picasaContactsXmlPath);
+
+            this.cacheFactory = cacheFactory;
         }
 
         protected override void Load(ContainerBuilder builder) {
@@ -47,7 +53,7 @@ namespace AshMind.Gallery.Core {
             var types = this.GetType().Assembly.GetTypes();
             
 
-            builder.Register(c => new MemoryCache("memory"))
+            builder.Register(c => cacheFactory())
                    .As<ObjectCache>()
                    .FactoryScoped();
 
@@ -69,6 +75,20 @@ namespace AshMind.Gallery.Core {
             builder.Register(c => new ImageCache(cacheRoot, ImageCacheFormat.Jpeg, c.Resolve<ICacheDependencyProvider[]>()))
                    .SingletonScoped();
 
+            RegisterSecurity(builder);
+
+            RegisterAlbumSupport(builder, types);
+
+            builder.Register<PreviewFacade>().SingletonScoped();
+            
+            RegisterPicasaIntegration(builder);
+                        
+            RegisterAllImplementationsOf<ILocationMetadataProvider>(builder, types, InstanceScope.Singleton);            
+            RegisterAllImplementationsOf<IOrientationProvider>(builder, types,  InstanceScope.Singleton);
+            RegisterAllImplementationsOf<ICacheDependencyProvider>(builder, types, InstanceScope.Singleton);            
+        }
+
+        private void RegisterSecurity(ContainerBuilder builder) {
             builder.Register<AuthorizationService>().SingletonScoped();
             builder.Register<JsonKeyPermissionProvider>()
                    .As<IPermissionProvider>()
@@ -79,19 +99,22 @@ namespace AshMind.Gallery.Core {
                    .As<IPermissionProvider>()
                    .SingletonScoped();
 
-            RegisterAlbumSupport(builder);
+            // because my current gallery has a lot of stuff with permissions set through this:
+            builder.Register<ObsoleteJsonLocationPermissionProvider>()
+                   .As<IPermissionProvider>()
+                   .SingletonScoped();
 
-            builder.Register<PreviewFacade>().SingletonScoped();
+            builder.Register<MD5UserGroupSecureReferenceStrategy>()
+                   .As<IUserGroupSecureReferenceStrategy>()
+                   .ContainerScoped();
 
-            RegisterPicasaIntegration(builder);
+            builder.Register(c => MD5.Create())
+                   .ContainerScoped();
 
-            RegisterAllImplementationsOf<IAlbumProvider>(builder, types,        InstanceScope.Singleton);
-            RegisterAllImplementationsOf<IOrientationProvider>(builder, types,  InstanceScope.Singleton);
-            RegisterAllImplementationsOf<ICacheDependencyProvider>(builder, types, InstanceScope.Singleton);
-            RegisterAllImplementationsOf<IAlbumFilter>(builder, types,          InstanceScope.Singleton);
+            builder.Register(c => (Func<IUserGroupSecureReferenceStrategy>)(() => c.Resolve<IUserGroupSecureReferenceStrategy>()));
         }
 
-        private void RegisterAlbumSupport(ContainerBuilder builder) {
+        private void RegisterAlbumSupport(ContainerBuilder builder, IEnumerable<Type> types) {
             builder.Register(c => new AlbumIDProvider(this.storageLocation, this.fileSystem))
                    .As<IAlbumIDProvider>();
 
@@ -100,6 +123,10 @@ namespace AshMind.Gallery.Core {
             builder.Register<AlbumFacade>()
                    .WithArguments(new TypedParameter(typeof(ILocation), this.albumLocation))
                    .SingletonScoped();
+
+            RegisterAllImplementationsOf<IAlbumItemMetadataProvider>(builder, types, InstanceScope.Singleton);
+            RegisterAllImplementationsOf<IAlbumProvider>(builder, types, InstanceScope.Singleton);
+            RegisterAllImplementationsOf<IAlbumFilter>(builder, types, InstanceScope.Singleton);
         }
 
         private void RegisterPicasaIntegration(ContainerBuilder builder) {

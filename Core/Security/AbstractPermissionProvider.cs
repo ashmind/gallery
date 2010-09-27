@@ -5,6 +5,14 @@ using System.Text;
 
 namespace AshMind.Gallery.Core.Security {
     public abstract class AbstractPermissionProvider<TTarget> : IPermissionProvider {
+        public virtual bool CanGetPermissions(TTarget target) {
+            return true;
+        }
+
+        public virtual bool CanSetPermissions(TTarget target) {
+            return true;
+        }
+
         public abstract IEnumerable<Permission> GetPermissions(TTarget target);
         public abstract void SetPermissions(TTarget target, IEnumerable<Permission> permissions);
 
@@ -18,8 +26,14 @@ namespace AshMind.Gallery.Core.Security {
             this.SetPermissions((TTarget)target, permissions);
         }
 
-        bool IPermissionProvider.CanGetOrSetPermissions(object target) {
-            return target is TTarget;
+        bool IPermissionProvider.CanGetPermissions(object target) {
+            return target is TTarget
+                && this.CanGetPermissions((TTarget)target);
+        }
+
+        bool IPermissionProvider.CanSetPermissions(object target) {
+            return target is TTarget
+                && this.CanSetPermissions((TTarget)target);
         }
 
         #endregion

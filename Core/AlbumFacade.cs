@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
+using AshMind.Extensions;
+
 using AshMind.Gallery.Core.AlbumSupport;
 using AshMind.Gallery.Core.Commenting;
 using AshMind.Gallery.Core.ImageProcessing;
@@ -18,6 +20,7 @@ namespace AshMind.Gallery.Core {
         private readonly IAlbumIDProvider idProvider;
         private readonly IDictionary<string, IAlbumProvider> albumProviders;
         private readonly IAlbumFilter[] albumFilters;
+        private readonly IAlbumItemMetadataProvider[] metadataProviders;
 
         internal ILocation Root { private set; get; }
 
@@ -25,13 +28,15 @@ namespace AshMind.Gallery.Core {
             ILocation root,
             IAlbumIDProvider idProvider,
             IAlbumProvider[] albumProviders,
-            IAlbumFilter[] albumFilters
+            IAlbumFilter[] albumFilters,
+            IAlbumItemMetadataProvider[] metadataProviders
         ) {
             this.Root = root;
 
             this.idProvider = idProvider;
             this.albumProviders = albumProviders.ToDictionary(p => p.ProviderKey);
             this.albumFilters = albumFilters;
+            this.metadataProviders = metadataProviders;
         }
 
         public IEnumerable<Album> GetAlbums(string providerKey, User user) {
@@ -58,6 +63,10 @@ namespace AshMind.Gallery.Core {
             var provider = this.albumProviders[descriptor.ProviderKey];
 
             return provider.GetAlbum(GetAlbumLocations(), descriptor.ProviderSpecificPath, user);
+        }
+
+        public void SaveItem(AlbumItem item) {
+            this.metadataProviders.ForEach(p => p.SaveMetadata(item));
         }
     }
 }

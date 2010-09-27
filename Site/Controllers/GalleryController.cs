@@ -112,6 +112,18 @@ namespace AshMind.Gallery.Site.Controllers {
             return RedirectToAction("View", new { album, item });
         }
 
+        public ActionResult ProposeDelete(string album, string item) {
+            if (!Request.IsAjaxRequest())
+                throw new NotImplementedException();
+
+            var galleryItem = this.gallery.GetItem(album, item, User);
+            galleryItem.DeleteProposals.Add(User);
+
+            this.gallery.SaveItem(galleryItem);
+
+            return new EmptyResult();
+        }
+
         private AlbumViewModel ToViewModel(Album album, bool manageSecurity) {
             if (album == null)
                 return null;

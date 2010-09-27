@@ -37,7 +37,9 @@ namespace AshMind.Gallery.Core.Integration.Picasa {
                 let key = new ContactKey(subject.Attribute("user").Value, subject.Attribute("id").Value)
                 let person = new Person(
                     element.Attribute("name").Value,
-                    element.Attributes("email0").Select(x => x.Value).SingleOrDefault()
+                    from attribute in element.Attributes()
+                    where attribute.Name.LocalName.StartsWith("email")
+                    select attribute.Value
                 )
                 select new { key, person }
             );

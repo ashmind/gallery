@@ -37,13 +37,15 @@ namespace AshMind.Gallery.Core.IO.Implementation {
         }
 
         public void SetHidden(bool value) {
-            if (!value)
-                throw new NotImplementedException();
+            var attributes = System.IO.File.GetAttributes(this.path);
+            if (value) {
+                attributes |= FileAttributes.Hidden;
+            }
+            else {
+                attributes &= ~FileAttributes.Hidden;
+            }
 
-            System.IO.File.SetAttributes(
-                this.path,
-                System.IO.File.GetAttributes(this.path) | FileAttributes.Hidden
-            );
+            System.IO.File.SetAttributes(this.path, attributes);
         }
 
         public Stream Read(FileLockMode lockMode) {

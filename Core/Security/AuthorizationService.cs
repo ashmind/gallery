@@ -28,7 +28,7 @@ namespace AshMind.Gallery.Core.Security {
             
             var otherGroups = (
                 from provider in this.providers
-                where provider.CanGetOrSetPermissions(target)
+                where provider.CanGetPermissions(target)
                 from permission in provider.GetPermissions(target)
                 where permission.Action == action
                     && !superGroups.Contains(permission.Group)
@@ -51,7 +51,7 @@ namespace AshMind.Gallery.Core.Security {
                 Group = group
             });
 
-            var provider = this.providers.FirstOrDefault(p => p.CanGetOrSetPermissions(target));
+            var provider = this.providers.FirstOrDefault(p => p.CanSetPermissions(target));
 
             if (provider == null)
                 throw new NotSupportedException();

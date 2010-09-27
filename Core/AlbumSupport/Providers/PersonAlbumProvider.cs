@@ -4,6 +4,8 @@ using System.Linq;
 using System.Runtime.Caching;
 using System.Text;
 
+using AshMind.Extensions;
+
 using AshMind.Gallery.Core.Integration;
 using AshMind.Gallery.Core.IO;
 using AshMind.Gallery.Core.Security;
@@ -34,13 +36,13 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
             var albumsCacheKey = "faces:all_albums";
             var cached = this.faceCache.Get(albumsCacheKey);
             if (cached != null)
-                return FilterByAuthorization((Album[])cached, user);
+                return CorrectAlbums((Album[])cached, user);
 
             var albums = (
                 from location in locations
                 from face in GetFaces(location)
                 group face by face.Person into personFaces
-                let uniqueKey = personFaces.Key.Email ?? personFaces.Key.Name
+                let uniqueKey = personFaces.Key.Emails.ElementAtOrDefault(0) ?? personFaces.Key.Name
                 select new Album(
                     new AlbumDescriptor(this.ProviderKey, uniqueKey),
                     personFaces.Key.Name,
@@ -54,11 +56,12 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
                 )
             ).ToArray();
 
+            albums.ForEach(a => a.MakeReadOnly());
             this.faceCache.Set(albumsCacheKey, albums, new CacheItemPolicy {
                 AbsoluteExpiration = DateTimeOffset.Now.AddDays(3)
             });
 
-            return FilterByAuthorization(albums, user);
+            return CorrectAlbums(albums, user);
         }
 
         private AlbumItem CreateAlbumItem(Face face, AlbumItemType itemType) {
@@ -72,6 +75,10 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
 
         public Album GetAlbum(IEnumerable<ILocation> locations, string providerSpecificPath, User user) {
             return this.GetAllAlbums(locations, user).Single(a => a.Descriptor.ProviderSpecificPath == providerSpecificPath);
+        }
+
+        private IEnumerable<Album> CorrectAlbums(IEnumerable<Album> albums, User user) {
+            return FilterByAuthorization(albums, user).Select(a => a.AsWritable());
         }
 
         private IEnumerable<Album> FilterByAuthorization(IEnumerable<Album> albums, User user) {

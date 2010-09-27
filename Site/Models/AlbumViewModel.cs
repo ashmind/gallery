@@ -11,7 +11,9 @@ using AshMind.Gallery.Core.Security;
 
 namespace AshMind.Gallery.Site.Models {
     public class AlbumViewModel {
-        public AlbumViewModel(Album album, Func<Album, string> getAlbumID) {
+        public AlbumViewModel(
+            Album album, Func<Album, string> getAlbumID
+        ) {
             this.ID = getAlbumID(album);
             this.Album = album;
             this.GetAdditionalAlbumID = getAlbumID;

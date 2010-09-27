@@ -9,17 +9,18 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.IO;
 
-using AshMind.Extensions;
-
-using AshMind.Gallery.Core;
-using AshMind.Gallery.Site.Models;
-using AshMind.Gallery.Site.Routing;
-
 using Autofac;
 using Autofac.Builder;
 using Autofac.Modules;
 using Autofac.Integration.Web;
 using Autofac.Integration.Web.Mvc;
+
+using AshMind.Extensions;
+
+using AshMind.Gallery.Core;
+using AshMind.Gallery.Site.Fixes;
+using AshMind.Gallery.Site.Models;
+using AshMind.Gallery.Site.Routing;
 
 namespace AshMind.Gallery.Site {
     public class MvcApplication : System.Web.HttpApplication {
@@ -80,7 +81,7 @@ namespace AshMind.Gallery.Site {
                 "Item Action",
                 "{album}/{item}/{action}",
                 new { controller = "gallery" },
-                new { action = "(view|comment)" }
+                new { action = "(view|comment|proposedelete)" }
             );
 
             routes.MapRoute(
@@ -118,7 +119,7 @@ namespace AshMind.Gallery.Site {
             var dataRoot = Path.Combine(Server.MapPath("~"), ".Store");
             Directory.CreateDirectory(dataRoot);
 
-            builder.RegisterModule(new CoreModule(albumsRoot, dataRoot, picasaContactsXmlPath));
+            builder.RegisterModule(new CoreModule(albumsRoot, dataRoot, picasaContactsXmlPath, () => new WebCache()));
             builder.RegisterModule(new WebModule());
 
             containerProvider = new ContainerProvider(builder.Build());

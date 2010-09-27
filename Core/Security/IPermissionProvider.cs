@@ -5,7 +5,8 @@ using System.Text;
 
 namespace AshMind.Gallery.Core.Security {
     public interface IPermissionProvider {
-        bool CanGetOrSetPermissions(object target);
+        bool CanGetPermissions(object target);
+        bool CanSetPermissions(object target);
 
         IEnumerable<Permission> GetPermissions(object target);
         void SetPermissions(object target, IEnumerable<Permission> permissions);

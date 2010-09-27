@@ -1,13 +1,14 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<AlbumViewModel>" %>
 
 <% foreach (var item in Model.Album.Items.OrderBy(i => i.Date)) { %>
-  <span class="item">
+  <span class="item <%= item.IsProposedToBeDeleted ? "to-delete" : "" %>">
     <a rel="gallery-item"
        href="<%= Url.Action("Get", "Image", new { album = Model.ID, item = item.Name, size = ImageSize.Large.Name.ToLowerInvariant() }) %>"
        data-name="<%= item.Name %>"
        <% if (item.PrimaryAlbum != null) { %>
        data-primaryAlbumID="<%= Model.GetAdditionalAlbumID(item.PrimaryAlbum) %>"
        <% } %>
+       data-action-delete="<%= Url.Action("ProposeDelete", "Gallery", new { album = Model.ID, item = item.Name }) %>"
        data-action-download="<%= Url.Action("Get", "Image", new { album = Model.ID, item = item.Name }) %>"
        data-action-comment="<%= Url.Action("View", "Gallery", new { album = Model.ID, item = item.Name }) %>"
        class="image-view"> 

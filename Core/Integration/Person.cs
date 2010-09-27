@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
 namespace AshMind.Gallery.Core.Integration {
     public class Person {
-        public Person(string name, string email) {
+        public Person(string name, IEnumerable<string> emails) {
             this.Name = name;
-            this.Email = email;
+            this.Emails = emails.ToList().AsReadOnly();
         }
 
         public string Name  { get; private set; }
-        public string Email { get; set; }
+        public ReadOnlyCollection<string> Emails { get; private set; }
     }
 }
