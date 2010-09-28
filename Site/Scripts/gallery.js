@@ -79,7 +79,21 @@ function loadAlbum(a, onsuccess) {
     });        
 }
 
+function reloadAlbum() {
+    loadAlbum($("#left a.album-name.selected"));
+}
+
 function setupAlbum() {
+    function getItemData(a) {
+        var data = a.data('data');
+        if (!data) {
+            data = eval('(' + a.attr('data-json') + ')');
+            a.data('data', data);
+        }
+
+        return data;
+    }
+
     $(".wall a").fancybox({
         padding	        : 0,
         transitionIn	: 'fade',
@@ -87,40 +101,17 @@ function setupAlbum() {
         overlayOpacity  : 0.8,
         overlayColor    : '#000',
         titlePosition   : 'over',
-        titleFormat     : function(title, currentArray, currentIndex) {
-            var a = currentArray.eq(currentIndex);
 
-            var locate = "";
-            var primaryAlbumID = a.attr('data-primaryAlbumID');
-            if (primaryAlbumID) {
-                locate = "<a class='locate' " +
-                    "data-albumID='" + primaryAlbumID + "' " +
-                    "data-itemname='" + a.attr('data-name') + "' " +
-                    "href='javascript:void(\"locate\")'" +
-                ">Locate</a>";
-            }
-
-            var _delete = "";
-            var deleteAction = a.attr('data-action-delete')
-            if (deleteAction) {
-                _delete = "<a class='delete' href='" + a.attr('data-action-delete') + "'>Propose to delete</a>";
-            }
-
-            return "<span id='fancybox-title-over' class='image-actions'>" +
-                locate +
-                _delete +
-                "<a href='" + a.attr('data-action-download') + "'>Download</a>" +
-                "<a href='" + a.attr('data-action-comment') + "'>Comment</a>"
-            "</span>";
-        },
         onComplete      : function(currentArray, currentIndex) {
             global.lightboxNotYetShown = false;
 
             var a = currentArray.eq(currentIndex);
+            var data = getItemData(a);
+
             a.parent().toggleClass('selected');
             if (!$.history.noaction) {
                 $.history.noaction = true;
-                $.history.load("\\" + a.parents('.album-view').attr('data-id') + '\\' + a.attr('data-name'));
+                $.history.load("\\" + a.parents('.album-view').attr('data-id') + '\\' + data.name);
                 $.history.noaction = false;
             }
 
@@ -130,12 +121,37 @@ function setupAlbum() {
             });
 
             $("#fancybox-wrap .delete").click(function(event) {
-                event.preventDefault();                
-                $.get($(this).attr('href'), {}, function(html) {
+                event.preventDefault();
+                var a = $(this);
+                $.get(a.attr('href'), {}, function(isDeleted) {
                     $.fancybox.close();
+                    reloadAlbum();
                 });
             });
         },
+
+        titleFormat     : function(title, currentArray, currentIndex) {
+            var a = currentArray.eq(currentIndex);
+            var data = getItemData(a);
+
+            var locate = "";
+            if (data.primaryAlbumID) {
+                locate = "<a class='locate' " +
+                    "data-albumID='" + data.primaryAlbumID + "' " +
+                    "data-itemname='" + data.name + "' " +
+                    "href='javascript:void(\"locate\")'" +
+                ">Locate</a>";
+            }
+
+            var _delete = "<a class='delete' href='" + data.actions['delete'].action + "'>" + data.actions['delete'].text + "</a>";
+            return "<span id='fancybox-title-over' class='image-actions'>" +
+                locate +
+                _delete +
+                "<a href='" + data.actions.download + "'>Download</a>" +
+                "<a href='" + data.actions.comment + "'>Comment</a>"
+            "</span>";
+        },
+
         onClosed        : function(currentArray, currentIndex) {
             var a = currentArray.eq(currentIndex);
 
@@ -144,7 +160,7 @@ function setupAlbum() {
                 $.history.load("\\" + a.parents('.album-view').attr('data-id'));
                 $.history.noaction = false;
             }
-            global.noHistoryRecordWhileClosingLightbox = true;
+            global.noHistoryRecordWhileClosingLightbox = false;
         }
     });
 
@@ -194,7 +210,7 @@ function setupSecurityPanel() {
             $('form.grant').ajaxForm({
                 success : function() {
                     $.fancybox.close();
-                    loadAlbum($("#left a.album-name.selected")); // reloads album
+                    reloadAlbum();
                 }
             });
         }

@@ -27,7 +27,7 @@ namespace AshMind.Gallery.Core {
             this.Type = type;
             this.Date = date;
             this.lazyComments = new Lazy<IList<Comment>>(getComments);
-            this.DeleteProposals = new List<User>();
+            this.DeleteProposals = new HashSet<User>();
         }
 
         public IFile File { get; private set; }
@@ -39,7 +39,7 @@ namespace AshMind.Gallery.Core {
             get { return this.LazyPrimaryAlbum != null ? this.LazyPrimaryAlbum.Value : null; }
         }
 
-        public IList<User> DeleteProposals { get; private set; }
+        public ICollection<User> DeleteProposals { get; private set; }
         internal Lazy<Album> LazyPrimaryAlbum {
             get { return this.lazyPrimaryAlbum; }
             set {
@@ -67,7 +67,7 @@ namespace AshMind.Gallery.Core {
             this.readOnly = true;
             this.lazyPrimaryAlbum = this.lazyPrimaryAlbum.Apply(album => album.MakeReadOnly());
             this.lazyComments = this.lazyComments.Apply(comments => comments.AsReadOnly());
-            this.DeleteProposals = this.DeleteProposals.AsReadOnly();
+            this.DeleteProposals = this.DeleteProposals.ToArray().AsReadOnly();
         }
 
         public bool IsReadOnly {

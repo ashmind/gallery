@@ -81,7 +81,7 @@ namespace AshMind.Gallery.Site {
                 "Item Action",
                 "{album}/{item}/{action}",
                 new { controller = "gallery" },
-                new { action = "(view|comment|proposedelete)" }
+                new { action = "(view|comment|proposedelete|revertdelete)" }
             );
 
             routes.MapRoute(

@@ -27,5 +27,13 @@ namespace AshMind.Gallery.Site.Controllers
                 return this.userRepository.Load(base.User.Identity.Name);
             }
         }
+
+        public HttpUnauthorizedResult Unauthorized() {
+            return new HttpUnauthorizedResult();
+        }
+
+        public EmptyResult Empty() {
+            return new EmptyResult();
+        }
     }
 }

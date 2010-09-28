@@ -8,6 +8,7 @@ using AshMind.Gallery.Core;
 using AshMind.Gallery.Site.Models;
 using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Core.Commenting;
+using System.Net.Mime;
 
 namespace AshMind.Gallery.Site.Controllers {
     [Authorize]
@@ -113,15 +114,27 @@ namespace AshMind.Gallery.Site.Controllers {
         }
 
         public ActionResult ProposeDelete(string album, string item) {
+            return ToggleDelete(album, item, albumItem => albumItem.DeleteProposals.Add(User));
+        }
+
+        public ActionResult RevertDelete(string album, string item) {
+            return ToggleDelete(album, item, albumItem => albumItem.DeleteProposals.Remove(User));
+        }
+
+        private ActionResult ToggleDelete(string albumID, string itemName, Action<AlbumItem> action) {
             if (!Request.IsAjaxRequest())
-                throw new NotImplementedException();
+                throw new NotImplementedException();          
 
-            var galleryItem = this.gallery.GetItem(album, item, User);
-            galleryItem.DeleteProposals.Add(User);
+            var album = this.gallery.GetAlbum(albumID, User);
+            if (album == null)
+                return Unauthorized();
 
-            this.gallery.SaveItem(galleryItem);
+            var item = album.Items.Single(i => i.Name == itemName);
+            action(item);
 
-            return new EmptyResult();
+            this.gallery.SaveItem(item);
+
+            return Content(item.DeleteProposals.Count.ToString(), MediaTypeNames.Text.Plain);
         }
 
         private AlbumViewModel ToViewModel(Album album, bool manageSecurity) {
@@ -130,10 +143,10 @@ namespace AshMind.Gallery.Site.Controllers {
 
             var id = this.gallery.GetAlbumID(album);
             if (!manageSecurity || !authorization.IsAuthorized(this.User, SecurableAction.ManageSecurity, null))
-                return new AlbumViewModel(album, this.gallery.GetAlbumID);
+                return new AlbumViewModel(album, this.gallery.GetAlbumID, this.User);
 
             return new AlbumViewModel(
-                album, this.gallery.GetAlbumID,
+                album, this.gallery.GetAlbumID, this.User,
                 true, (
                     from @group in this.authorization.GetAuthorizedTo(SecurableAction.View, album.SecurableToken)
                     select new UserGroupViewModel(@group)
