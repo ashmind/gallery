@@ -8,7 +8,7 @@ $(function() {
         if ($.history.noaction)
             return;
 
-        var parts = hash.replace(/^\\/, '').split('\\');
+        var parts = hash.replace(/^\//, '').split('/');
         var albumLink = $("#left a.album-name[data-id='" + parts[0] + "']");
 
         if (albumLink.length == 0)
@@ -45,7 +45,7 @@ $(function() {
 
     $("#left a.album-name").live('click', function(event) {
         event.preventDefault();
-        $.history.load("\\" + $(this).attr('data-id'));
+        $.history.load("/" + $(this).attr('data-id'));
     });
 
     $("#left section.folders a.more").live('click', function(event) {
@@ -111,13 +111,13 @@ function setupAlbum() {
             a.parent().toggleClass('selected');
             if (!$.history.noaction) {
                 $.history.noaction = true;
-                $.history.load("\\" + a.parents('.album-view').attr('data-id') + '\\' + data.name);
+                $.history.load("/" + a.parents('.album-view').attr('data-id') + '/' + data.name);
                 $.history.noaction = false;
             }
 
             $("#fancybox-wrap .locate").click(function(event) {
                 event.preventDefault();                
-                $.history.load("\\" + $(this).attr('data-albumid') + '\\' + $(this).attr('data-itemname'));
+                $.history.load("/" + $(this).attr('data-albumid') + '/' + $(this).attr('data-itemname'));
             });
 
             $("#fancybox-wrap .delete").click(function(event) {
@@ -157,7 +157,7 @@ function setupAlbum() {
 
             if (!global.noHistoryRecordWhileClosingLightbox) {
                 $.history.noaction = true;
-                $.history.load("\\" + a.parents('.album-view').attr('data-id'));
+                $.history.load("/" + a.parents('.album-view').attr('data-id'));
                 $.history.noaction = false;
             }
             global.noHistoryRecordWhileClosingLightbox = false;
