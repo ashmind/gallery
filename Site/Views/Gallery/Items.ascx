@@ -4,7 +4,7 @@
   <% var proposedToBeDeletedByCurrentUser = item.DeleteProposals.Contains(Model.CurrentUser); %>
 
   <span class="item<%= item.IsProposedToBeDeleted ? " to-delete" : "" %>">
-    <a rel="gallery-item"
+    <a <% if (!item.IsProposedToBeDeleted) { %>rel="normal-gallery-item"<% } %> 
        href="<%= Url.Action("Get", "Image", new { album = Model.ID, item = item.Name, size = ImageSize.Large.Name.ToLowerInvariant() }) %>"
        data-name="<%= item.Name %>"
        data-json="{

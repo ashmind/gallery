@@ -105,7 +105,7 @@ function setupAlbum() {
         onComplete      : function(currentArray, currentIndex) {
             global.lightboxNotYetShown = false;
 
-            var a = currentArray.eq(currentIndex);
+            var a = $(currentArray).eq(currentIndex);
             var data = getItemData(a);
 
             a.parent().toggleClass('selected');
@@ -131,7 +131,7 @@ function setupAlbum() {
         },
 
         titleFormat     : function(title, currentArray, currentIndex) {
-            var a = currentArray.eq(currentIndex);
+            var a = $(currentArray).eq(currentIndex);
             var data = getItemData(a);
 
             var locate = "";
@@ -153,7 +153,7 @@ function setupAlbum() {
         },
 
         onClosed        : function(currentArray, currentIndex) {
-            var a = currentArray.eq(currentIndex);
+            var a = $(currentArray).eq(currentIndex);
 
             if (!global.noHistoryRecordWhileClosingLightbox) {
                 $.history.noaction = true;
