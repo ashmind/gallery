@@ -6,10 +6,13 @@ using System.Web;
 using System.Web.Mvc;
 using System.Net.Mime;
 
+using AshMind.Extensions;
+
 using AshMind.Gallery.Core;
-using AshMind.Gallery.Site.Models;
 using AshMind.Gallery.Core.IO;
 using AshMind.Gallery.Core.Security;
+using AshMind.Gallery.Site.Logic;
+using AshMind.Gallery.Site.Models;
 
 namespace AshMind.Gallery.Site.Controllers {
     [Authorize]
@@ -23,8 +26,8 @@ namespace AshMind.Gallery.Site.Controllers {
         private readonly AlbumFacade gallery;
         private readonly PreviewFacade preview;
 
-        public ImageController(AlbumFacade gallery, PreviewFacade preview, IRepository<User> userRepository)
-            : base(userRepository)
+        public ImageController(AlbumFacade gallery, PreviewFacade preview, UserAuthentication authentication)
+            : base(authentication)
         {
             this.gallery = gallery;
             this.preview = preview;
@@ -35,8 +38,16 @@ namespace AshMind.Gallery.Site.Controllers {
             var imageSize = ImageSize.Parse(size);
 
             var file = this.gallery.GetItem(album, item, this.User).File;
-            if (imageSize != ImageSize.Original)
+            var fileName = file.Name;
+            if (imageSize != ImageSize.Original) {
                 file = this.preview.GetPreview(file, imageSize.Size);
+                fileName = string.Format(
+                    "{0}_{1}px.{2}",
+                    fileName.SubstringBefore("."),
+                    imageSize.Size,
+                    fileName.SubstringAfter(".")
+                );
+            }
 
             var ifModifiedSince = Request.Headers["If-Modified-Since"];
             var lastModifiedDate = file.GetLastWriteTime();
@@ -68,7 +79,7 @@ namespace AshMind.Gallery.Site.Controllers {
             return File(
                 file.Path,
                 knownMimeTypes[Path.GetExtension(file.Name).ToLower()],
-                file.Name
+                fileName
             );
         }
     }

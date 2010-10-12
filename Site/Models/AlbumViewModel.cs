@@ -14,7 +14,7 @@ namespace AshMind.Gallery.Site.Models {
         public AlbumViewModel(
             Album album,
             Func<Album, string> getAlbumID,
-            User currentUser
+            IUser currentUser
         ) {
             this.ID = getAlbumID(album);
             this.Album = album;
@@ -26,7 +26,7 @@ namespace AshMind.Gallery.Site.Models {
         public AlbumViewModel(
             Album album,
             Func<Album, string> getAlbumID,
-            User currentUser,
+            IUser currentUser,
             bool canManageSecurity, IList<UserGroupViewModel> visibleToGroups            
         ) {
             if (!canManageSecurity)
@@ -42,7 +42,7 @@ namespace AshMind.Gallery.Site.Models {
 
         public string ID { get; private set; }
         public Album Album { get; private set; }
-        public User CurrentUser { get; private set; }
+        public IUser CurrentUser { get; private set; }
 
         public bool CanManageSecurity { get; private set; }
         public ReadOnlyCollection<UserGroupViewModel> VisibleToGroups { get; private set; }

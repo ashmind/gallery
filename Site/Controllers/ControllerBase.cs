@@ -4,27 +4,27 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
+using AshMind.Extensions;
+
 using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Core;
+using AshMind.Gallery.Site.Logic;
 
-namespace AshMind.Gallery.Site.Controllers
-{
-    public abstract class ControllerBase : Controller
-    {
-        private readonly IRepository<User> userRepository;
+namespace AshMind.Gallery.Site.Controllers {
+    public abstract class ControllerBase : Controller {
+        private IUser user;
+        private readonly UserAuthentication authentication;
 
-        public ControllerBase(
-            IRepository<User> userRepository
-        ) {
-            this.userRepository = userRepository;
+        public ControllerBase(UserAuthentication authentication) {
+            this.authentication = authentication;
         }
 
-        public new User User {
-            get { 
-                if (!base.User.Identity.IsAuthenticated)
-                    return null;
+        public new IUser User {
+            get {
+                if (this.user == null)
+                    this.user = this.authentication.GetUser(base.User);
 
-                return this.userRepository.Load(base.User.Identity.Name);
+                return this.user;
             }
         }
 

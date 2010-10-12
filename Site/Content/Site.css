@@ -258,7 +258,7 @@ form.grant .user-group.granted {
     text-align: right;
 }
 
-.image-actions a + a {
+.image-actions * + * {
     margin-left: 0.5em;
 }
 

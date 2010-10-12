@@ -39,7 +39,7 @@ namespace AshMind.Gallery.Core {
             this.metadataProviders = metadataProviders;
         }
 
-        public IEnumerable<Album> GetAlbums(string providerKey, User user) {
+        public IEnumerable<Album> GetAlbums(string providerKey, IUser user) {
             var locations = GetAlbumLocations();
             return this.albumProviders[providerKey].GetAllAlbums(locations, user);
         }
@@ -53,12 +53,12 @@ namespace AshMind.Gallery.Core {
             return this.idProvider.GetAlbumID(album.Name, album.Descriptor);
         }
 
-        public AlbumItem GetItem(string albumID, string itemName, User user) {
+        public AlbumItem GetItem(string albumID, string itemName, IUser user) {
             var album = GetAlbum(albumID, user);
             return album.Items.FirstOrDefault(item => item.Name == itemName);
         }
 
-        public Album GetAlbum(string albumID, User user) {
+        public Album GetAlbum(string albumID, IUser user) {
             var descriptor = this.idProvider.GetAlbumDescriptor(albumID);
             var provider = this.albumProviders[descriptor.ProviderKey];
 

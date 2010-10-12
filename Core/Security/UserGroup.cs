@@ -9,19 +9,22 @@ namespace AshMind.Gallery.Core.Security {
 
         public UserGroup() {
             this.Users = new HashSet<User>();
-            this.Permissions = new HashSet<Permission>();
+            this.Keys = new HashSet<string>();
         }
 
         public string Name                     { get; set; }
         public HashSet<User> Users             { get; private set; }
-        public HashSet<Permission> Permissions { get; private set; }
+        public HashSet<string> Keys            { get; private set; }
 
         public bool IsSuper {
             get { return this.Name == SuperName; }
         }
 
-        HashSet<User> IUserGroup.GetUsers() {
-            return this.Users;
+        IEnumerable<IUser> IUserGroup.GetUsers() {
+            return Enumerable.Concat(
+                this.Users,
+                new IUser[] { new AnonymousMember(this) }
+            );
         }
     }
 }

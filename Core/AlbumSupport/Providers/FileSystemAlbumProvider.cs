@@ -27,7 +27,7 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
             this.cache = cache;
         }
 
-        public IEnumerable<Album> GetAllAlbums(IEnumerable<ILocation> locations, User user) {
+        public IEnumerable<Album> GetAllAlbums(IEnumerable<ILocation> locations, IUser user) {
             return from location in locations
                    let album = GetAlbum(location, user)
                    where album != null
@@ -35,11 +35,11 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
                    select album;
         }
 
-        public Album GetAlbum(IEnumerable<ILocation> locations, string providerSpecificPath, User user) {
+        public Album GetAlbum(IEnumerable<ILocation> locations, string providerSpecificPath, IUser user) {
             return GetAlbum(this.fileSystem.GetLocation(providerSpecificPath), user);
         }
 
-        public Album GetAlbum(ILocation location, User user, bool ensureNonEmpty = true) {
+        public Album GetAlbum(ILocation location, IUser user, bool ensureNonEmpty = true) {
             if (!authorization.IsAuthorized(user, SecurableAction.View, location))
                 return null;
 
@@ -70,7 +70,7 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
             return album.AsWritable();
         }
 
-        private IEnumerable<AlbumItem> GetItemsAtLocation(ILocation location, User user) {
+        private IEnumerable<AlbumItem> GetItemsAtLocation(ILocation location, IUser user) {
             return from file in location.GetFiles()
                    let itemType = GuessItemType.Of(file.Name)
                    where itemType == AlbumItemType.Image

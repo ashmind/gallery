@@ -94,7 +94,9 @@
     <Compile Include="Fixes\FixedFileChangeMonitor.cs" />
     <Compile Include="IReadOnlySupport.cs" />
     <Compile Include="LazyExtensions.cs" />
+    <Compile Include="Security\AnonymousMember.cs" />
     <Compile Include="Security\Internal\MD5UserGroupSecureReferenceStrategy.cs" />
+    <Compile Include="Security\IUser.cs" />
     <Compile Include="Security\IUserGroupSecureReferenceStrategy.cs" />
     <Compile Include="AlbumSupport\Providers\FileSystemAlbumProvider.cs" />
     <Compile Include="AlbumSupport\HiddenAlbumFilter.cs" />

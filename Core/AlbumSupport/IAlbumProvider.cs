@@ -8,8 +8,8 @@ using AshMind.Gallery.Core.Security;
 
 namespace AshMind.Gallery.Core {
     public interface IAlbumProvider {
-        IEnumerable<Album> GetAllAlbums(IEnumerable<ILocation> locations, User user);
-        Album GetAlbum(IEnumerable<ILocation> locations, string providerSpecificPath, User user);
+        IEnumerable<Album> GetAllAlbums(IEnumerable<ILocation> locations, IUser user);
+        Album GetAlbum(IEnumerable<ILocation> locations, string providerSpecificPath, IUser user);
 
         string ProviderKey { get; }
     }

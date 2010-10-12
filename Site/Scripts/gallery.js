@@ -3,6 +3,19 @@
     noHistoryRecordWhileClosingLightbox : false
 };
 
+if (Array.prototype.filter) {
+    Array.prototype.filter = function(filter) {
+        var result = [];
+        for (var i = 0; i < this.length; i++) {
+            if (!filter(this[i], i))
+                continue;
+
+            result.push(this[i]);
+        }
+        return result;
+    }
+}
+
 $(function() {
     $.history.init(function(hash) {
         if ($.history.noaction)
@@ -144,11 +157,17 @@ function setupAlbum() {
             }
 
             var _delete = "<a class='delete' href='" + data.actions['delete'].action + "'>" + data.actions['delete'].text + "</a>";
+            var download = "<span>Download: ";
+            var downloadData = data.actions.download;
+            for (var name in downloadData.sizes) {
+                download += "<a href='" + downloadData.action + "/" + downloadData.sizes[name] + "'>" + name + "</a>"
+            }
+            download += "</span>";
+
             return "<span id='fancybox-title-over' class='image-actions'>" +
-                locate +
-                _delete +
-                "<a href='" + data.actions.download + "'>Download</a>" +
-                "<a href='" + data.actions.comment + "'>Comment</a>"
+                [ locate, _delete, download, "<a href='" + data.actions.comment + "'>Comment</a>" ]
+                    .filter(function(item) { return !!item; })
+                    .join('<span class="separator">|</span>')
             "</span>";
         },
 

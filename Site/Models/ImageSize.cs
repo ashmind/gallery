@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace AshMind.Gallery.Site.Models {
     public sealed class ImageSize {
+        public static ImageSize Thumbnail   { get; private set; }
         public static ImageSize Small       { get; private set; }
         public static ImageSize Medium      { get; private set; }
         public static ImageSize Large       { get; private set; }
@@ -14,12 +15,13 @@ namespace AshMind.Gallery.Site.Models {
         private static IDictionary<string, ImageSize> sizesByName;
 
         static ImageSize() {
-            Small    = new ImageSize("Small", 250);
-            Medium   = new ImageSize("Medium", 500);
-            Large    = new ImageSize("Large", 1000);
-            Original = new ImageSize("Original", 10000);
+            Thumbnail = new ImageSize("Thumbnail", 250);
+            Small     = new ImageSize("Small", 500);
+            Medium    = new ImageSize("Medium", 1000);
+            Large     = new ImageSize("Large", 3000);
+            Original  = new ImageSize("Original", 10000);
 
-            sizesByName = new[] { Small, Medium, Large, Original }.ToDictionary(s => s.Name, StringComparer.InvariantCultureIgnoreCase);
+            sizesByName = new[] { Thumbnail, Small, Medium, Large, Original }.ToDictionary(s => s.Name, StringComparer.InvariantCultureIgnoreCase);
         }
 
         public ImageSize(string name, int size) {

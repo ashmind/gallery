@@ -8,7 +8,7 @@ using AshMind.Gallery.Core.Security;
 
 namespace AshMind.Gallery.Site.Models {
     public class ItemDetailsViewModel {
-        public ItemDetailsViewModel(string albumID, AlbumItem item, User currentUser) {
+        public ItemDetailsViewModel(string albumID, AlbumItem item, IUser currentUser) {
             this.AlbumID = albumID;
             this.Item = item;
             this.CurrentUser = currentUser;
@@ -16,6 +16,6 @@ namespace AshMind.Gallery.Site.Models {
 
         public string AlbumID   { get; private set; }
         public AlbumItem Item   { get; private set; }
-        public User CurrentUser { get; private set; }
+        public IUser CurrentUser { get; private set; }
     }
 }

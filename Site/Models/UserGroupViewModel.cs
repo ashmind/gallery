@@ -24,7 +24,7 @@ namespace AshMind.Gallery.Site.Models {
             }
 
             this.UserGroup = userGroup;
-            this.Users = userGroup.GetUsers().ToList().AsReadOnly();
+            this.Users = userGroup.GetUsers().OfType<User>().ToList().AsReadOnly();
         }
 
         public string Key { get; private set; }

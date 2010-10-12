@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Web;
 using System.Web.Mvc;
 
@@ -8,7 +9,7 @@ using AshMind.Gallery.Core;
 using AshMind.Gallery.Site.Models;
 using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Core.Commenting;
-using System.Net.Mime;
+using AshMind.Gallery.Site.Logic;
 
 namespace AshMind.Gallery.Site.Controllers {
     [Authorize]
@@ -21,8 +22,8 @@ namespace AshMind.Gallery.Site.Controllers {
             AlbumFacade gallery,
             AuthorizationService authorization,
             ICommentRepository commentRepository,
-            IRepository<User> userRepository
-        ) : base(userRepository) {
+            UserAuthentication authentication
+        ) : base(authentication) {
             this.gallery = gallery;
             this.authorization = authorization;
             this.commentRepository = commentRepository;
@@ -52,7 +53,7 @@ namespace AshMind.Gallery.Site.Controllers {
             ));
         }
 
-        private ActionResult AjaxAlbum(string albumID, User user) {
+        private ActionResult AjaxAlbum(string albumID, IUser user) {
             var album = this.gallery.GetAlbum(albumID, user) ?? Album.Empty;
             return PartialView("Album", ToViewModel(album, true));
         }
@@ -74,19 +75,22 @@ namespace AshMind.Gallery.Site.Controllers {
             ));
         }
 
-        private IEnumerable<AlbumViewModel> GetStandardAlbums(User user) {
+        private IEnumerable<AlbumViewModel> GetStandardAlbums(IUser user) {
             return this.gallery.GetAlbums(AlbumProviderKeys.Default, user)
                                .OrderByDescending(a => a.Date)
                                .Select(a => ToViewModel(a, false));
         }
 
-        private Tuple<IList<AlbumViewModel>, AlbumViewModel> GetPeopleAlbumsAndCurrentUserAlbum(User user) {
+        private Tuple<IList<AlbumViewModel>, AlbumViewModel> GetPeopleAlbumsAndCurrentUserAlbum(IUser user) {
             var personAlbums = this.gallery.GetAlbums(AlbumProviderKeys.People, user)
                                            .OrderBy(p => p.Name)
                                            .Select(a => ToViewModel(a, false))
                                            .ToList();
 
-            var indexOfUserAlbum = personAlbums.FindIndex(m => m.Album.Descriptor.ProviderSpecificPath == user.Email);
+            var realUser = user as User;
+            var indexOfUserAlbum = realUser != null
+                                 ? personAlbums.FindIndex(m => m.Album.Descriptor.ProviderSpecificPath == realUser.Email)
+                                 : -1;
             var userAlbum = (AlbumViewModel)null;
             if (indexOfUserAlbum >= 0) {
                 userAlbum = personAlbums[indexOfUserAlbum];
@@ -104,7 +108,7 @@ namespace AshMind.Gallery.Site.Controllers {
         }
 
         public ActionResult Comment(string album, string item, string comment) {
-            var author = this.User;
+            var author = (User)this.User;
             var path = this.gallery.GetItem(album, item, author).File.Path;
             commentRepository.SaveComment(
                 path, new Comment(author, DateTimeOffset.Now, comment)
@@ -114,11 +118,11 @@ namespace AshMind.Gallery.Site.Controllers {
         }
 
         public ActionResult ProposeDelete(string album, string item) {
-            return ToggleDelete(album, item, albumItem => albumItem.DeleteProposals.Add(User));
+            return ToggleDelete(album, item, albumItem => albumItem.DeleteProposals.Add((User)User));
         }
 
         public ActionResult RevertDelete(string album, string item) {
-            return ToggleDelete(album, item, albumItem => albumItem.DeleteProposals.Remove(User));
+            return ToggleDelete(album, item, albumItem => albumItem.DeleteProposals.Remove((User)User));
         }
 
         private ActionResult ToggleDelete(string albumID, string itemName, Action<AlbumItem> action) {

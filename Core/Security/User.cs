@@ -6,7 +6,7 @@ using System.Text;
 using AshMind.Extensions;
 
 namespace AshMind.Gallery.Core.Security {
-    public class User : IUserGroup {
+    public class User : IUser {
         public static User System { get; private set; }
 
         static User() {
@@ -18,13 +18,9 @@ namespace AshMind.Gallery.Core.Security {
         }
 
         public string Email { get; private set; }
-
-        public bool IsSystem {
-            get { return this == System; }
-        }
-
-        HashSet<User> IUserGroup.GetUsers() {
-            return new HashSet<User> { this };
+        
+        IEnumerable<IUser> IUserGroup.GetUsers() {
+            yield return this;
         }
 
         string IUserGroup.Name {

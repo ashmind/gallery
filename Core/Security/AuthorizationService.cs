@@ -40,9 +40,9 @@ namespace AshMind.Gallery.Core.Security {
             }
         }
 
-        public bool IsAuthorized(User user, SecurableAction action, object target) {
+        public bool IsAuthorized(IUser user, SecurableAction action, object target) {
             return GetAuthorizedTo(action, target)
-                        .Any(g => g.GetUsers().Contains(user)) || user.IsSystem;
+                        .Any(g => g.GetUsers().Contains(user)) || user == User.System;
         }
 
         public void MakeAuthorizedTo(SecurableAction action, object target, IEnumerable<IUserGroup> userGroups) {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -15,34 +16,37 @@ using AshMind.Extensions;
 
 using AshMind.Gallery.Core;
 using AshMind.Gallery.Core.Security;
+using AshMind.Gallery.Site.Logic;
 using AshMind.Gallery.Site.Models;
 using AshMind.Gallery.Site.OpenIdAbstraction;
-using System.Collections.Generic;
 
 namespace AshMind.Gallery.Site.Controllers {
     [HandleError]
     public class AccessController : ControllerBase {
         private readonly IOpenIdAjaxRelyingParty openId;
-        private readonly IRepository<User> userRepository;
-        private readonly IRepository<UserGroup> userGroupRepository;
+        private readonly UserAuthentication authentication;
+        private readonly IRepository<IUserGroup> userGroupRepository;
         private readonly AuthorizationService authorization;
         private readonly AlbumFacade gallery;
 
         public AccessController(
             IOpenIdAjaxRelyingParty openId,
-            IRepository<User> userRepository,
-            IRepository<UserGroup> userGroupRepository,
+            UserAuthentication authentication,
+            IRepository<IUserGroup> userGroupRepository,
             AuthorizationService authorization,
             AlbumFacade gallery
-        ) : base(userRepository) {
+        ) : base(authentication) {
             this.openId = openId;
-            this.userRepository = userRepository;
+            this.authentication = authentication;
             this.userGroupRepository = userGroupRepository;
             this.authorization = authorization;
             this.gallery = gallery;
         }
       
-        public ActionResult Login(string error) {
+        public ActionResult Login(string error, string returnUrl, string key) {
+            if (this.authentication.AuthenticateByKey(key))
+                return Redirect(returnUrl);
+
             Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-us");
             var returnToUrl = MakeAbsolute(Url.Action("OpenIdLoginReturnTo"));
             var requests = new[] { "https://www.google.com/accounts/o8/id" }.SelectMany(
@@ -58,15 +62,7 @@ namespace AshMind.Gallery.Site.Controllers {
 
             return View(new LoginViewModel { PreloadedDiscoveryResults = ajax });
         }
-
-        public ActionResult Impersonate(string key) {
-            if (!this.authorization.IsAuthorized(this.User, SecurableAction.ManageSecurity, null))
-                return new HttpUnauthorizedResult();
-
-            FormsAuthentication.SetAuthCookie(key, false);
-            return new RedirectResult(Url.Content("~"));
-        }
-
+        
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Post), ValidateInput(false)]
         public ActionResult OpenIdLoginReturnTo() {
             return this.openId.ProcessResponseFromPopup().AsActionResult();
@@ -100,11 +96,10 @@ namespace AshMind.Gallery.Site.Controllers {
                     return RedirectToAction("Login", new { error = "Email not received." });
                 }
 
-                var user = this.userRepository.FindByEmail(claims.Email);
-                if (user == null)
-                    return RedirectToAction("Login", new { error = "User is not known." });
+                var authenticated = this.authentication.AuthenticateByEmail(claims.Email);
+                if (!authenticated)
+                    return RedirectToAction("Login", new { error = "Could not authenticate this email." });
 
-                FormsAuthentication.SetAuthCookie((string)this.userRepository.GetKey(user), false);
                 return Redirect(returnUrl);
             }
 
@@ -143,10 +138,7 @@ namespace AshMind.Gallery.Site.Controllers {
         }
 
         private IEnumerable<UserGroupViewModel> GetAllGroups() {
-            return Enumerable.Concat<IUserGroup>(
-                this.userRepository.Query().AsEnumerable(),
-                this.userGroupRepository.Query().AsEnumerable()
-            ).Select(g => new UserGroupViewModel(g));
+            return this.userGroupRepository.Query().AsEnumerable().Select(g => new UserGroupViewModel(g));
         }
 
         private Uri MakeAbsolute(string uri) {

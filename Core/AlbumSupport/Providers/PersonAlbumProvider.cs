@@ -32,7 +32,7 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
             this.faceCache = faceCache;
         }
 
-        public IEnumerable<Album> GetAllAlbums(IEnumerable<ILocation> locations, User user) {
+        public IEnumerable<Album> GetAllAlbums(IEnumerable<ILocation> locations, IUser user) {
             var albumsCacheKey = "faces:all_albums";
             var cached = this.faceCache.Get(albumsCacheKey);
             if (cached != null)
@@ -73,22 +73,23 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
             return item;
         }
 
-        public Album GetAlbum(IEnumerable<ILocation> locations, string providerSpecificPath, User user) {
+        public Album GetAlbum(IEnumerable<ILocation> locations, string providerSpecificPath, IUser user) {
             return this.GetAllAlbums(locations, user).Single(a => a.Descriptor.ProviderSpecificPath == providerSpecificPath);
         }
 
-        private IEnumerable<Album> CorrectAlbums(IEnumerable<Album> albums, User user) {
+        private IEnumerable<Album> CorrectAlbums(IEnumerable<Album> albums, IUser user) {
             return FilterByAuthorization(albums, user).Select(a => a.AsWritable());
         }
 
-        private IEnumerable<Album> FilterByAuthorization(IEnumerable<Album> albums, User user) {
+        private IEnumerable<Album> FilterByAuthorization(IEnumerable<Album> albums, IUser user) {
+            var realUser = user as User;            
             return albums.Where(
-                album => album.Descriptor.ProviderSpecificPath == user.Email
+                album => (realUser != null && album.Descriptor.ProviderSpecificPath == realUser.Email)
                       || IsAuthorizedTo(album, user)
             );
         }
 
-        private bool IsAuthorizedTo(Album album, User user) {
+        private bool IsAuthorizedTo(Album album, IUser user) {
             return this.authorization.IsAuthorized(
                 user, SecurableAction.View,
                 new SecurableUniqueKey(album.Descriptor.ProviderSpecificPath)

@@ -10,6 +10,9 @@ namespace AshMind.Gallery.Site {
             builder.Register(new OpenIdAjaxRelyingParty(new DotNetOpenAuth.OpenId.RelyingParty.OpenIdAjaxRelyingParty(null)))
                    .As<IOpenIdAjaxRelyingParty, IOpenIdRelyingParty>()
                    .SingletonScoped();
+
+            builder.Register<Logic.UserAuthentication>()
+                   .ContainerScoped();
         }
     }
 }

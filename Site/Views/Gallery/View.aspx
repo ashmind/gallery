@@ -13,7 +13,7 @@
     <div class="navigation">
       <%= Html.ActionLink("Back to Album", "Home", new { album = Model.AlbumID }, new { id = "back" }) %>
     </div>
-    <img class="view" src="<%= Url.Action("Get", "Image", new { album = Model.AlbumID, item = Model.Item.Name, size = ImageSize.Medium.Name.ToLowerInvariant() }) %>" />
+    <img class="view" src="<%= Url.Action("Get", "Image", new { album = Model.AlbumID, item = Model.Item.Name, size = ImageSize.Small.Name.ToLowerInvariant() }) %>" />
 
     <div id="comments">
       <h2>Comments</h2>
