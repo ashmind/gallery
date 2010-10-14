@@ -118,6 +118,7 @@ namespace AshMind.Gallery.Core {
             builder.Register(c => new AlbumIDProvider(this.storageLocation, this.fileSystem))
                    .As<IAlbumIDProvider>();
 
+            builder.Register<AlbumFactory>();
             builder.Register<AlbumItemFactory>();
             
             builder.Register<AlbumFacade>()

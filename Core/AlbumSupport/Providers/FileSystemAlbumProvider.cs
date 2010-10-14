@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Caching;
 using System.Text;
 
+using AshMind.Gallery.Core.AlbumSupport;
 using AshMind.Gallery.Core.IO;
 using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Core.Fixes;
@@ -11,17 +12,20 @@ using AshMind.Gallery.Core.Fixes;
 namespace AshMind.Gallery.Core.AlbumSupport.Providers {
     public class FileSystemAlbumProvider : IAlbumProvider {
         private readonly IFileSystem fileSystem;
+        private readonly AlbumFactory albumFactory;
         private readonly AlbumItemFactory itemFactory;
         private readonly AuthorizationService authorization;
         private readonly ObjectCache cache;
 
         public FileSystemAlbumProvider(
             IFileSystem fileSystem,
+            AlbumFactory albumFactory,
             AlbumItemFactory itemFactory,
             AuthorizationService authorization,
             ObjectCache cache
         ) {
             this.fileSystem = fileSystem;
+            this.albumFactory = albumFactory;
             this.itemFactory = itemFactory;
             this.authorization = authorization;
             this.cache = cache;
@@ -57,7 +61,7 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
                 itemFactory = () => items;
             }
 
-            album = new Album(
+            album = this.albumFactory.Create(
                 new AlbumDescriptor(this.ProviderKey, location.Path),
                 location.Name, itemFactory,
                 location

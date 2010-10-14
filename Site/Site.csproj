@@ -87,6 +87,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Logic\PeopleAlbumNameRegexTransform.cs" />
     <Compile Include="Logic\UserAuthentication.cs" />
     <Compile Include="Models\AlbumListViewModel.cs" />
     <Compile Include="Models\PagedListViewModel.cs" />

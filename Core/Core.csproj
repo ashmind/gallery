@@ -90,7 +90,9 @@
     <Compile Include="AlbumSupport\AlbumDescriptor.cs" />
     <Compile Include="AlbumSupport\AlbumItemFactory.cs" />
     <Compile Include="AlbumSupport\AlbumItemLocationBasedMetadataProvider.cs" />
+    <Compile Include="AlbumSupport\AlbumFactory.cs" />
     <Compile Include="AlbumSupport\IAlbumItemMetadataProvider.cs" />
+    <Compile Include="AlbumSupport\IAlbumNameTransform.cs" />
     <Compile Include="Fixes\FixedFileChangeMonitor.cs" />
     <Compile Include="IReadOnlySupport.cs" />
     <Compile Include="LazyExtensions.cs" />

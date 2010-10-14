@@ -12,6 +12,7 @@ using AshMind.Gallery.Core.Security;
 
 namespace AshMind.Gallery.Core.AlbumSupport.Providers {
     public class PersonAlbumProvider : IAlbumProvider {
+        private readonly AlbumFactory albumFactory;
         private readonly AlbumItemFactory itemFactory;
         private readonly IFaceProvider[] faceProviders;
         private readonly FileSystemAlbumProvider primaryAlbumProvider;
@@ -19,12 +20,14 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
         private readonly ObjectCache faceCache;
 
         public PersonAlbumProvider(
+            AlbumFactory albumFactory,
             AlbumItemFactory itemFactory,
             FileSystemAlbumProvider primaryAlbumProvider,
             IFaceProvider[] faceProviders,
             AuthorizationService authorization,
             ObjectCache faceCache
         ) {
+            this.albumFactory = albumFactory;
             this.itemFactory = itemFactory;
             this.primaryAlbumProvider = primaryAlbumProvider;
             this.faceProviders = faceProviders;
@@ -43,7 +46,7 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
                 from face in GetFaces(location)
                 group face by face.Person into personFaces
                 let uniqueKey = personFaces.Key.Emails.ElementAtOrDefault(0) ?? personFaces.Key.Name
-                select new Album(
+                select this.albumFactory.Create(
                     new AlbumDescriptor(this.ProviderKey, uniqueKey),
                     personFaces.Key.Name,
                     () => (
