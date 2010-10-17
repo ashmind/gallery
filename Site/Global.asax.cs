@@ -85,7 +85,7 @@ namespace AshMind.Gallery.Site {
             );
 
             containerProvider.ApplicationContainer.Resolve<Logic.IImageRequestStrategy>()
-                             .SetupRoute(routes, "Image", "Get");
+                             .MapRoute(routes, "Image", "Get");
 
             routes.MapRoute(
                 "Home",

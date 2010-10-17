@@ -108,6 +108,7 @@ function setupAlbum() {
     }
 
     $(".wall a").fancybox({
+        type            : 'image',
         padding	        : 0,
         transitionIn	: 'fade',
         transitionOut	: 'fade',

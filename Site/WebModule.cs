@@ -13,7 +13,8 @@ using AshMind.Gallery.Site.OpenIdAbstraction;
 namespace AshMind.Gallery.Site {
     public class WebModule : Module {
         private static readonly IDictionary<string, string> knownImageStrategyNameShortcuts = new Dictionary<string, string> {
-            { "friendly", typeof(Logic.ImageRequest.FriendlyImageUrlStrategy).AssemblyQualifiedName }
+            { "friendly", typeof(Logic.ImageRequest.FriendlyImageUrlStrategy).AssemblyQualifiedName },
+            { "subdomains", typeof(Logic.ImageRequest.SubdomainImageRequestStrategy).AssemblyQualifiedName },
         };
 
         protected override void Load(ContainerBuilder builder) {

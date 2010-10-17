@@ -83,12 +83,16 @@
     <Compile Include="Controllers\GalleryController.cs" />
     <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Extensions\GravatarExtension.cs" />
+    <Compile Include="Fixes\IVType.cs" />
+    <Compile Include="Fixes\MachineKeySectionMethods.cs" />
     <Compile Include="Fixes\WebCache.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Logic\ImageRequest\CookielessImageRequestStrategy.cs" />
     <Compile Include="Logic\ImageRequest\FriendlyImageUrlStrategy.cs" />
     <Compile Include="Logic\IImageRequestStrategy.cs" />
+    <Compile Include="Logic\ImageRequest\SubdomainImageRequestStrategy.cs" />
     <Compile Include="Logic\PeopleAlbumNameRegexTransform.cs" />
     <Compile Include="Logic\UserAuthentication.cs" />
     <Compile Include="Models\AlbumListViewModel.cs" />
