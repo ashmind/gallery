@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Text.RegularExpressions;
 
@@ -11,6 +12,10 @@ using AshMind.Gallery.Site.OpenIdAbstraction;
 
 namespace AshMind.Gallery.Site {
     public class WebModule : Module {
+        private static readonly IDictionary<string, string> knownImageStrategyNameShortcuts = new Dictionary<string, string> {
+            { "friendly", typeof(Logic.ImageRequest.FriendlyImageUrlStrategy).AssemblyQualifiedName }
+        };
+
         protected override void Load(ContainerBuilder builder) {
             base.Load(builder);
 
@@ -32,6 +37,21 @@ namespace AshMind.Gallery.Site {
                 builder.Register(new Logic.PeopleAlbumNameRegexTransform(personNameRegex, personNameReplacement))
                        .As<IAlbumNameTransform>();
             }
+
+            RegisterImageRequestStrategy(builder);
+        }
+
+        private void RegisterImageRequestStrategy(ContainerBuilder builder) {
+            var imageRequestStrategyName = ConfigurationManager.AppSettings["Gallery.ImageUrls"];
+            if (imageRequestStrategyName.IsNullOrEmpty())
+                imageRequestStrategyName = typeof(Logic.ImageRequest.FriendlyImageUrlStrategy).AssemblyQualifiedName;
+
+            imageRequestStrategyName = knownImageStrategyNameShortcuts.GetValueOrDefault(
+                imageRequestStrategyName, imageRequestStrategyName
+            );
+
+            var type = Type.GetType(imageRequestStrategyName, true, true);
+            builder.Register(type).As<Logic.IImageRequestStrategy>();
         }
     }
 }

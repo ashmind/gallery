@@ -8,26 +8,31 @@ using AshMind.Extensions;
 
 using AshMind.Gallery.Core;
 using AshMind.Gallery.Core.Security;
+using AshMind.Gallery.Site.Logic;
 
 namespace AshMind.Gallery.Site.Models {
     public class AlbumViewModel {
         public AlbumViewModel(
             Album album,
             Func<Album, string> getAlbumID,
-            IUser currentUser
+            IUser currentUser,
+            IImageRequestStrategy imageAccess
         ) {
             this.ID = getAlbumID(album);
             this.Album = album;
             this.GetAdditionalAlbumID = getAlbumID;
             this.VisibleToGroups = new UserGroupViewModel[0].AsReadOnly();
             this.CurrentUser = currentUser;
+            this.ImageAccess = imageAccess;
         }
 
         public AlbumViewModel(
             Album album,
             Func<Album, string> getAlbumID,
             IUser currentUser,
-            bool canManageSecurity, IList<UserGroupViewModel> visibleToGroups            
+            IImageRequestStrategy imageAccess,
+            bool canManageSecurity,
+            IList<UserGroupViewModel> visibleToGroups
         ) {
             if (!canManageSecurity)
                 throw new ArgumentException();
@@ -38,6 +43,7 @@ namespace AshMind.Gallery.Site.Models {
             this.CanManageSecurity = canManageSecurity;
             this.VisibleToGroups = visibleToGroups.AsReadOnly();
             this.CurrentUser = currentUser;
+            this.ImageAccess = imageAccess;
         }
 
         public string ID { get; private set; }
@@ -48,5 +54,7 @@ namespace AshMind.Gallery.Site.Models {
         public ReadOnlyCollection<UserGroupViewModel> VisibleToGroups { get; private set; }
 
         public Func<Album, string> GetAdditionalAlbumID { get; private set; }
+
+        public IImageRequestStrategy ImageAccess { get; private set; }
     }
 }

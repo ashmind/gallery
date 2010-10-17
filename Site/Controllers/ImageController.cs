@@ -15,7 +15,6 @@ using AshMind.Gallery.Site.Logic;
 using AshMind.Gallery.Site.Models;
 
 namespace AshMind.Gallery.Site.Controllers {
-    [Authorize]
     public class ImageController : ControllerBase {
         private IDictionary<string, string> knownMimeTypes = new Dictionary<string, string> {
             {".jpg",    MediaTypeNames.Image.Jpeg},
@@ -25,19 +24,29 @@ namespace AshMind.Gallery.Site.Controllers {
 
         private readonly AlbumFacade gallery;
         private readonly PreviewFacade preview;
+        private readonly IImageRequestStrategy strategy;
 
-        public ImageController(AlbumFacade gallery, PreviewFacade preview, UserAuthentication authentication)
+        public ImageController(
+            AlbumFacade gallery,
+            PreviewFacade preview,
+            UserAuthentication authentication,
+            IImageRequestStrategy strategy
+        )
             : base(authentication)
         {
             this.gallery = gallery;
             this.preview = preview;
+            this.strategy = strategy;
         }
 
         //[OutputCache(Duration = 60, VaryByParam = "*")]
-        public ActionResult Get(string album, string item, string size) {
-            var imageSize = ImageSize.Parse(size);
+        public ActionResult Get(string size) {
+            if (!this.strategy.IsAuthorized(ControllerContext.RequestContext))
+                return Unauthorized();
 
-            var file = this.gallery.GetItem(album, item, this.User).File;
+            var imageSize = ImageSize.Parse(size);                       
+
+            var file = this.strategy.GetImageFile(ControllerContext.RequestContext);
             var fileName = file.Name;
             if (imageSize != ImageSize.Original) {
                 file = this.preview.GetPreview(file, imageSize.Size);

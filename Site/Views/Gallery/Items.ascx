@@ -5,7 +5,7 @@
 
   <span class="item<%= item.IsProposedToBeDeleted ? " to-delete" : "" %>">
     <a <% if (!item.IsProposedToBeDeleted) { %>rel="normal-gallery-item"<% } %> 
-       href="<%= Url.Action("Get", "Image", new { album = Model.ID, item = item.Name, size = ImageSize.Medium.Name.ToLowerInvariant() }) %>"
+       href="<%= Model.ImageAccess.GetActionUrl(ViewContext.RequestContext, Model.ID, item.Name) + "/" + ImageSize.Medium.Name.ToLowerInvariant() %>"
        data-name="<%= item.Name %>"
        data-json="{
           name : '<%= item.Name %>',
@@ -25,7 +25,7 @@
               },
 
               download : {
-                  action : '<%= Url.Action("Get", "Image", new { album = Model.ID, item = item.Name }) %>',
+                  action : '<%= Model.ImageAccess.GetActionUrl(ViewContext.RequestContext, Model.ID, item.Name) %>',
                   sizes : {
                       '<%= ImageSize.Small.Size %>px' : '<%= ImageSize.Small.Name.ToLowerInvariant() %>',
                       '<%= ImageSize.Medium.Size %>px' : '<%= ImageSize.Medium.Name.ToLowerInvariant() %>',
@@ -38,7 +38,7 @@
        }"
        class="image-view"> 
         <img src="<%= Url.Content("~/content/images/blank.gif") %>"
-             data-lazysrc="<%= Url.Action("Get", "Image", new { album = Model.ID, item = item.Name, size = ImageSize.Thumbnail.Name.ToLowerInvariant() }) %>" />
+             data-lazysrc="<%= Model.ImageAccess.GetActionUrl(ViewContext.RequestContext, Model.ID, item.Name) + "/" + ImageSize.Thumbnail.Name.ToLowerInvariant() %>" />
     </a>
   </span>
 <% } %>

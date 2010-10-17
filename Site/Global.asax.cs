@@ -39,8 +39,8 @@ namespace AshMind.Gallery.Site {
             try {
                 AreaRegistration.RegisterAllAreas();
 
-                RegisterRoutes(RouteTable.Routes);
                 this.RegisterContainer();
+                RegisterRoutes(RouteTable.Routes);
 
                 startFailure = null;
             }
@@ -84,11 +84,8 @@ namespace AshMind.Gallery.Site {
                 new { action = "(view|comment|proposedelete|revertdelete)" }
             );
 
-            routes.MapRoute(
-                "Image",
-                "{album}/{item}/{size}",
-                new { controller = "image", action = "get", size = ImageSize.Original }
-            );
+            containerProvider.ApplicationContainer.Resolve<Logic.IImageRequestStrategy>()
+                             .SetupRoute(routes, "Image", "Get");
 
             routes.MapRoute(
                 "Home",

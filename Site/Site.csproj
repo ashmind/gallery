@@ -87,6 +87,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Logic\ImageRequest\FriendlyImageUrlStrategy.cs" />
+    <Compile Include="Logic\IImageRequestStrategy.cs" />
     <Compile Include="Logic\PeopleAlbumNameRegexTransform.cs" />
     <Compile Include="Logic\UserAuthentication.cs" />
     <Compile Include="Models\AlbumListViewModel.cs" />
@@ -151,7 +153,9 @@
     <Content Include="Views\Gallery\Items.ascx" />
     <Content Include="Views\Gallery\Home.aspx" />
     <Content Include="Views\Gallery\View.aspx" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -175,6 +179,7 @@
   <ItemGroup>
     <Content Include="Views\Shared\Main.Master" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

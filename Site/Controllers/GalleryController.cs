@@ -17,16 +17,19 @@ namespace AshMind.Gallery.Site.Controllers {
         private readonly AlbumFacade gallery;
         private readonly AuthorizationService authorization;
         private readonly ICommentRepository commentRepository;
+        private readonly IImageRequestStrategy requestStrategy;
 
         public GalleryController(
             AlbumFacade gallery,
             AuthorizationService authorization,
             ICommentRepository commentRepository,
-            UserAuthentication authentication
+            UserAuthentication authentication,
+            IImageRequestStrategy requestStrategy
         ) : base(authentication) {
             this.gallery = gallery;
             this.authorization = authorization;
             this.commentRepository = commentRepository;
+            this.requestStrategy = requestStrategy;
         }
 
         public ActionResult Home(string album, int albumCount = 20) {
@@ -147,14 +150,15 @@ namespace AshMind.Gallery.Site.Controllers {
 
             var id = this.gallery.GetAlbumID(album);
             if (!manageSecurity || !authorization.IsAuthorized(this.User, SecurableAction.ManageSecurity, null))
-                return new AlbumViewModel(album, this.gallery.GetAlbumID, this.User);
+                return new AlbumViewModel(album, this.gallery.GetAlbumID, this.User, this.requestStrategy);
 
             return new AlbumViewModel(
                 album, this.gallery.GetAlbumID, this.User,
+                this.requestStrategy,
                 true, (
                     from @group in this.authorization.GetAuthorizedTo(SecurableAction.View, album.SecurableToken)
                     select new UserGroupViewModel(@group)
-                ).ToList()                
+                ).ToList()        
             );
         }
     }

@@ -26,12 +26,18 @@
         </div>
       <% } %>
 
-      <form id="add-comment" class="comment" method="post" action="<%= Url.Action("Comment", new { album = Model.AlbumID, item = Model.Item.Name }) %>">
-        <%= Html.Gravatar(Model.CurrentUser.Email, new { s = "40" }) %>
-        <%= Html.TextArea("comment") %>
+      <% var realUser = Model.CurrentUser as AshMind.Gallery.Core.Security.User; %>
+      <% if (realUser != null) { %>
+        <form id="add-comment" class="comment" method="post" action="<%= Url.Action("Comment", new { album = Model.AlbumID, item = Model.Item.Name }) %>">
+          <%= Html.Gravatar(realUser.Email, new { s = "40" })%>
+          <%= Html.TextArea("comment")%>
 
-        <button type="submit">Submit</button>
-      </form>
+          <button type="submit">Submit</button>
+        </form>
+      <% } %>
+      <% else { %>
+        <div>Key access is not enough to post comments, please log in.</div>
+      <% } %>
     </div>
   </div>
 
