@@ -49,10 +49,14 @@
   <% } %>
 </section>
 
-<a class="expand-to-delete" href="#">Show proposed to be deleted</a>
-<section class="to-delete">
-  <h2>Proposed to be deleted</h2>
-  <% foreach (var item in Model.Album.Items.Where(i => i.IsProposedToBeDeleted).OrderBy(i => i.Date)) { %>
-    <% renderItem(item); %>
-  <% } %>
-</section>
+<% var proposedToBeDeleted = Model.Album.Items.Where(i => i.IsProposedToBeDeleted).ToArray(); %>
+
+<% if (proposedToBeDeleted.Any()) { %>
+  <a class="expand-to-delete" href="#">Show proposed to be deleted</a>
+  <section class="to-delete">
+    <h2>Proposed to be deleted</h2>
+    <% foreach (var item in proposedToBeDeleted.OrderBy(i => i.Date)) { %>
+      <% renderItem(item); %>
+    <% } %>
+  </section>
+<% } %>
