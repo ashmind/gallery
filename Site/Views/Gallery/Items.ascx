@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" Inherits="System.Web.Mvc.ViewUserControl<AlbumViewModel>" %>
 
-<% foreach (var item in Model.Album.Items.OrderBy(i => i.Date)) { %>
+<% Action<AlbumItem> renderItem = item => { %>
   <% var proposedToBeDeletedByCurrentUser = item.DeleteProposals.Contains(Model.CurrentUser); %>
 
   <span class="item<%= item.IsProposedToBeDeleted ? " to-delete" : "" %>">
@@ -41,4 +41,18 @@
              data-lazysrc="<%= Model.ImageAccess.GetActionUrl(ViewContext.RequestContext, Model.ID, item.Name) + "/" + ImageSize.Thumbnail.Name.ToLowerInvariant() %>" />
     </a>
   </span>
-<% } %>
+<% }; %>
+
+<section>
+  <% foreach (var item in Model.Album.Items.Where(i => !i.IsProposedToBeDeleted).OrderBy(i => i.Date)) { %>
+    <% renderItem(item); %>
+  <% } %>
+</section>
+
+<a class="expand-to-delete" href="#">Show proposed to be deleted</a>
+<section class="to-delete">
+  <h2>Proposed to be deleted</h2>
+  <% foreach (var item in Model.Album.Items.Where(i => i.IsProposedToBeDeleted).OrderBy(i => i.Date)) { %>
+    <% renderItem(item); %>
+  <% } %>
+</section>

@@ -198,7 +198,44 @@ a.block-link:hover {
 }
 
 .album-view .wall .item.to-delete {
-    opacity: 0.1;
+    opacity: 0.6;
+}
+
+.album-view .wall .item.to-delete:hover {
+    opacity: 1;
+}
+
+.album-view .wall section {
+    display: block;
+}
+
+.album-view .wall section + section,
+.album-view .wall section + a + section {
+    margin-top: 1.6em;
+    border-top: 1px solid #EEE;
+}
+
+.album-view .wall h2 {
+    font-family: "Calibri",Verdana,Helvetica,sans-serif;
+    color:  #AAA;
+    margin-top: 0.2em;
+    margin-bottom: 0.8em;
+}
+
+.album-view .wall section.to-delete {
+    display: none;
+}
+
+.album-view .wall .expand-to-delete {
+    opacity: 0.5;
+    display: block;
+    float: right;
+    text-decoration: none;
+}
+
+.album-view .wall .expand-to-delete:hover {
+    opacity: 1;
+    text-decoration: underline;
 }
 
 .image-view {

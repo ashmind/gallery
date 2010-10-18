@@ -14,7 +14,7 @@
    } %>
 
   <a class="block-link album-name <%= Model.IsSelected(album) ? "selected" : "" %>" data-id='<%= albumModel.ID %>' href='<%= Url.Action("Home", new { album = albumModel.ID, albumCount = index > PageSize ? (int?)index : null }) %>' title="<%= album.Name %>">
-    <span class="image-count">(<%= album.Items.Count %>)</span>
+    <span class="image-count">(<%= album.Items.Count(item => !item.IsProposedToBeDeleted) %>)</span>
     <%= album.Name %>
   </a>
 <% } %>

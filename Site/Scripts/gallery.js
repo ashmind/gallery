@@ -74,6 +74,15 @@ $(function() {
         $(this).remove();
         $("#left section.people div.more").show();        
     });
+
+    $(".expand-to-delete").live('click', function(event) {
+        event.preventDefault();
+
+        $("section.to-delete").css('display', 'block');
+        $(this).hide();
+
+        $("#main").scroll();
+    });
 });
 
 function loadAlbum(a, onsuccess) {
@@ -107,7 +116,7 @@ function setupAlbum() {
         return data;
     }
 
-    $(".wall a").fancybox({
+    $(".wall a.image-view").fancybox({
         type            : 'image',
         padding	        : 0,
         transitionIn	: 'fade',

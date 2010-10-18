@@ -10,7 +10,7 @@
     <% var album = albumModel.Album; %>
 
     <a class="block-link album-name <%= Model.IsSelected(album) ? "selected" : "" %>" data-id='<%= albumModel.ID %>' href='<%= Url.Action("Home", new { album = albumModel.ID }) %>' title="<%= album.Name %>">
-      <span class="image-count">(<%= album.Items.Count %>)</span>
+      <span class="image-count">(<%= album.Items.Count(item => !item.IsProposedToBeDeleted) %>)</span>
       You: <%= album.Name %>
     </a>
   <% } %>
@@ -25,7 +25,7 @@
     <% } %>
 
         <a class="block-link album-name <%= Model.IsSelected(albumModel.Album) ? "selected" : "" %>" data-id='<%= albumModel.ID %>' href='<%= Url.Action("Home", new { album = albumModel.ID }) %>' title="<%= albumModel.Album.Name %>">
-          <span class="image-count">(<%= albumModel.Album.Items.Count%>)</span>
+          <span class="image-count">(<%= albumModel.Album.Items.Count(item => !item.IsProposedToBeDeleted) %>)</span>
           <%= albumModel.Album.Name%>
         </a>
   <% } %>
