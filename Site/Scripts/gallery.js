@@ -86,6 +86,13 @@ $(function() {
 });
 
 function loadAlbum(a, onsuccess) {
+    if(window.stop) {
+        window.stop();
+    }
+    else if(document.execCommand) {
+        document.execCommand("Stop", false);
+    }
+
     $.get(a.attr('href'), {}, function(html) {
         $('#main').html(html);
 
