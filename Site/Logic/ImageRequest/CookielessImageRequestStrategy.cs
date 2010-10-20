@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO.Compression;
 using System.Linq;
 using System.Text;
-using System.Runtime.Remoting.Metadata.W3cXsd2001; // this is for byte-string conversion only
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -13,7 +12,6 @@ using AshMind.Gallery.Core.IO;
 using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Site.Models;
 using AshMind.Gallery.Site.Fixes;
-using System.IO;
 
 namespace AshMind.Gallery.Site.Logic.ImageRequest {
     public class CookielessImageRequestStrategy : IImageRequestStrategy {        
@@ -72,13 +70,30 @@ namespace AshMind.Gallery.Site.Logic.ImageRequest {
             );
         }
 
+        private static readonly char[] Base64CharsUnsafeForUrl = { '/', '=', '+' };
+
         private string BytesToString(byte[] bytes) {
-            return Convert.ToBase64String(bytes)
-                          .Replace('/', '_');
+            var base64 = Convert.ToBase64String(bytes);
+            return Regex.Replace(
+                base64,
+                "[" + new string(Base64CharsUnsafeForUrl) + "]",
+                match => {
+                    var @char = match.Value[0];
+                    return "_" + (char)('a' + Array.IndexOf(Base64CharsUnsafeForUrl, @char));
+                }
+            );
         }
 
         private byte[] StringToBytes(string value) {
-            return Convert.FromBase64String(value.Replace('_', '/'));
+            var base64 = Regex.Replace(
+                value, "_[a-z]",
+                match => {
+                    var @char = match.Value[1];
+                    return Base64CharsUnsafeForUrl[@char - 'a'].ToString();
+                }
+            );
+
+            return Convert.FromBase64String(base64);
         }
     }
 }
