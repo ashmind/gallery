@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Runtime.Remoting.Metadata.W3cXsd2001; // this is for byte-string conversion only
@@ -12,6 +13,7 @@ using AshMind.Gallery.Core.IO;
 using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Site.Models;
 using AshMind.Gallery.Site.Fixes;
+using System.IO;
 
 namespace AshMind.Gallery.Site.Logic.ImageRequest {
     public class CookielessImageRequestStrategy : IImageRequestStrategy {        
@@ -36,11 +38,11 @@ namespace AshMind.Gallery.Site.Logic.ImageRequest {
             var keyBytes = EncryptOrDecrypt(bytes, encrypt: true);
             var key = BytesToString(keyBytes);
 
-            return GetActionUrl(new UrlHelper(requestContext), key);
+            return GetActionUrl(new UrlHelper(requestContext), new { key });
         }
 
-        protected virtual string GetActionUrl(UrlHelper urlHelper, string key) {
-            return urlHelper.RouteUrl(this.RouteName, new { key });
+        protected virtual string GetActionUrl(UrlHelper urlHelper, object routeValues) {
+            return urlHelper.RouteUrl(this.RouteName, routeValues);
         }
 
         public virtual bool IsAuthorized(RequestContext requestContext) {
@@ -49,6 +51,7 @@ namespace AshMind.Gallery.Site.Logic.ImageRequest {
 
         public virtual IFile GetImageFile(RequestContext requestContext) {
             var key = (string)requestContext.RouteData.Values["key"];
+
             var keyBytes = StringToBytes(key);
             var bytes = EncryptOrDecrypt(keyBytes, encrypt: false);
             var arguments = Encoding.UTF8.GetString(bytes).Split('/');
@@ -70,11 +73,12 @@ namespace AshMind.Gallery.Site.Logic.ImageRequest {
         }
 
         private string BytesToString(byte[] bytes) {
-            return new SoapHexBinary(bytes).ToString().ToLowerInvariant();
+            return Convert.ToBase64String(bytes)
+                          .Replace('/', '_');
         }
 
         private byte[] StringToBytes(string value) {
-            return SoapHexBinary.Parse(value.ToUpperInvariant()).Value;
+            return Convert.FromBase64String(value.Replace('_', '/'));
         }
     }
 }

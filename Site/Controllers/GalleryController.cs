@@ -63,14 +63,14 @@ namespace AshMind.Gallery.Site.Controllers {
 
         public ActionResult StandardAlbumNames(int start, int count) {
             var albums = GetStandardAlbums(this.User)
-                                     .Skip(start).Take(count + 1)
+                                     .Skip(start - 1).Take(count)
                                      .ToArray();
 
             return PartialView(new GalleryViewModel(
                 null,
                 new AlbumViewModel[0],
                 new AlbumListViewModel(
-                    count > 0 ? albums.Skip(1).ToArray() : albums,
+                    albums,
                     start,
                     count > 0 ? (int?)albums[0].Album.Date.Year : null
                 ),

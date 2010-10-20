@@ -46,5 +46,9 @@ namespace AshMind.Gallery.Core.IO.Implementation {
         }
 
         public string Path { get; private set; }
+
+        public override string ToString() {
+            return this.Path;
+        }
     }
 }

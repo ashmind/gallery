@@ -21,8 +21,8 @@ namespace AshMind.Gallery.Site.Logic.ImageRequest {
             this.subdomainPattern = subdomainPattern.TrimEnd('.');
         }
 
-        protected override string GetActionUrl(UrlHelper urlHelper, string key) {
-            var urlString = urlHelper.RouteUrl(this.RouteName, new { key }, urlHelper.RequestContext.HttpContext.Request.Url.Scheme);
+        protected override string GetActionUrl(UrlHelper urlHelper, object routeValues) {
+            var urlString = urlHelper.RouteUrl(this.RouteName, routeValues, urlHelper.RequestContext.HttpContext.Request.Url.Scheme);
             var urlBuilder = new UriBuilder(urlString);
 
             if (!urlBuilder.Host.Contains(".")) // this should be overridable in future, but not now
