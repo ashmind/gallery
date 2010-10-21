@@ -15,7 +15,7 @@ namespace AshMind.Gallery.Core {
         private Lazy<IList<Comment>> lazyComments;
         private Lazy<Album> lazyPrimaryAlbum;
 
-        internal AlbumItem(
+        public AlbumItem(
             IFile file,
             string name,            
             AlbumItemType type,

@@ -14,14 +14,14 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
         private readonly IFileSystem fileSystem;
         private readonly AlbumFactory albumFactory;
         private readonly AlbumItemFactory itemFactory;
-        private readonly AuthorizationService authorization;
+        private readonly IAuthorizationService authorization;
         private readonly ObjectCache cache;
 
         public FileSystemAlbumProvider(
             IFileSystem fileSystem,
             AlbumFactory albumFactory,
             AlbumItemFactory itemFactory,
-            AuthorizationService authorization,
+            IAuthorizationService authorization,
             ObjectCache cache
         ) {
             this.fileSystem = fileSystem;

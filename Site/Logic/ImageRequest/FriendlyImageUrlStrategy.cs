@@ -14,12 +14,12 @@ namespace AshMind.Gallery.Site.Logic.ImageRequest {
     public class FriendlyImageUrlStrategy : IImageRequestStrategy {
         private static readonly string RouteName = "Images (" + typeof(FriendlyImageUrlStrategy) + ")";
 
-        private readonly AlbumFacade gallery;
-        private readonly UserAuthentication authentication;
+        private readonly IAlbumFacade gallery;
+        private readonly IUserAuthentication authentication;
 
         public FriendlyImageUrlStrategy(
-            AlbumFacade gallery,
-            UserAuthentication authentication
+            IAlbumFacade gallery,
+            IUserAuthentication authentication
         ) {
             this.gallery = gallery;
             this.authentication = authentication;

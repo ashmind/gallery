@@ -16,7 +16,7 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
         private readonly AlbumItemFactory itemFactory;
         private readonly IFaceProvider[] faceProviders;
         private readonly FileSystemAlbumProvider primaryAlbumProvider;
-        private readonly AuthorizationService authorization;
+        private readonly IAuthorizationService authorization;
         private readonly ObjectCache faceCache;
 
         public PersonAlbumProvider(
@@ -24,7 +24,7 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
             AlbumItemFactory itemFactory,
             FileSystemAlbumProvider primaryAlbumProvider,
             IFaceProvider[] faceProviders,
-            AuthorizationService authorization,
+            IAuthorizationService authorization,
             ObjectCache faceCache
         ) {
             this.albumFactory = albumFactory;

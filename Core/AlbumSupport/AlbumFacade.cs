@@ -6,7 +6,6 @@ using System.Text;
 
 using AshMind.Extensions;
 
-using AshMind.Gallery.Core.AlbumSupport;
 using AshMind.Gallery.Core.Commenting;
 using AshMind.Gallery.Core.ImageProcessing;
 using AshMind.Gallery.Core.Internal;
@@ -15,8 +14,8 @@ using AshMind.Gallery.Core.Metadata;
 using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Core.Integration;
 
-namespace AshMind.Gallery.Core {
-    public class AlbumFacade {
+namespace AshMind.Gallery.Core.AlbumSupport {
+    public class AlbumFacade : IAlbumFacade {
         private readonly IAlbumIDProvider idProvider;
         private readonly IDictionary<string, IAlbumProvider> albumProviders;
         private readonly IAlbumFilter[] albumFilters;

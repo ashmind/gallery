@@ -89,7 +89,7 @@ namespace AshMind.Gallery.Core {
         }
 
         private void RegisterSecurity(ContainerBuilder builder) {
-            builder.Register<AuthorizationService>().SingletonScoped();
+            builder.Register<AuthorizationService>().As<IAuthorizationService>().SingletonScoped();
             builder.Register<JsonKeyPermissionProvider>()
                    .As<IPermissionProvider>()
                    .WithArguments(new TypedParameter(typeof(IFile), this.storageLocation.GetFile("permissions.jsdb", false)))
@@ -122,6 +122,7 @@ namespace AshMind.Gallery.Core {
             builder.Register<AlbumItemFactory>();
             
             builder.Register<AlbumFacade>()
+                   .As<IAlbumFacade>()
                    .WithArguments(new TypedParameter(typeof(ILocation), this.albumLocation))
                    .SingletonScoped();
 

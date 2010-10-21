@@ -22,14 +22,14 @@ namespace AshMind.Gallery.Site.Controllers {
             {".png",    "image/png"}
         };
 
-        private readonly AlbumFacade gallery;
+        private readonly IAlbumFacade gallery;
         private readonly PreviewFacade preview;
         private readonly IImageRequestStrategy strategy;
 
         public ImageController(
-            AlbumFacade gallery,
+            IAlbumFacade gallery,
             PreviewFacade preview,
-            UserAuthentication authentication,
+            IUserAuthentication authentication,
             IImageRequestStrategy strategy
         )
             : base(authentication)

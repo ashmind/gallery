@@ -13,9 +13,9 @@ using AshMind.Gallery.Site.Logic;
 namespace AshMind.Gallery.Site.Controllers {
     public abstract class ControllerBase : Controller {
         private IUser user;
-        private readonly UserAuthentication authentication;
+        private readonly IUserAuthentication authentication;
 
-        public ControllerBase(UserAuthentication authentication) {
+        public ControllerBase(IUserAuthentication authentication) {
             this.authentication = authentication;
         }
 

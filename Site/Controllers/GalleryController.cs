@@ -14,16 +14,16 @@ using AshMind.Gallery.Site.Logic;
 namespace AshMind.Gallery.Site.Controllers {
     [Authorize]
     public class GalleryController : ControllerBase {
-        private readonly AlbumFacade gallery;
-        private readonly AuthorizationService authorization;
+        private readonly IAlbumFacade gallery;
+        private readonly IAuthorizationService authorization;
         private readonly ICommentRepository commentRepository;
         private readonly IImageRequestStrategy requestStrategy;
 
         public GalleryController(
-            AlbumFacade gallery,
-            AuthorizationService authorization,
+            IAlbumFacade gallery,
+            IAuthorizationService authorization,
             ICommentRepository commentRepository,
-            UserAuthentication authentication,
+            IUserAuthentication authentication,
             IImageRequestStrategy requestStrategy
         ) : base(authentication) {
             this.gallery = gallery;

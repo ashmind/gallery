@@ -5,8 +5,8 @@ using System.Text;
 
 using AshMind.Extensions;
 
-namespace AshMind.Gallery.Core.Security {
-    public class AuthorizationService {
+namespace AshMind.Gallery.Core.Security.Internal {
+    public class AuthorizationService : IAuthorizationService {
         private readonly HashSet<UserGroup> superGroups = new HashSet<UserGroup>();
         private readonly IPermissionProvider[] providers;
 
@@ -45,7 +45,7 @@ namespace AshMind.Gallery.Core.Security {
                         .Any(g => g.GetUsers().Contains(user)) || user == User.System;
         }
 
-        public void MakeAuthorizedTo(SecurableAction action, object target, IEnumerable<IUserGroup> userGroups) {
+        public void AuthorizeTo(SecurableAction action, object target, IEnumerable<IUserGroup> userGroups) {
             var permissions = userGroups.Select(group => new Permission {
                 Action = action,
                 Group = group

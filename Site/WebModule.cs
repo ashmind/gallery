@@ -25,6 +25,7 @@ namespace AshMind.Gallery.Site {
                    .SingletonScoped();
 
             builder.Register<Logic.UserAuthentication>()
+                   .As<Logic.IUserAuthentication>()
                    .ContainerScoped();
 
             var personNameRegexString = ConfigurationManager.AppSettings["PersonNameRegex"];

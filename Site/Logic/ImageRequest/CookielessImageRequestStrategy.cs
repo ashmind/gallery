@@ -15,10 +15,10 @@ using AshMind.Gallery.Site.Fixes;
 
 namespace AshMind.Gallery.Site.Logic.ImageRequest {
     public class CookielessImageRequestStrategy : IImageRequestStrategy {        
-        private readonly AlbumFacade gallery;
+        private readonly IAlbumFacade gallery;
         protected string RouteName { get; private set; }
         
-        public CookielessImageRequestStrategy(AlbumFacade gallery) {
+        public CookielessImageRequestStrategy(IAlbumFacade gallery) {
             this.gallery = gallery;
             this.RouteName = "Images (" + this.GetType() + ")";
         }

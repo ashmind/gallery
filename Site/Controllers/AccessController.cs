@@ -24,17 +24,17 @@ namespace AshMind.Gallery.Site.Controllers {
     [HandleError]
     public class AccessController : ControllerBase {
         private readonly IOpenIdAjaxRelyingParty openId;
-        private readonly UserAuthentication authentication;
+        private readonly IUserAuthentication authentication;
         private readonly IRepository<IUserGroup> userGroupRepository;
-        private readonly AuthorizationService authorization;
-        private readonly AlbumFacade gallery;
+        private readonly IAuthorizationService authorization;
+        private readonly IAlbumFacade gallery;
 
         public AccessController(
             IOpenIdAjaxRelyingParty openId,
-            UserAuthentication authentication,
+            IUserAuthentication authentication,
             IRepository<IUserGroup> userGroupRepository,
-            AuthorizationService authorization,
-            AlbumFacade gallery
+            IAuthorizationService authorization,
+            IAlbumFacade gallery
         ) : base(authentication) {
             this.openId = openId;
             this.authentication = authentication;
@@ -133,7 +133,7 @@ namespace AshMind.Gallery.Site.Controllers {
                              .Where(g => groupKeys.Contains(g.Key))
                              .Select(g => g.UserGroup);
 
-            this.authorization.MakeAuthorizedTo(SecurableAction.View, album.SecurableToken, groups);
+            this.authorization.AuthorizeTo(SecurableAction.View, album.SecurableToken, groups);
             return new EmptyResult();
         }
 

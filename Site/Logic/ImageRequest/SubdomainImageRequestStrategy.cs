@@ -13,10 +13,10 @@ namespace AshMind.Gallery.Site.Logic.ImageRequest {
         private int currentIndex;
         private string subdomainPattern;
 
-        public SubdomainImageRequestStrategy(AlbumFacade gallery) : this(gallery, "img{0}") {
+        public SubdomainImageRequestStrategy(IAlbumFacade gallery) : this(gallery, "img{0}") {
         }
 
-        public SubdomainImageRequestStrategy(AlbumFacade gallery, string subdomainPattern) : base(gallery) {
+        public SubdomainImageRequestStrategy(IAlbumFacade gallery, string subdomainPattern) : base(gallery) {
             this.currentIndex = 1;
             this.subdomainPattern = subdomainPattern.TrimEnd('.');
         }

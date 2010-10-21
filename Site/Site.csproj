@@ -93,6 +93,7 @@
     <Compile Include="Logic\ImageRequest\FriendlyImageUrlStrategy.cs" />
     <Compile Include="Logic\IImageRequestStrategy.cs" />
     <Compile Include="Logic\ImageRequest\SubdomainImageRequestStrategy.cs" />
+    <Compile Include="Logic\IUserAuthentication.cs" />
     <Compile Include="Logic\PeopleAlbumNameRegexTransform.cs" />
     <Compile Include="Logic\UserAuthentication.cs" />
     <Compile Include="Models\AlbumListViewModel.cs" />
