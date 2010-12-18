@@ -7,7 +7,37 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Tests", "Core.Tests\Core.Tests.csproj", "{93813FFE-7AD9-40A3-96DF-A00A8C5137F8}"
 EndProject
-Project("{00000000-0000-0000-0000-000000000000}") = "Site.Tests", "Site.Tests\Site.Tests.csproj", "{C56FF232-5221-4297-85CD-1891039D24AC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Site.Tests", "Site.Tests\Site.Tests.csproj", "{C56FF232-5221-4297-85CD-1891039D24AC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Libraries", ".Libraries", "{BAF74785-A607-4481-84B6-3288545F3493}"
+	ProjectSection(SolutionItems) = preProject
+		.Libraries\AshMind.Extensions.dll = .Libraries\AshMind.Extensions.dll
+		.Libraries\AshMind.Extensions.xml = .Libraries\AshMind.Extensions.xml
+		.Libraries\ExifLibrary.dll = .Libraries\ExifLibrary.dll
+		.Libraries\Moq.dll = .Libraries\Moq.dll
+		.Libraries\Moq.xml = .Libraries\Moq.xml
+		.Libraries\Newtonsoft.Json.dll = .Libraries\Newtonsoft.Json.dll
+		.Libraries\Newtonsoft.Json.xml = .Libraries\Newtonsoft.Json.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Autofac", "Autofac", "{357B0B2C-2974-4920-B6DE-BE6E788AFB31}"
+	ProjectSection(SolutionItems) = preProject
+		.Libraries\Autofac\Autofac.dll = .Libraries\Autofac\Autofac.dll
+		.Libraries\Autofac\Autofac.Integration.Web.dll = .Libraries\Autofac\Autofac.Integration.Web.dll
+		.Libraries\Autofac\Autofac.XML = .Libraries\Autofac\Autofac.XML
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DotNetOpenAuth", "DotNetOpenAuth", "{82B5AC64-F293-42F9-8B47-E3D9416B2C93}"
+	ProjectSection(SolutionItems) = preProject
+		.Libraries\DotNetOpenAuth\DotNetOpenAuth.Contracts.dll = .Libraries\DotNetOpenAuth\DotNetOpenAuth.Contracts.dll
+		.Libraries\DotNetOpenAuth\DotNetOpenAuth.Contracts.pdb = .Libraries\DotNetOpenAuth\DotNetOpenAuth.Contracts.pdb
+		.Libraries\DotNetOpenAuth\DotNetOpenAuth.dll = .Libraries\DotNetOpenAuth\DotNetOpenAuth.dll
+		.Libraries\DotNetOpenAuth\DotNetOpenAuth.pdb = .Libraries\DotNetOpenAuth\DotNetOpenAuth.pdb
+		.Libraries\DotNetOpenAuth\DotNetOpenAuth.xml = .Libraries\DotNetOpenAuth\DotNetOpenAuth.xml
+		.Libraries\DotNetOpenAuth\DotNetOpenAuth.xsd = .Libraries\DotNetOpenAuth\DotNetOpenAuth.xsd
+		.Libraries\DotNetOpenAuth\log4net.dll = .Libraries\DotNetOpenAuth\log4net.dll
+		.Libraries\DotNetOpenAuth\log4net.xml = .Libraries\DotNetOpenAuth\log4net.xml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,5 +64,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{357B0B2C-2974-4920-B6DE-BE6E788AFB31} = {BAF74785-A607-4481-84B6-3288545F3493}
+		{82B5AC64-F293-42F9-8B47-E3D9416B2C93} = {BAF74785-A607-4481-84B6-3288545F3493}
 	EndGlobalSection
 EndGlobal
