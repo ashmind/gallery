@@ -75,8 +75,11 @@ namespace AshMind.Gallery.Core.Integration.Picasa {
                     continue;
 
                 var key = new ContactKey(contact.UserCode, contact.ID);
+                var person = this.contacts.GetValueOrDefault(key);
+                if (person == null)
+                    continue;
 
-                yield return new Face(this.contacts[key], file);
+                yield return new Face(person, file);
             }
         }
     }
