@@ -132,7 +132,7 @@ function setupAlbum() {
         overlayColor    : '#000',
         titlePosition   : 'over',
 
-        onComplete      : function(currentArray, currentIndex) {
+        onComplete : function(currentArray, currentIndex) {
             global.lightboxNotYetShown = false;
 
             var a = $(currentArray).eq(currentIndex);
@@ -150,17 +150,23 @@ function setupAlbum() {
                 $.history.load("/" + $(this).attr('data-albumid') + '/' + $(this).attr('data-itemname'));
             });
 
-            $("#fancybox-wrap .delete").click(function(event) {
+            $("#fancybox-wrap .delete, #fancybox-wrap .restore").click(function(event) {
                 event.preventDefault();
-                var a = $(this);
-                $.get(a.attr('href'), {}, function(isDeleted) {
+                var item = a.parents(".item");
+                $.get($(this).attr('href'), {}, function(deletesCount) {
                     $.fancybox.close();
-                    reloadAlbum();
+                    var deleted = $("section.to-delete");
+                    if (deletesCount > 0) {
+                        deleted.append(item);
+                    }
+                    else {
+                        deleted.prevAll('section').append(item);
+                    }
                 });
             });
         },
 
-        titleFormat     : function(title, currentArray, currentIndex) {
+        titleFormat : function(title, currentArray, currentIndex) {
             var a = $(currentArray).eq(currentIndex);
             var data = getItemData(a);
 
@@ -173,7 +179,9 @@ function setupAlbum() {
                 ">Locate</a>";
             }
 
-            var _delete = "<a class='delete' href='" + data.actions['delete'].action + "'>" + data.actions['delete'].text + "</a>";
+            var deleteOrRestoreKey = data.actions['delete'] ? 'delete' : 'restore';
+            var deleteOrRestoreData = data.actions[deleteOrRestoreKey];
+            var deleteOrRestore = "<a class='" + deleteOrRestoreKey + "' href='" + deleteOrRestoreData.action + "'>" + deleteOrRestoreData.text + "</a>";
             var download = "<span>Download: ";
             var downloadData = data.actions.download;
             for (var name in downloadData.sizes) {
@@ -182,13 +190,13 @@ function setupAlbum() {
             download += "</span>";
 
             return "<span id='fancybox-title-over' class='image-actions'>" +
-                [ locate, _delete, download, "<a href='" + data.actions.comment + "'>Comment</a>" ]
+                [ locate, deleteOrRestore, download, "<a href='" + data.actions.comment + "'>Comment</a>" ]
                     .filter(function(item) { return !!item; })
                     .join('<span class="separator">|</span>')
             "</span>";
         },
 
-        onClosed        : function(currentArray, currentIndex) {
+        onClosed : function(currentArray, currentIndex) {
             var a = $(currentArray).eq(currentIndex);
 
             if (!global.noHistoryRecordWhileClosingLightbox) {

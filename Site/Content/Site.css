@@ -197,11 +197,11 @@ a.block-link:hover {
     margin: 0;
 }
 
-.album-view .wall .item.to-delete {
+.album-view .wall .to-delete .item {
     opacity: 0.6;
 }
 
-.album-view .wall .item.to-delete:hover {
+.album-view .wall .to-delete .item:hover {
     opacity: 1;
 }
 

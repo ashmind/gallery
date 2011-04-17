@@ -3,7 +3,7 @@
 <% Action<AlbumItem> renderItem = item => { %>
   <% var proposedToBeDeletedByCurrentUser = item.DeleteProposals.Contains(Model.CurrentUser); %>
 
-  <span class="item<%= item.IsProposedToBeDeleted ? " to-delete" : "" %>">
+  <span class="item">
     <a <% if (!item.IsProposedToBeDeleted) { %>rel="normal-gallery-item"<% } %> 
        href="<%= Model.ImageAccess.GetActionUrl(ViewContext.RequestContext, Model.ID, item.Name) + "/" + ImageSize.Medium.Name.ToLowerInvariant() %>"
        data-name="<%= item.Name %>"
@@ -15,7 +15,7 @@
           <% } %>
 
           actions : {
-              'delete' : {
+              '<%= (proposedToBeDeletedByCurrentUser ? "restore" : "delete") %>' : {
                   action : '<%= Url.Action(
                        (proposedToBeDeletedByCurrentUser ? "Revert" : "Propose") + "Delete", "Gallery",
                        new { album = Model.ID, item = item.Name }
