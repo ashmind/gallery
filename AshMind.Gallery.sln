@@ -20,13 +20,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Libraries", ".Libraries", 
 		.Libraries\Newtonsoft.Json.xml = .Libraries\Newtonsoft.Json.xml
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Autofac", "Autofac", "{357B0B2C-2974-4920-B6DE-BE6E788AFB31}"
-	ProjectSection(SolutionItems) = preProject
-		.Libraries\Autofac\Autofac.dll = .Libraries\Autofac\Autofac.dll
-		.Libraries\Autofac\Autofac.Integration.Web.dll = .Libraries\Autofac\Autofac.Integration.Web.dll
-		.Libraries\Autofac\Autofac.XML = .Libraries\Autofac\Autofac.XML
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DotNetOpenAuth", "DotNetOpenAuth", "{82B5AC64-F293-42F9-8B47-E3D9416B2C93}"
 	ProjectSection(SolutionItems) = preProject
 		.Libraries\DotNetOpenAuth\DotNetOpenAuth.Contracts.dll = .Libraries\DotNetOpenAuth\DotNetOpenAuth.Contracts.dll
@@ -66,7 +59,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{357B0B2C-2974-4920-B6DE-BE6E788AFB31} = {BAF74785-A607-4481-84B6-3288545F3493}
 		{82B5AC64-F293-42F9-8B47-E3D9416B2C93} = {BAF74785-A607-4481-84B6-3288545F3493}
 	EndGlobalSection
 EndGlobal

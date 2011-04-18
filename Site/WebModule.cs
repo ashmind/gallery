@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Text.RegularExpressions;
 
-using Autofac.Builder;
+using Autofac;
 
 using AshMind.Extensions;
 
@@ -20,13 +20,13 @@ namespace AshMind.Gallery.Site {
         protected override void Load(ContainerBuilder builder) {
             base.Load(builder);
 
-            builder.Register(new OpenIdAjaxRelyingParty(new DotNetOpenAuth.OpenId.RelyingParty.OpenIdAjaxRelyingParty(null)))
+            builder.RegisterInstance(new OpenIdAjaxRelyingParty(new DotNetOpenAuth.OpenId.RelyingParty.OpenIdAjaxRelyingParty(null)))
                    .As<IOpenIdAjaxRelyingParty, IOpenIdRelyingParty>()
-                   .SingletonScoped();
+                   .SingleInstance();
 
-            builder.Register<Logic.UserAuthentication>()
+            builder.RegisterType<Logic.UserAuthentication>()
                    .As<Logic.IUserAuthentication>()
-                   .ContainerScoped();
+                   .InstancePerLifetimeScope();
 
             var personNameRegexString = ConfigurationManager.AppSettings["PersonNameRegex"];
             if (personNameRegexString.IsNotNullOrEmpty()) {
@@ -36,7 +36,7 @@ namespace AshMind.Gallery.Site {
 
                 var personNameRegex = new Regex(personNameRegexString);
 
-                builder.Register(new Logic.PeopleAlbumNameRegexTransform(personNameRegex, personNameReplacement))
+                builder.RegisterInstance(new Logic.PeopleAlbumNameRegexTransform(personNameRegex, personNameReplacement))
                        .As<IAlbumNameTransform>();
             }
 
@@ -53,7 +53,7 @@ namespace AshMind.Gallery.Site {
             );
 
             var type = Type.GetType(imageRequestStrategyName, true, true);
-            builder.Register(type).As<Logic.IImageRequestStrategy>();
+            builder.RegisterType(type).As<Logic.IImageRequestStrategy>();
         }
     }
 }

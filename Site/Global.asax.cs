@@ -10,26 +10,17 @@ using System.Web.Routing;
 using System.IO;
 
 using Autofac;
-using Autofac.Builder;
-using Autofac.Modules;
-using Autofac.Integration.Web;
-using Autofac.Integration.Web.Mvc;
+using Autofac.Integration.Mvc;
 
 using AshMind.Extensions;
 
 using AshMind.Gallery.Core;
 using AshMind.Gallery.Site.Fixes;
-using AshMind.Gallery.Site.Models;
 using AshMind.Gallery.Site.Routing;
 
 namespace AshMind.Gallery.Site {
     public class MvcApplication : System.Web.HttpApplication {
-        private static ContainerProvider containerProvider;
         private static Exception startFailure;
-
-        public static IContainer RequestContainer {
-            get { return containerProvider.RequestContainer; }
-        }
 
         protected void Application_Start() {
             Start();
@@ -84,8 +75,8 @@ namespace AshMind.Gallery.Site {
                 new { action = "(view|comment|proposedelete|revertdelete)" }
             );
 
-            containerProvider.ApplicationContainer.Resolve<Logic.IImageRequestStrategy>()
-                             .MapRoute(routes, "Image", "Get");
+            DependencyResolver.Current.GetService<Logic.IImageRequestStrategy>()
+                              .MapRoute(routes, "Image", "Get");
 
             routes.MapRoute(
                 "Home",
@@ -102,12 +93,8 @@ namespace AshMind.Gallery.Site {
 
         protected virtual void RegisterContainer() {
             var builder = new ContainerBuilder();
-
-            builder.RegisterModule(new ImplicitCollectionSupportModule());
-            builder.RegisterModule(new AutofacControllerModule(
-                BuildManager.GetReferencedAssemblies().Cast<Assembly>().ToArray()
-            ));
-
+            builder.RegisterControllers(BuildManager.GetReferencedAssemblies().Cast<Assembly>().ToArray());
+            
             var albumsRoot = ConfigurationManager.AppSettings["Albums"]
                           ?? Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
 
@@ -118,27 +105,13 @@ namespace AshMind.Gallery.Site {
 
             builder.RegisterModule(new CoreModule(albumsRoot, dataRoot, picasaContactsXmlPath, () => new WebCache()));
             builder.RegisterModule(new WebModule());
+            
+            var container = builder.Build();
+            var dependencyResolver = new AutofacDependencyResolver(container);
 
-            containerProvider = new ContainerProvider(builder.Build());
-            ControllerBuilder.Current.SetControllerFactory(new AutofacControllerFactory(containerProvider));
+            DependencyResolver.SetResolver(dependencyResolver);
         }
-
-        private void DiscoverAllModules(ContainerBuilder builder) {
-            var path = Server.MapPath("~/bin");
-
-            foreach (var file in Directory.GetFiles(path, "*.dll")) {
-                if (!file.Contains("Web.Gallery."))
-                    continue;
-
-                var assembly = Assembly.LoadFrom(file);
-                var modules = from type in assembly.GetTypes()
-                              where typeof(IModule).IsAssignableFrom(type)
-                              select (IModule)Activator.CreateInstance(type);
-
-                modules.ForEach(builder.RegisterModule);
-            }
-        }
-
+        
         protected void Application_BeginRequest(object sender, EventArgs e) {
             if (startFailure != null)
                 this.Restart();
@@ -155,15 +128,5 @@ namespace AshMind.Gallery.Site {
                 Response.End();
             }
         }
-
-        protected void Application_EndRequest(object sender, EventArgs e) {
-            if (startFailure != null)
-                return;
-
-            if (containerProvider == null)
-                return;
-
-            containerProvider.DisposeRequestContainer();
-        }   
     }
 }

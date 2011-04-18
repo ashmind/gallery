@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.Caching;
-using System.Security.Cryptography;
 
 using Autofac;
 using Autofac.Builder;
@@ -55,98 +53,100 @@ namespace AshMind.Gallery.Core {
 
             builder.Register(c => cacheFactory())
                    .As<ObjectCache>()
-                   .FactoryScoped();
+                   .InstancePerDependency();
 
             builder.Register(c => new JsonSecurityRepository(
                         this.storageLocation.GetFile("users.jsdb", false)
                     ))
                    .As<IRepository<User>, IRepository<UserGroup>, IRepository<IUserGroup>>()
-                   .SingletonScoped();
+                   .SingleInstance();
 
-            builder.Register<JsonCommentRepository>()
+            builder.RegisterType<JsonCommentRepository>()
                    .As<ICommentRepository>()
-                   .SingletonScoped();
+                   .SingleInstance();
 
-            builder.Register(this.fileSystem)
+            builder.RegisterInstance(this.fileSystem)
                    .As<IFileSystem>()
-                   .SingletonScoped();
+                   .SingleInstance();
 
             var cacheRoot = this.storageLocation.GetLocation("images", ActionIfMissing.CreateNew);
             builder.Register(c => new ImageCache(cacheRoot, ImageCacheFormat.Jpeg, c.Resolve<ICacheDependencyProvider[]>()))
-                   .SingletonScoped();
+                   .SingleInstance();
 
             RegisterSecurity(builder);
 
             RegisterAlbumSupport(builder, types);
 
-            builder.Register<PreviewFacade>().SingletonScoped();
+            builder.RegisterType<PreviewFacade>().SingleInstance();
             
             RegisterPicasaIntegration(builder);
                         
-            RegisterAllImplementationsOf<ILocationMetadataProvider>(builder, types, InstanceScope.Singleton);            
-            RegisterAllImplementationsOf<IOrientationProvider>(builder, types,  InstanceScope.Singleton);
-            RegisterAllImplementationsOf<ICacheDependencyProvider>(builder, types, InstanceScope.Singleton);            
+            RegisterAllImplementationsOf<ILocationMetadataProvider>(builder, types, x => x.SingleInstance());
+            RegisterAllImplementationsOf<IOrientationProvider>(builder, types, x => x.SingleInstance());
+            RegisterAllImplementationsOf<ICacheDependencyProvider>(builder, types, x => x.SingleInstance());            
         }
 
         private void RegisterSecurity(ContainerBuilder builder) {
-            builder.Register<AuthorizationService>().As<IAuthorizationService>().SingletonScoped();
-            builder.Register<JsonKeyPermissionProvider>()
+            builder.RegisterType<AuthorizationService>().As<IAuthorizationService>().SingleInstance();
+            builder.RegisterType<JsonKeyPermissionProvider>()
                    .As<IPermissionProvider>()
-                   .WithArguments(new TypedParameter(typeof(IFile), this.storageLocation.GetFile("permissions.jsdb", false)))
-                   .SingletonScoped();
+                   .WithParameter(new TypedParameter(typeof(IFile), this.storageLocation.GetFile("permissions.jsdb", false)))
+                   .SingleInstance();
 
-            builder.Register<JsonLocationPermissionProvider>()
+            builder.RegisterType<JsonLocationPermissionProvider>()
                    .As<IPermissionProvider>()
-                   .SingletonScoped();
+                   .SingleInstance();
 
             // because my current gallery has a lot of stuff with permissions set through this:
-            builder.Register<ObsoleteJsonLocationPermissionProvider>()
+            builder.RegisterType<ObsoleteJsonLocationPermissionProvider>()
                    .As<IPermissionProvider>()
-                   .SingletonScoped();
+                   .SingleInstance();
 
-            builder.Register<MD5UserGroupSecureReferenceStrategy>()
+            builder.RegisterType<MD5UserGroupSecureReferenceStrategy>()
                    .As<IUserGroupSecureReferenceStrategy>()
-                   .ContainerScoped();
-
-            builder.Register(c => (Func<IUserGroupSecureReferenceStrategy>)(() => c.Resolve<IUserGroupSecureReferenceStrategy>()));
+                   .InstancePerLifetimeScope();
         }
 
-        private void RegisterAlbumSupport(ContainerBuilder builder, IEnumerable<Type> types) {
+        private void RegisterAlbumSupport(ContainerBuilder builder, IList<Type> types) {
             builder.Register(c => new AlbumIDProvider(this.storageLocation, this.fileSystem))
                    .As<IAlbumIDProvider>();
 
-            builder.Register<AlbumFactory>();
-            builder.Register<AlbumItemFactory>();
-            
-            builder.Register<AlbumFacade>()
-                   .As<IAlbumFacade>()
-                   .WithArguments(new TypedParameter(typeof(ILocation), this.albumLocation))
-                   .SingletonScoped();
+            builder.RegisterType<AlbumFactory>();
+            builder.RegisterType<AlbumItemFactory>();
 
-            RegisterAllImplementationsOf<IAlbumItemMetadataProvider>(builder, types, InstanceScope.Singleton);
-            RegisterAllImplementationsOf<IAlbumProvider>(builder, types, InstanceScope.Singleton);
-            RegisterAllImplementationsOf<IAlbumFilter>(builder, types, InstanceScope.Singleton);
+            builder.RegisterType<AlbumFacade>()
+                   .As<IAlbumFacade>()
+                   .WithParameter(new TypedParameter(typeof(ILocation), this.albumLocation))
+                   .SingleInstance();
+
+            RegisterAllImplementationsOf<IAlbumItemMetadataProvider>(builder, types, x => x.SingleInstance());
+            RegisterAllImplementationsOf<IAlbumProvider>(builder, types, x => x.SingleInstance());
+            RegisterAllImplementationsOf<IAlbumFilter>(builder, types, x => x.SingleInstance());
         }
 
         private void RegisterPicasaIntegration(ContainerBuilder builder) {
-            builder.Register<PicasaIniFileFinder>();
-            builder.Register<PicasaIniParser>();
+            builder.RegisterType<PicasaIniFileFinder>();
+            builder.RegisterType<PicasaIniParser>();
 
             if (this.picasaContactsXmlFile == null)
                 return;
 
             builder.Register(c => new PicasaDatabase(this.picasaContactsXmlFile));
 
-            builder.Register<PicasaFaceProvider>()
+            builder.RegisterType<PicasaFaceProvider>()
                    .As<IFaceProvider>()
-                   .SingletonScoped();
+                   .SingleInstance();
         }
 
-        private void RegisterAllImplementationsOf<TService>(ContainerBuilder builder, IEnumerable<Type> types, InstanceScope scope) {
+        private void RegisterAllImplementationsOf<TService>(
+            ContainerBuilder builder,
+            IEnumerable<Type> types,
+            Action<IRegistrationBuilder<object, ConcreteReflectionActivatorData, SingleRegistrationStyle>> scope
+        ) {
             var service = typeof(TService);
             types.Where(type => type.GetInterfaces().Contains(service))
                  .ForEach(
-                    type => builder.Register(type).As(service, type).WithScope(scope)
+                    type => scope(builder.RegisterType(type).As(service, type))
                  );
         }
     }
