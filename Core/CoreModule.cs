@@ -108,9 +108,6 @@ namespace AshMind.Gallery.Core {
                    .As<IUserGroupSecureReferenceStrategy>()
                    .ContainerScoped();
 
-            builder.Register(c => MD5.Create())
-                   .ContainerScoped();
-
             builder.Register(c => (Func<IUserGroupSecureReferenceStrategy>)(() => c.Resolve<IUserGroupSecureReferenceStrategy>()));
         }
 
