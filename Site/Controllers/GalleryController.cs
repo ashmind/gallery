@@ -150,7 +150,7 @@ namespace AshMind.Gallery.Site.Controllers {
 
             var id = this.gallery.GetAlbumID(album);
             if (!manageSecurity || !authorization.IsAuthorized(this.User, SecurableAction.ManageSecurity, null))
-                return new AlbumViewModel(album, this.gallery.GetAlbumID, this.User, this.requestStrategy);
+                return new AlbumViewModel(album, this.gallery.GetAlbumID, this.User, this.requestStrategy, false, null);
 
             return new AlbumViewModel(
                 album, this.gallery.GetAlbumID, this.User,

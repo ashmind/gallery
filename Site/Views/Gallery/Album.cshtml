@@ -1,0 +1,12 @@
+﻿@model AlbumViewModel
+
+<div class="album-view" data-id="@Model.ID">
+  <div class="wall">
+     @Html.Partial("Items") 
+  </div>
+</div>
+
+@if (Model.CanManageSecurity) { 
+   @Html.Partial("AlbumVisibleTo") 
+ } 
+

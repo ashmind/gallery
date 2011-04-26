@@ -1,0 +1,17 @@
+﻿@model AlbumViewModel
+
+<section>
+  @foreach (var item in Model.Items.OrderBy(i => i.Date)) { 
+      Html.RenderPartial("_Item", item);
+  }
+</section>
+
+@if (Model.ProposedToBeDeleted.Any()) { 
+  <a class="expand-to-delete" href="#">Show proposed to be deleted</a>
+  <section class="to-delete">
+    <h2>Proposed to be deleted</h2>
+    @foreach (var item in Model.ProposedToBeDeleted.OrderBy(i => i.Date)) { 
+        Html.RenderPartial("_Item", item);
+    } 
+  </section>
+} 

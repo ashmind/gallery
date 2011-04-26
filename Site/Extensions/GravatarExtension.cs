@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -8,18 +9,18 @@ using AshMind.Extensions;
 
 namespace AshMind.Gallery.Site.Extensions {
     public static class GravatarExtension {
-        public static string Gravatar(this HtmlHelper html, string email) {
+        public static IHtmlString Gravatar(this HtmlHelper html, string email) {
             return GetImageTag(GetGravatar(email), new RouteValueDictionary(), null);
         }
 
-        public static string Gravatar(this HtmlHelper html, string email, object gravatarAttributes) {
+        public static IHtmlString Gravatar(this HtmlHelper html, string email, object gravatarAttributes) {
             var attributes = (gravatarAttributes == null ? new RouteValueDictionary()
                                                          : new RouteValueDictionary(gravatarAttributes));
 
             return GetImageTag(GetGravatar(email, attributes), attributes, null);
         }
 
-        public static string Gravatar(this HtmlHelper html, string email, object gravatarAttributes, object htmlAttributes) {
+        public static IHtmlString Gravatar(this HtmlHelper html, string email, object gravatarAttributes, object htmlAttributes) {
             var attributes = (gravatarAttributes == null ? new RouteValueDictionary()
                                                          : new RouteValueDictionary(gravatarAttributes));
 
@@ -27,7 +28,7 @@ namespace AshMind.Gallery.Site.Extensions {
         }
 
 
-        private static string GetImageTag(string source, RouteValueDictionary gravatarAttributes, object htmlAttributes) {
+        private static IHtmlString GetImageTag(string source, RouteValueDictionary gravatarAttributes, object htmlAttributes) {
             var attributes = (htmlAttributes == null 
                 ? new RouteValueDictionary() 
                 : new RouteValueDictionary(htmlAttributes)
@@ -49,7 +50,7 @@ namespace AshMind.Gallery.Site.Extensions {
 
             builder.MergeAttributes(attributes);
 
-            return builder.ToString(TagRenderMode.SelfClosing);
+            return new MvcHtmlString(builder.ToString(TagRenderMode.SelfClosing));
         }
 
         private static string GetGravatar(string email) {
