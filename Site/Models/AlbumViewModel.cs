@@ -11,7 +11,17 @@ using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Site.Logic;
 
 namespace AshMind.Gallery.Site.Models {
-    public class AlbumViewModel {       
+    public class AlbumViewModel {
+        private class SetEqualityComparer<T> : IEqualityComparer<ISet<T>> {
+            public bool Equals(ISet<T> x, ISet<T> y) {
+                return x.SetEquals(y);
+            }
+
+            public int GetHashCode(ISet<T> obj) {
+                return obj.Aggregate(0, (hashCode, x) => hashCode ^ x.GetHashCode());
+            }
+        }
+
         public AlbumViewModel(
             Album album,
             Func<Album, string> getAlbumID,
@@ -29,12 +39,17 @@ namespace AshMind.Gallery.Site.Models {
             this.VisibleToGroups = (visibleToGroups ?? new UserGroupViewModel[0]).AsReadOnly();
             this.CurrentUser = currentUser;
 
-            var itemModels = album.Items.ToLookup(
-                item => item.IsProposedToBeDeleted,
-                item => ToItemModel(item, getAlbumID, imageAccess)
-            );
-            this.Items = itemModels[false].ToList().AsReadOnly();
-            this.ProposedToBeDeleted = itemModels[true].ToList().AsReadOnly();
+            var itemModels = album.Items.ToLookup(item => item.IsProposedToBeDeleted);
+            this.Items = itemModels[false].Select(item => ToItemModel(item, getAlbumID, imageAccess)).ToList().AsReadOnly();
+            this.ProposedToBeDeleted = itemModels[true]
+                                            .GroupBy(
+                                                item => (ISet<User>)item.DeleteProposals.ToSet(),
+                                                item => ToItemModel(item, getAlbumID, imageAccess),
+                                                (key, models) => new DeleteProposalGroupModel(key, models.ToSet()),
+                                                new SetEqualityComparer<User>()
+                                            )
+                                            .ToList()
+                                            .AsReadOnly();
         }
 
         private AlbumItemModel ToItemModel(AlbumItem item, Func<Album, string> getAlbumID, IImageRequestStrategy imageAccess) {
@@ -50,7 +65,7 @@ namespace AshMind.Gallery.Site.Models {
         public Album Album { get; private set; }
         public IUser CurrentUser { get; private set; }
         public ReadOnlyCollection<AlbumItemModel> Items { get; private set; }
-        public ReadOnlyCollection<AlbumItemModel> ProposedToBeDeleted { get; private set; }
+        public ReadOnlyCollection<DeleteProposalGroupModel> ProposedToBeDeleted { get; private set; }
 
         public bool CanManageSecurity { get; private set; }
         public ReadOnlyCollection<UserGroupViewModel> VisibleToGroups { get; private set; }

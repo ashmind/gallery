@@ -20,6 +20,11 @@ h2 {
     margin: 0;
 }
 
+h3 {
+    font-size: 105%;
+    margin: 0;
+}
+
 #left, #main, #right-menu {
     padding: 12px;
     margin: 16px;
@@ -215,7 +220,8 @@ a.block-link:hover {
     border-top: 1px solid #EEE;
 }
 
-.album-view .wall h2 {
+.album-view .wall h2,
+.album-view .wall h3 {
     font-family: "Calibri",Verdana,Helvetica,sans-serif;
     color:  #AAA;
     margin-top: 0.2em;

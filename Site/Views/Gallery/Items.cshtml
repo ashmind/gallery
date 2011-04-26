@@ -10,8 +10,18 @@
   <a class="expand-to-delete" href="#">Show proposed to be deleted</a>
   <section class="to-delete">
     <h2>Proposed to be deleted</h2>
-    @foreach (var item in Model.ProposedToBeDeleted.OrderBy(i => i.Date)) { 
-        Html.RenderPartial("_Item", item);
-    } 
+    @foreach (var group in Model.ProposedToBeDeleted.OrderByDescending(x => x.By.Count).ThenBy(x => x.By.Min(u => u.Email))) {
+      <section>
+        <h3>
+          @foreach (var user in group.By.OrderBy(u => u.Email)) {
+            @Html.Gravatar(user.Email, new { s = 40, d = "identicon" }, new { @class = "user" })
+          }
+        </h3>
+
+        @foreach (var item in group.Items.OrderBy(i => i.Date)) {
+          Html.RenderPartial("_Item", item);
+        }
+      </section>
+    }
   </section>
 } 

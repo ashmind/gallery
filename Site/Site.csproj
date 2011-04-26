@@ -107,6 +107,7 @@
     <Compile Include="Logic\UserAuthentication.cs" />
     <Compile Include="Models\AlbumItemModel.cs" />
     <Compile Include="Models\AlbumListViewModel.cs" />
+    <Compile Include="Models\DeleteProposalGroupModel.cs" />
     <Compile Include="Models\PagedListViewModel.cs" />
     <Compile Include="Models\AlbumViewModel.cs" />
     <Compile Include="Models\GalleryViewModel.cs" />
