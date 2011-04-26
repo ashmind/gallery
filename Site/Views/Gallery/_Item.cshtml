@@ -1,0 +1,38 @@
+﻿@model AlbumItemModel
+
+<span class="item">
+  <a @(!Model.IsProposedToBeDeleted ? "rel=normal-gallery-item" : "")
+     href="@(Model.GetImageUrlBase(ViewContext.RequestContext) + "/" + ImageSize.Medium.Name.ToLowerInvariant())"
+     data-name="@Model.Name"
+     data-json="{
+        name : '@Model.Name',
+
+        @(Model.PrimaryAlbumID != null ? "primaryAlbumID : '" + Model.PrimaryAlbumID + "'" : "") 
+
+        actions : {
+            '@(Model.WasProposedToBeDeletedByCurrentUser ? "restore" : "delete")' : {
+                action : '@(Url.Action(
+                  (Model.WasProposedToBeDeletedByCurrentUser ? "Revert" : "Propose") + "Delete", "Gallery",
+                      new { album = Model.CurrentAlbumID, item = Model.Name }
+                ))',
+
+                text : '@(Model.WasProposedToBeDeletedByCurrentUser ? "Restore" : "Propose to delete")'
+            },
+
+            download : {
+                action : '@Model.GetImageUrlBase(ViewContext.RequestContext)',
+                sizes : {
+                    '@(ImageSize.Small.Size)px' : '@ImageSize.Small.Name.ToLowerInvariant()',
+                    '@(ImageSize.Medium.Size)px' : '@ImageSize.Medium.Name.ToLowerInvariant()',
+                    '@(ImageSize.Large.Size)px' : '@ImageSize.Large.Name.ToLowerInvariant()',
+                    '@ImageSize.Original.Name' : '@ImageSize.Original.Name.ToLowerInvariant()'
+                }
+            },
+            comment : '@Url.Action("View", "Gallery", new { album = Model.CurrentAlbumID, item = Model.Name })'
+        }
+      }"
+      class="image-view"> 
+      <img src="@Url.Content("~/content/images/blank.gif")"
+           data-lazysrc="@(Model.GetImageUrlBase(ViewContext.RequestContext) + "/" + ImageSize.Thumbnail.Name.ToLowerInvariant())" />
+  </a>
+</span>
