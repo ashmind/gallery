@@ -32,7 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AshMind.Extensions, Version=1.0.1.0, Culture=neutral, PublicKeyToken=32a35e6126a2a893, processorArchitecture=MSIL" />
+    <Reference Include="AshMind.Extensions, Version=1.0.4.0, Culture=neutral, PublicKeyToken=32a35e6126a2a893, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\$packages\AshMind.Extensions.1.0.4\lib\3.5\AshMind.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="Gallio" />
     <Reference Include="MbUnit" />
     <Reference Include="Moq">
@@ -77,7 +80,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Of.Integration\Picasa\Resources\picasa.complex.ini" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
