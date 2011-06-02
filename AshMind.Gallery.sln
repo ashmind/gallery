@@ -12,8 +12,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Libraries", ".Libraries", "{BAF74785-A607-4481-84B6-3288545F3493}"
 	ProjectSection(SolutionItems) = preProject
 		.Libraries\ExifLibrary.dll = .Libraries\ExifLibrary.dll
-		.Libraries\Moq.dll = .Libraries\Moq.dll
-		.Libraries\Moq.xml = .Libraries\Moq.xml
 		.Libraries\Newtonsoft.Json.dll = .Libraries\Newtonsoft.Json.dll
 		.Libraries\Newtonsoft.Json.xml = .Libraries\Newtonsoft.Json.xml
 	EndProjectSection
