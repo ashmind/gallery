@@ -8,12 +8,12 @@
     <title>Log in</title>
 
     <link rel="Stylesheet" type="text/css" href="<%= Url.Content("~/content/site.css") %>" />
-    <%= Html.OpenIdSelectorStyles(this) %>
+    <%= Html.OpenIdSelectorStyles() %>
   
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js" type="text/javascript"></script>
     <script src="<%= Url.Content("~/Scripts/jquery.cookie.js") %>" type="text/javascript"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js" type="text/javascript"></script>
-    <%= Html.OpenIdSelectorScripts(this, null, new OpenIdAjaxOptions {
+    <%= Html.OpenIdSelectorScripts(null, new OpenIdAjaxOptions {
         PreloadedDiscoveryResults = Model.PreloadedDiscoveryResults
     }) %>
   </head>
@@ -27,7 +27,7 @@
           <%= Html.Hidden("ReturnUrl", Request.QueryString["ReturnUrl"], new { id = "ReturnUrl" }) %>
           <%= Html.Hidden("openid_openidAuthData") %>
          
-          Log in using <%= Html.OpenIdSelector(this.Page, new SelectorButton[] {
+          Log in using <%= Html.OpenIdSelector(new SelectorButton[] {
               new SelectorProviderButton("https://www.google.com/accounts/o8/id", Url.Content("~/Content/images/openid/google.png")),
               new SelectorOpenIdButton(Url.Content("~/Content/images/openid.png"))
           }) %>
