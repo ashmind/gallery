@@ -9,32 +9,27 @@ using System.Net.Mime;
 using AshMind.Extensions;
 
 using AshMind.Gallery.Core;
-using AshMind.Gallery.Core.IO;
-using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Site.Logic;
 using AshMind.Gallery.Site.Models;
 
 namespace AshMind.Gallery.Site.Controllers {
     public class ImageController : ControllerBase {
-        private IDictionary<string, string> knownMimeTypes = new Dictionary<string, string> {
+        private readonly IDictionary<string, string> knownMimeTypes = new Dictionary<string, string> {
             {".jpg",    MediaTypeNames.Image.Jpeg},
             {".jpeg",   MediaTypeNames.Image.Jpeg},
             {".png",    "image/png"}
         };
 
-        private readonly IAlbumFacade gallery;
         private readonly PreviewFacade preview;
         private readonly IImageRequestStrategy strategy;
 
         public ImageController(
-            IAlbumFacade gallery,
             PreviewFacade preview,
             IUserAuthentication authentication,
             IImageRequestStrategy strategy
         )
             : base(authentication)
         {
-            this.gallery = gallery;
             this.preview = preview;
             this.strategy = strategy;
         }
@@ -74,13 +69,9 @@ namespace AshMind.Gallery.Site.Controllers {
             Response.Cache.SetETagFromFileDependencies();
             Response.Cache.SetLastModifiedFromFileDependencies();
 
-            var maxAge = TimeSpan.Zero;
-            if ((DateTimeOffset.Now - lastModifiedDate).TotalDays > 30) { // I think I will not edit these
-                maxAge = TimeSpan.FromDays(90);
-            }
-            else {
-                maxAge = TimeSpan.FromHours(1);
-            }
+            var maxAge = (DateTimeOffset.Now - lastModifiedDate).TotalDays > 30 // I think I will not edit these
+                       ? TimeSpan.FromDays(90)
+                       : TimeSpan.FromHours(1);
 
             Response.Cache.SetExpires((DateTimeOffset.Now + maxAge).UtcDateTime);
             Response.Cache.SetMaxAge(maxAge);

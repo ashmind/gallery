@@ -1,26 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 using AshMind.Gallery.Core.IO;
-
-using File = System.IO.File;
 
 namespace AshMind.Gallery.Core.AlbumSupport {
     internal class AlbumIDProvider : IAlbumIDProvider {
         private readonly IFile idMapFile;
         private readonly ConcurrentDictionary<string, AlbumDescriptor> idMap;
-        private readonly IFileSystem albumFileSystem;
 
-        public AlbumIDProvider(ILocation dataRoot, IFileSystem albumFileSystem) {
+        public AlbumIDProvider(ILocation dataRoot) {
             this.idMapFile = dataRoot.GetFile("idmap", false);
             this.idMap = new ConcurrentDictionary<string, AlbumDescriptor>(this.LoadMap());
-
-            this.albumFileSystem = albumFileSystem;
         }
 
         private IEnumerable<KeyValuePair<string, AlbumDescriptor>> LoadMap() {

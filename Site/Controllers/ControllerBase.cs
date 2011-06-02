@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
-using AshMind.Extensions;
-
 using AshMind.Gallery.Core.Security;
-using AshMind.Gallery.Core;
 using AshMind.Gallery.Site.Logic;
 
 namespace AshMind.Gallery.Site.Controllers {
@@ -15,7 +11,7 @@ namespace AshMind.Gallery.Site.Controllers {
         private IUser user;
         private readonly IUserAuthentication authentication;
 
-        public ControllerBase(IUserAuthentication authentication) {
+        protected ControllerBase(IUserAuthentication authentication) {
             this.authentication = authentication;
         }
 

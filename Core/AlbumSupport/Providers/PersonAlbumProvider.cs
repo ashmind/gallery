@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Caching;
-using System.Text;
 
 using AshMind.Extensions;
 
@@ -36,7 +35,7 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
         }
 
         public IEnumerable<Album> GetAllAlbums(IEnumerable<ILocation> locations, IUser user) {
-            var albumsCacheKey = "faces:all_albums";
+            const string albumsCacheKey = "faces:all_albums";
             var cached = this.faceCache.Get(albumsCacheKey);
             if (cached != null)
                 return CorrectAlbums((Album[])cached, user);

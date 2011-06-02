@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 using AshMind.Gallery.Core.IO;
 
 namespace AshMind.Gallery.Core.Tests.IO {
     public class Resource : IFile {
-        private string resourcePath;
-        private Assembly assembly;
+        private readonly string resourcePath;
+        private readonly Assembly assembly;
 
         public Resource(string resourcePath) {
             this.resourcePath = resourcePath;

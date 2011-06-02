@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Collections.ObjectModel;
 
 using AshMind.Extensions;
 
 using AshMind.Gallery.Core.AlbumSupport;
-using AshMind.Gallery.Core.IO;
 
 namespace AshMind.Gallery.Core {
     public class Album : IReadOnlySupport<Album> {
         public static Album Empty { get; private set; }
 
-        private bool readOnly = false;
+        private bool readOnly;
         private Lazy<ReadOnlyCollection<AlbumItem>> lazyItems;
         private readonly Lazy<DateTimeOffset> lazyDate;
 

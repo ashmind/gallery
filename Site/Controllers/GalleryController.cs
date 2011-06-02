@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
-using System.Web;
 using System.Web.Mvc;
 
 using AshMind.Gallery.Core;
@@ -148,7 +147,6 @@ namespace AshMind.Gallery.Site.Controllers {
             if (album == null)
                 return null;
 
-            var id = this.gallery.GetAlbumID(album);
             if (!manageSecurity || !authorization.IsAuthorized(this.User, SecurableAction.ManageSecurity, null))
                 return new AlbumViewModel(album, this.gallery.GetAlbumID, this.User, this.requestStrategy, false, null);
 

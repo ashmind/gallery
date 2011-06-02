@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 using AshMind.Extensions;
 
@@ -64,9 +63,7 @@ namespace AshMind.Gallery.Core.AlbumSupport {
                 item.DeleteProposals.Select(this.userGroupReferenceSupport.GetReference)
             );
 
-            locationMetadataProvider.ApplyMetadata<AlbumItemRawMetadata>(
-                item.File.Location, item.File.Name, metadata
-            );
+            locationMetadataProvider.ApplyMetadata(item.File.Location, item.File.Name, metadata);
         }
     }
 }

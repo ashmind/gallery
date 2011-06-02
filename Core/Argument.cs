@@ -99,14 +99,14 @@ public static class Argument
 
     public static string FormatWrongType(object value, Type type)
     {
-        string template = Argument.GetString("Argument.WrongType");
+        var template = Argument.GetString("Argument.WrongType");
 
         return String.Format(template, value, type);
     }
 
     public static string FormatWrongKeyType(object value, Type type)
     {
-        string template = Argument.GetString("Argument.WrongKeyType");
+        var template = Argument.GetString("Argument.WrongKeyType");
 
         return String.Format(template, value, type);
     }

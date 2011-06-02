@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-using Gallio.Framework;
 using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
 
 using AshMind.Gallery.Core.AlbumSupport;
 using AshMind.Gallery.Core.IO;
@@ -31,8 +28,7 @@ namespace AshMind.Gallery.Core.Tests.Of.AlbumSupport {
             return new AlbumIDProvider(
                 new MemoryLocation {
                     { "idmap", idmap }
-                },
-                new MemoryFileSystem()
+                }
             );
         }
     }

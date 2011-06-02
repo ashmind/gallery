@@ -54,6 +54,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\AssemblyInfoCommon.cs">
+      <Link>Properties\AssemblyInfoCommon.cs</Link>
+    </Compile>
     <Compile Include="IO\MemoryFile.cs" />
     <Compile Include="IO\MemoryFileSystem.cs" />
     <Compile Include="IO\MemoryLocation.cs" />

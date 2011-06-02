@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-using Gallio.Framework;
 using MbUnit.Framework;
-using MbUnit.Framework.ContractVerifiers;
 
-using Moq;
-
-using AshMind.Gallery.Core.IO;
 using AshMind.Gallery.Core.Integration.Picasa;
 using AshMind.Gallery.Core.Tests.IO;
 

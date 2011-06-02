@@ -2,24 +2,23 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace AshMind.Gallery.Core.IO.Implementation {
     internal class File : IFile {
-        private static IDictionary<FileLockMode, FileShare> fileShare = new Dictionary<FileLockMode, FileShare> {
+        private static readonly IDictionary<FileLockMode, FileShare> fileShare = new Dictionary<FileLockMode, FileShare> {
             { FileLockMode.None,        FileShare.ReadWrite },
             { FileLockMode.Read,        FileShare.Write },
             { FileLockMode.Write,       FileShare.Read },
             { FileLockMode.ReadWrite,   FileShare.None },
         };
 
-        private static IDictionary<FileOpenMode, FileMode> fileMode = new Dictionary<FileOpenMode, FileMode> {
+        private static readonly IDictionary<FileOpenMode, FileMode> fileMode = new Dictionary<FileOpenMode, FileMode> {
             { FileOpenMode.Append,       FileMode.Append },
             { FileOpenMode.ReadOrWrite,  FileMode.OpenOrCreate },
             { FileOpenMode.Recreate,     FileMode.Create }
         };
 
-        private static IDictionary<FileOpenMode, FileAccess> fileAccess = new Dictionary<FileOpenMode, FileAccess> {
+        private static readonly IDictionary<FileOpenMode, FileAccess> fileAccess = new Dictionary<FileOpenMode, FileAccess> {
             { FileOpenMode.Append,       FileAccess.Write },
             { FileOpenMode.ReadOrWrite,  FileAccess.ReadWrite },
             { FileOpenMode.Recreate,     FileAccess.Write }

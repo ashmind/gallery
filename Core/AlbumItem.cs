@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 using AshMind.Extensions;
 
-using AshMind.Gallery.Core.ImageProcessing;
 using AshMind.Gallery.Core.IO;
 using AshMind.Gallery.Core.Security;
 

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
-using System.Web;
 using System.Web.Security;
 
 using AshMind.Extensions;
@@ -12,7 +11,7 @@ using AshMind.Gallery.Core.Security;
 
 namespace AshMind.Gallery.Site.Logic {
     public class UserAuthentication : IUserAuthentication {
-        private static string GroupMemberNamePrefix = "anonymous-member-of:";
+        private const string GroupMemberNamePrefix = "anonymous-member-of:";
 
         private readonly IRepository<User> userRepository;
         private readonly IRepository<UserGroup> userGroupRepository;

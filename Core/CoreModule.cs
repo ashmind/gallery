@@ -108,7 +108,7 @@ namespace AshMind.Gallery.Core {
         }
 
         private void RegisterAlbumSupport(ContainerBuilder builder, IList<Type> types) {
-            builder.Register(c => new AlbumIDProvider(this.storageLocation, this.fileSystem))
+            builder.Register(c => new AlbumIDProvider(this.storageLocation))
                    .As<IAlbumIDProvider>();
 
             builder.RegisterType<AlbumFactory>();

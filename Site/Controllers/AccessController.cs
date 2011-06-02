@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Web.Mvc;
-using System.Web.Security;
 
 using DotNetOpenAuth.Messaging;
 using DotNetOpenAuth.OpenId;

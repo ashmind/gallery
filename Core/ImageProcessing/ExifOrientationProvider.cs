@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 
 using AshMind.Gallery.Core.Metadata;
 using AshMind.Gallery.Core.IO;
@@ -11,7 +10,7 @@ namespace AshMind.Gallery.Core.ImageProcessing {
     public class ExifOrientationProvider : IOrientationProvider {
         private const int ExifOrientationId = 274;
 
-        private static IDictionary<int, ImageOrientation> orientations = new Dictionary<int, ImageOrientation> {
+        private static readonly IDictionary<int, ImageOrientation> orientations = new Dictionary<int, ImageOrientation> {
             { 1, new ImageOrientation(0) },
             { 2, new ImageOrientation(0, ImageMirroring.Horizontal) },
             { 3, new ImageOrientation(180) },

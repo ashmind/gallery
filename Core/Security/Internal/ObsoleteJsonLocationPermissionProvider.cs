@@ -10,8 +10,6 @@ using AshMind.Extensions;
 
 using AshMind.Gallery.Core.Internal;
 using AshMind.Gallery.Core.IO;
-using AshMind.Gallery.Core.Security;
-using System.IO;
 
 namespace AshMind.Gallery.Core.Security.Internal {
     [Obsolete("Use JsonLocationPermissionProvider instead.")]

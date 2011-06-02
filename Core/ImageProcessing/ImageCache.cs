@@ -2,16 +2,13 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
-using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using System.Web;
 
 using AshMind.Gallery.Core.Internal;
 using AshMind.Gallery.Core.IO;
 
 using Encoder = System.Drawing.Imaging.Encoder;
-using Newtonsoft.Json;
 
 namespace AshMind.Gallery.Core.ImageProcessing {
     public class ImageCache {

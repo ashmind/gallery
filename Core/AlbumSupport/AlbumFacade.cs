@@ -1,18 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 
 using AshMind.Extensions;
 
-using AshMind.Gallery.Core.Commenting;
-using AshMind.Gallery.Core.ImageProcessing;
-using AshMind.Gallery.Core.Internal;
 using AshMind.Gallery.Core.IO;
-using AshMind.Gallery.Core.Metadata;
 using AshMind.Gallery.Core.Security;
-using AshMind.Gallery.Core.Integration;
 
 namespace AshMind.Gallery.Core.AlbumSupport {
     public class AlbumFacade : IAlbumFacade {
@@ -26,7 +19,7 @@ namespace AshMind.Gallery.Core.AlbumSupport {
         public AlbumFacade(
             ILocation root,
             IAlbumIDProvider idProvider,
-            IAlbumProvider[] albumProviders,
+            IEnumerable<IAlbumProvider> albumProviders,
             IAlbumFilter[] albumFilters,
             IAlbumItemMetadataProvider[] metadataProviders
         ) {

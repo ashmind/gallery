@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Routing;
 
 using AshMind.Gallery.Core;
 using System.Threading;
@@ -11,7 +9,7 @@ using System.Threading;
 namespace AshMind.Gallery.Site.Logic.ImageRequest {
     public class SubdomainImageRequestStrategy : CookielessImageRequestStrategy {
         private int currentIndex;
-        private string subdomainPattern;
+        private readonly string subdomainPattern;
 
         public SubdomainImageRequestStrategy(IAlbumFacade gallery) : this(gallery, "img{0}") {
         }

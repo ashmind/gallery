@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 using AshMind.Extensions;
@@ -29,7 +28,8 @@ namespace AshMind.Gallery.Core.Integration.Picasa {
                     MoveOverContacts(result, linesIterator, out finished);
                     continue;
                 }
-                else if (line.StartsWith("[") && line.Contains(".")) {
+
+                if (line.StartsWith("[") && line.Contains(".")) {
                     MoveOverItem(result, line, linesIterator, out finished);
                     continue;
                 }

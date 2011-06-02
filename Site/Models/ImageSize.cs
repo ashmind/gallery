@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Data;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 
 namespace AshMind.Gallery.Site.Models {
@@ -12,7 +10,7 @@ namespace AshMind.Gallery.Site.Models {
         public static ImageSize Large       { get; private set; }
         public static ImageSize Original    { get; private set; }
 
-        private static IDictionary<string, ImageSize> sizesByName;
+        private static readonly IDictionary<string, ImageSize> sizesByName;
 
         static ImageSize() {
             Thumbnail = new ImageSize("Thumbnail", 250);

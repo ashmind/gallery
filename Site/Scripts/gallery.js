@@ -13,7 +13,7 @@ if (Array.prototype.filter) {
             result.push(this[i]);
         }
         return result;
-    }
+    };
 }
 
 $(function() {
@@ -185,14 +185,14 @@ function setupAlbum() {
             var download = "<span>Download: ";
             var downloadData = data.actions.download;
             for (var name in downloadData.sizes) {
-                download += "<a href='" + downloadData.action + "/" + downloadData.sizes[name] + "'>" + name + "</a>"
+                download += "<a href='" + downloadData.action + "/" + downloadData.sizes[name] + "'>" + name + "</a>";
             }
             download += "</span>";
 
             return "<span id='fancybox-title-over' class='image-actions'>" +
                 [ locate, deleteOrRestore, download, "<a href='" + data.actions.comment + "'>Comment</a>" ]
                     .filter(function(item) { return !!item; })
-                    .join('<span class="separator">|</span>')
+                    .join('<span class="separator">|</span>') +
             "</span>";
         },
 

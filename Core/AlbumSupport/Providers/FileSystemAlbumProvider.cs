@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Caching;
-using System.Text;
 
-using AshMind.Gallery.Core.AlbumSupport;
 using AshMind.Gallery.Core.IO;
 using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Core.Fixes;
@@ -52,18 +50,18 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
             if (album != null)
                 return album.AsWritable();
 
-            Func<AlbumItem[]> itemFactory = () => this.GetItemsAtLocation(location, user).ToArray();
+            Func<AlbumItem[]> itemsFactory = () => this.GetItemsAtLocation(location).ToArray();
             if (ensureNonEmpty) {
-                var items = itemFactory();
+                var items = itemsFactory();
                 if (items.Length == 0)
                     return null;
 
-                itemFactory = () => items;
+                itemsFactory = () => items;
             }
 
             album = this.albumFactory.Create(
                 new AlbumDescriptor(this.ProviderKey, location.Path),
-                location.Name, itemFactory,
+                location.Name, itemsFactory,
                 location
             );
             album.MakeReadOnly();
@@ -74,7 +72,7 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
             return album.AsWritable();
         }
 
-        private IEnumerable<AlbumItem> GetItemsAtLocation(ILocation location, IUser user) {
+        private IEnumerable<AlbumItem> GetItemsAtLocation(ILocation location) {
             return from file in location.GetFiles()
                    let itemType = GuessItemType.Of(file.Name)
                    where itemType == AlbumItemType.Image

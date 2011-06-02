@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
-using AshMind.Extensions;
 using AshMind.Gallery.Core.Security;
 
 namespace AshMind.Gallery.Site.Models {

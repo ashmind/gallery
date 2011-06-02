@@ -12,8 +12,6 @@ using System.IO;
 using Autofac;
 using Autofac.Integration.Mvc;
 
-using AshMind.Extensions;
-
 using AshMind.Gallery.Core;
 using AshMind.Gallery.Site.Fixes;
 using AshMind.Gallery.Site.Routing;

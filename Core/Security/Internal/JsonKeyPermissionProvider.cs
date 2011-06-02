@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading;
 
 using Newtonsoft.Json;
 
 using AshMind.Extensions;
 
-using AshMind.Gallery.Core.Internal;
 using AshMind.Gallery.Core.IO;
-using AshMind.Gallery.Core.Security;
 
 namespace AshMind.Gallery.Core.Security.Internal {
     internal class JsonKeyPermissionProvider : AbstractPermissionProvider<SecurableUniqueKey> {

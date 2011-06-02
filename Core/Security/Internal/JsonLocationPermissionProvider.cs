@@ -1,17 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 
-using Newtonsoft.Json;
-
-using AshMind.Extensions;
-
-using AshMind.Gallery.Core.Internal;
 using AshMind.Gallery.Core.IO;
 using AshMind.Gallery.Core.Metadata;
-using AshMind.Gallery.Core.Security;
 
 namespace AshMind.Gallery.Core.Security.Internal {
     internal class JsonLocationPermissionProvider : AbstractPermissionProvider<ILocation> {
@@ -19,7 +11,7 @@ namespace AshMind.Gallery.Core.Security.Internal {
 
         private readonly ILocationMetadataProvider metadataProvider;
         private readonly IRepository<IUserGroup> userGroupRepository;
-        private Func<IUserGroupSecureReferenceStrategy> getUserGroupReferenceSupport;
+        private readonly Func<IUserGroupSecureReferenceStrategy> getUserGroupReferenceSupport;
 
         public JsonLocationPermissionProvider(
             ILocationMetadataProvider metadataProvider,

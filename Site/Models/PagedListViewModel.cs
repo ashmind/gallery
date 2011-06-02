@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Web;
 
 using AshMind.Extensions;
-
-using AshMind.Gallery.Core;
 
 namespace AshMind.Gallery.Site.Models {
     public class PagedListViewModel<T> {

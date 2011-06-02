@@ -122,7 +122,7 @@ namespace AshMind.Gallery.Site.Fixes {
 
         public override object this[string key] {
             get { return this.Get(key); }
-            set { this.Set(key, value, ObjectCache.InfiniteAbsoluteExpiration, null); }
+            set { this.Set(key, value, ObjectCache.InfiniteAbsoluteExpiration); }
         }
 
         public override string Name {

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using System.Text;
 
 using AshMind.Extensions;
 
@@ -61,7 +60,7 @@ namespace AshMind.Gallery.Core.Integration.Picasa {
             var parsed = this.parser.Parse(ini);
             var rawFaces = from pair in parsed.Items
                            from face in pair.Value.Faces
-                           select new { FileName = pair.Key, ContactHash = face.ContactHash };
+                           select new { FileName = pair.Key, face.ContactHash };
 
             var contactsIndex = parsed.Contacts.ToDictionary(c => c.Hash);
 
