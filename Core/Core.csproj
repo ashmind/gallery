@@ -105,7 +105,6 @@
     <Compile Include="Fixes\FixedFileChangeMonitor.cs" />
     <Compile Include="IAlbumFacade.cs" />
     <Compile Include="IReadOnlySupport.cs" />
-    <Compile Include="LazyExtensions.cs" />
     <Compile Include="Security\Actions\ManageSecurityAction.cs" />
     <Compile Include="Security\Actions\ISecurableAction.cs" />
     <Compile Include="Security\Actions\SecurableActionOn.cs" />
@@ -171,6 +170,7 @@
     <Compile Include="ImageProcessing\ImageProcessor.cs" />
     <Compile Include="PreviewFacade.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Values\NullValue.cs" />
     <Compile Include="Values\ValueEnumerableExtensions.cs" />
     <Compile Include="Values\IValue.cs" />
     <Compile Include="Values\JustValue.cs" />

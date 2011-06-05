@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using AshMind.Gallery.Core.Values;
 using AshMind.IO.Abstraction;
 using AshMind.Gallery.Core.Security;
 
 namespace AshMind.Gallery.Core {
     public class AlbumItem : IReadOnlySupport<AlbumItem> {
         private bool readOnly;
-        private Lazy<Album> lazyPrimaryAlbum;
+        private IValue<Album> primaryAlbum;
         private KnownUser proposedToBeDeletedBy;
 
         public AlbumItem(
@@ -28,8 +29,14 @@ namespace AshMind.Gallery.Core {
         public AlbumItemType Type { get; private set; }
         public DateTimeOffset Date { get; private set; }
 
-        public Album PrimaryAlbum {
-            get { return this.LazyPrimaryAlbum != null ? this.LazyPrimaryAlbum.Value : null; }
+        public IValue<Album> PrimaryAlbum {
+            get { return this.primaryAlbum ?? To.Null<Album>(); }
+            internal set {
+                if (this.readOnly)
+                    throw new InvalidOperationException("The AlbumItem is read-only.");
+
+                this.primaryAlbum = value;
+            }
         }
 
         public KnownUser ProposedToBeDeletedBy {
@@ -39,16 +46,6 @@ namespace AshMind.Gallery.Core {
                     throw new InvalidOperationException("The AlbumItem is read-only."); 
                 
                 this.proposedToBeDeletedBy = value;
-            }
-        }
-
-        internal Lazy<Album> LazyPrimaryAlbum {
-            get { return this.lazyPrimaryAlbum; }
-            set {
-                if (this.readOnly)
-                    throw new InvalidOperationException("The AlbumItem is read-only.");
-
-                this.lazyPrimaryAlbum = value;
             }
         }
 
@@ -62,8 +59,8 @@ namespace AshMind.Gallery.Core {
             if (this.readOnly)
                 return;
 
+            this.PrimaryAlbum = this.PrimaryAlbum.Change(album => album.MakeReadOnly());
             this.readOnly = true;
-            this.lazyPrimaryAlbum = this.lazyPrimaryAlbum.Apply(album => album.MakeReadOnly());
         }
 
         public bool IsReadOnly {

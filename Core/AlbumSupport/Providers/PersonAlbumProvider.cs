@@ -73,7 +73,7 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
 
         private AlbumItem CreateAlbumItem(Face face, AlbumItemType itemType) {
             var item = this.itemFactory.CreateFrom(face.File, itemType);
-            item.LazyPrimaryAlbum = new Lazy<Album>(
+            item.PrimaryAlbum = To.Lazy(
                 () => this.primaryAlbumProvider.GetAlbum(face.File.Location, KnownUser.System, ensureNonEmpty: false)
             );
 

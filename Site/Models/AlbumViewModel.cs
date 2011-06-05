@@ -45,7 +45,7 @@ namespace AshMind.Gallery.Site.Models {
         private AlbumItemModel ToItemModel(AlbumItem item, Func<Album, string> getAlbumID, IImageRequestStrategy imageAccess) {
             return new AlbumItemModel(
                 item, this.ID,
-                item.PrimaryAlbum != null ? getAlbumID(item.PrimaryAlbum) : null,
+                item.PrimaryAlbum.Get(getAlbumID).Value,
                 request => imageAccess.GetActionUrl(request, this.ID, item.Name),
                 this.CurrentUser
             );
