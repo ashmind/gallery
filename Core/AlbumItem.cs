@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using AshMind.Extensions;
-
 using AshMind.IO.Abstraction;
 using AshMind.Gallery.Core.Security;
 
 namespace AshMind.Gallery.Core {
     public class AlbumItem : IReadOnlySupport<AlbumItem> {
         private bool readOnly;
-        private Lazy<IList<Comment>> lazyComments;
         private Lazy<Album> lazyPrimaryAlbum;
         private KnownUser proposedToBeDeletedBy;
 
@@ -18,14 +15,12 @@ namespace AshMind.Gallery.Core {
             IFile file,
             string name,            
             AlbumItemType type,
-            DateTimeOffset date,
-            Func<IList<Comment>> getComments
+            DateTimeOffset date
         ) {
             this.File = file;
             this.Name = name;
             this.Type = type;
             this.Date = date;
-            this.lazyComments = new Lazy<IList<Comment>>(getComments);
         }
 
         public IFile File { get; private set; }
@@ -57,10 +52,6 @@ namespace AshMind.Gallery.Core {
             }
         }
 
-        public IList<Comment> Comments {
-            get { return this.lazyComments.Value; }
-        }
-
         public bool IsProposedToBeDeleted {
             get { return this.ProposedToBeDeletedBy != null; }
         }
@@ -73,7 +64,6 @@ namespace AshMind.Gallery.Core {
 
             this.readOnly = true;
             this.lazyPrimaryAlbum = this.lazyPrimaryAlbum.Apply(album => album.MakeReadOnly());
-            this.lazyComments = this.lazyComments.Apply(comments => comments.AsReadOnly());
         }
 
         public bool IsReadOnly {
@@ -84,11 +74,9 @@ namespace AshMind.Gallery.Core {
             if (!this.IsReadOnly)
                 return this;
 
-            var item = new AlbumItem(
-                this.File, this.Name, this.Type, this.Date,
-                () => this.Comments
-            ) { ProposedToBeDeletedBy =  this.proposedToBeDeletedBy };
-            return item;
+            return new AlbumItem(this.File, this.Name, this.Type, this.Date) {
+                ProposedToBeDeletedBy =  this.proposedToBeDeletedBy
+            };
         }
 
         #endregion

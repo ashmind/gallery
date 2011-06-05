@@ -190,7 +190,7 @@ function setupAlbum() {
             download += "</span>";
 
             return "<span id='fancybox-title-over' class='image-actions'>" +
-                [ locate, deleteOrRestore, download, "<a href='" + data.actions.comment + "'>Comment</a>" ]
+                [ locate, deleteOrRestore, download ]
                     .filter(function(item) { return !!item; })
                     .join('<span class="separator">|</span>') +
             "</span>";

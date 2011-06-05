@@ -12,7 +12,6 @@ using AshMind.IO.Abstraction;
 using AshMind.IO.Abstraction.DefaultImplementation;
 
 using AshMind.Gallery.Core.AlbumSupport;
-using AshMind.Gallery.Core.Commenting;
 using AshMind.Gallery.Core.ImageProcessing;
 using AshMind.Gallery.Core.Integration;
 using AshMind.Gallery.Core.Integration.Picasa;
@@ -56,11 +55,7 @@ namespace AshMind.Gallery.Core {
                     ))
                    .As<IRepository<KnownUser>, IRepository<UserGroup>, IRepository<IUserGroup>>()
                    .SingleInstance();
-
-            builder.RegisterType<JsonCommentRepository>()
-                   .As<ICommentRepository>()
-                   .SingleInstance();
-
+            
             builder.RegisterType<FileSystem>()
                    .As<IFileSystem>()
                    .SingleInstance();

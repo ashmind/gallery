@@ -8,7 +8,6 @@ using AshMind.Gallery.Core;
 using AshMind.Gallery.Core.Security.Actions;
 using AshMind.Gallery.Site.Models;
 using AshMind.Gallery.Core.Security;
-using AshMind.Gallery.Core.Commenting;
 using AshMind.Gallery.Site.Logic;
 
 namespace AshMind.Gallery.Site.Controllers {
@@ -16,19 +15,16 @@ namespace AshMind.Gallery.Site.Controllers {
     public class GalleryController : ControllerBase {
         private readonly IAlbumFacade gallery;
         private readonly IAuthorizationService authorization;
-        private readonly ICommentRepository commentRepository;
         private readonly IImageRequestStrategy requestStrategy;
 
         public GalleryController(
             IAlbumFacade gallery,
             IAuthorizationService authorization,
-            ICommentRepository commentRepository,
             IUserAuthentication authentication,
             IImageRequestStrategy requestStrategy
         ) : base(authentication) {
             this.gallery = gallery;
             this.authorization = authorization;
-            this.commentRepository = commentRepository;
             this.requestStrategy = requestStrategy;
         }
 
@@ -102,23 +98,6 @@ namespace AshMind.Gallery.Site.Controllers {
             }
 
             return new Tuple<IList<AlbumViewModel>, AlbumViewModel>(personAlbums, userAlbum);
-        }
-
-        public new ActionResult View(string album, string item) {
-            var albumItem = this.gallery.GetItem(album, item, this.User).Value;
-            return View(
-                new ItemDetailsViewModel(album, albumItem, this.User)
-            );
-        }
-
-        public ActionResult Comment(string album, string item, string comment) {
-            var author = (KnownUser)this.User;
-            var path = this.gallery.GetItem(album, item, author).Value.File.Path;
-            commentRepository.SaveComment(
-                path, new Comment(author, DateTimeOffset.Now, comment)
-            );
-
-            return RedirectToAction("View", new { album, item });
         }
 
         public ActionResult ProposeDelete(string album, string item) {

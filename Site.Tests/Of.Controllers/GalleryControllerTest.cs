@@ -10,7 +10,6 @@ using MbUnit.Framework;
 using AshMind.Gallery.Core;
 using AshMind.Gallery.Core.AlbumSupport;
 using AshMind.Gallery.Core.Security;
-using AshMind.Gallery.Core.Commenting;
 using AshMind.Gallery.Site.Controllers;
 using AshMind.Gallery.Site.Logic;
 using AshMind.Gallery.Site.Models;
@@ -33,7 +32,7 @@ namespace AshMind.Gallery.Site.Tests.Of.Controllers {
             var loadedNames = Enumerable.Concat(
                 GetModel<GalleryViewModel>(controller.StandardAlbumNames(0, 20)).StandardAlbums.List,
                 GetModel<GalleryViewModel>(controller.StandardAlbumNames(21, 40)).StandardAlbums.List
-            ).Select(a => a.Album.Name);
+            ).Select(a => a.Name);
 
             Assert.AreElementsEqual(albums.Select(a => a.Name), loadedNames);
         }
@@ -42,7 +41,7 @@ namespace AshMind.Gallery.Site.Tests.Of.Controllers {
             return new Album(
                 new AlbumDescriptor(AlbumProviderKeys.Default, ""),
                 name, null,
-                To.Just(new[] { new AlbumItem(null, "", AlbumItemType.Image, date, () => new Comment[0]) })
+                To.Just(new[] { new AlbumItem(null, "", AlbumItemType.Image, date) })
             );
         }
 
@@ -54,7 +53,6 @@ namespace AshMind.Gallery.Site.Tests.Of.Controllers {
             return new GalleryController(
                 facade ?? new Mock<IAlbumFacade>().Object,
                 new Mock<IAuthorizationService>().Object,
-                new Mock<ICommentRepository>().Object,
                 new Mock<IUserAuthentication>().Object,
                 new Mock<IImageRequestStrategy>().Object
             );

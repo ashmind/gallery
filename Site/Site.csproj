@@ -205,9 +205,6 @@
     <Content Include="Views\Gallery\Home.cshtml" />
     <Content Include="Views\Gallery\Items.cshtml" />
     <Content Include="Views\Gallery\StandardAlbumNames.cshtml" />
-    <Content Include="Views\Gallery\View.cshtml">
-      <SubType>ASPXCodeBehind</SubType>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\AlbumVisibleTo.cshtml" />

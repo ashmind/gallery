@@ -121,9 +121,6 @@
     <Compile Include="AlbumSupport\HiddenAlbumFilter.cs" />
     <Compile Include="AlbumSupport\IAlbumFilter.cs" />
     <Compile Include="AlbumSupport\Providers\PersonAlbumProvider.cs" />
-    <Compile Include="Comment.cs" />
-    <Compile Include="Commenting\ICommentRepository.cs" />
-    <Compile Include="Commenting\JsonCommentRepository.cs" />
     <Compile Include="AlbumSupport\IAlbumProvider.cs" />
     <Compile Include="ImageProcessing\ExifOrientationProvider.cs" />
     <Compile Include="ImageProcessing\ICacheDependencyProvider.cs" />
