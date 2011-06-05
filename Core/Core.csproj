@@ -154,7 +154,6 @@
     <Compile Include="Security\IUserGroup.cs" />
     <Compile Include="Security\Rules\IAuthorizationRule.cs" />
     <Compile Include="Security\Rules\OwnersAreAllowedEverythingRule.cs" />
-    <Compile Include="Security\SecurableUniqueKey.cs" />
     <Compile Include="Security\SecurityModule.cs" />
     <Compile Include="Security\UserRepositoryExtensions.cs" />
     <Compile Include="IRepository.cs" />

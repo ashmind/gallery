@@ -117,7 +117,7 @@ namespace AshMind.Gallery.Site.Controllers {
             var album = this.gallery.GetAlbum(albumID, this.User);
             return PartialView("GrantForm", new GrantViewModel(
                 albumID,
-                this.authorization.GetAuthorizedTo(SecurableActions.View(album.SecurableToken)).ToSet(),
+                this.authorization.GetAuthorizedTo(SecurableActions.View(album)).ToSet(),
                 this.GetAllGroups().ToList()
             ));
         }
@@ -132,7 +132,7 @@ namespace AshMind.Gallery.Site.Controllers {
                              .Where(g => groupKeys.Contains(g.Key))
                              .Select(g => g.UserGroup);
 
-            this.authorization.AuthorizeTo(SecurableActions.View(album.SecurableToken), groups);
+            this.authorization.AuthorizeTo(SecurableActions.View(album), groups);
             return new EmptyResult();
         }
 

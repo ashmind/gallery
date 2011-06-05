@@ -48,14 +48,13 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
                 let uniqueKey = personFaces.Key.Emails.ElementAtOrDefault(0) ?? personFaces.Key.Name
                 select this.albumFactory.Create(
                     new AlbumDescriptor(this.ProviderKey, uniqueKey),
-                    personFaces.Key.Name,
+                    personFaces.Key.Name, uniqueKey,
                     () => (
                         from face in personFaces
                         let itemType = GuessItemType.Of(face.File.Name)
                         where itemType == AlbumItemType.Image
                         select CreateAlbumItem(face, itemType)
-                    ).ToList(),
-                    new SecurableUniqueKey(uniqueKey)
+                    ).ToList()
                 )
             ).ToArray();
 
@@ -87,14 +86,8 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
         private IEnumerable<Album> FilterByAuthorization(IEnumerable<Album> albums, IUser user) {
             var realUser = user as KnownUser;            
             return albums.Where(
-                album => (realUser != null && album.Descriptor.ProviderSpecificPath == realUser.Email)
-                      || IsAuthorizedTo(album, user)
-            );
-        }
-
-        private bool IsAuthorizedTo(Album album, IUser user) {
-            return this.authorization.IsAuthorized(
-                user, SecurableActions.View(new SecurableUniqueKey(album.Descriptor.ProviderSpecificPath))
+                album => (realUser != null && (string)album.ProviderData == realUser.Email)
+                      || this.authorization.IsAuthorized(user, SecurableActions.View(album))
             );
         }
 

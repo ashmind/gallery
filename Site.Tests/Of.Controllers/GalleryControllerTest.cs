@@ -41,9 +41,8 @@ namespace AshMind.Gallery.Site.Tests.Of.Controllers {
         private static Album MakeAlbum(string name, DateTimeOffset date) {
             return new Album(
                 new AlbumDescriptor(AlbumProviderKeys.Default, ""),
-                name,
-                new[] { new AlbumItem(null, "", AlbumItemType.Image, date, () => new Comment[0]) },
-                new object()
+                name, null,
+                new[] { new AlbumItem(null, "", AlbumItemType.Image, date, () => new Comment[0]) }
             );
         }
 

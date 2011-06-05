@@ -16,24 +16,24 @@ namespace AshMind.Gallery.Core {
         private readonly Lazy<DateTimeOffset> lazyDate;
 
         static Album() {
-            Empty = new Album(new AlbumDescriptor("", ""), "", () => new AlbumItem[0], null);
+            Empty = new Album(new AlbumDescriptor("", ""), "", null, () => new AlbumItem[0]);
         }
 
-        public Album(AlbumDescriptor descriptor, string name, IList<AlbumItem> items, object securableToken) 
-            : this(descriptor, name, () => items, securableToken)
+        public Album(AlbumDescriptor descriptor, string name, object providerData, IList<AlbumItem> items)
+            : this(descriptor, name, providerData, () => items)
         {
         }
 
-        public Album(AlbumDescriptor descriptor, string name, Func<IList<AlbumItem>> getItems, object securableToken)
-            : this(descriptor, name, new Lazy<ReadOnlyCollection<AlbumItem>>(() => getItems().AsReadOnly(), true), securableToken)
+        public Album(AlbumDescriptor descriptor, string name, object providerData, Func<IList<AlbumItem>> getItems)
+            : this(descriptor, name, providerData, new Lazy<ReadOnlyCollection<AlbumItem>>(() => getItems().AsReadOnly(), true))
         {
         }
 
-        private Album(AlbumDescriptor descriptor, string name, Lazy<ReadOnlyCollection<AlbumItem>> items, object securableToken) {
+        private Album(AlbumDescriptor descriptor, string name, object providerData, Lazy<ReadOnlyCollection<AlbumItem>> items) {
             this.Descriptor = descriptor;
             this.Name = name;
+            this.ProviderData = providerData;
             this.lazyItems = items;
-            this.SecurableToken = securableToken;
             this.lazyDate = new Lazy<DateTimeOffset>(
                 () => Items.Min(i => (DateTimeOffset?)i.Date) ?? DateTimeOffset.Now,
                 true
@@ -41,8 +41,8 @@ namespace AshMind.Gallery.Core {
         }
 
         public AlbumDescriptor Descriptor          { get; private set; }
-        public object SecurableToken               { get; private set; }
         public string Name                         { get; private set; }
+        public object ProviderData                 { get; private set; }
 
         public DateTimeOffset Date {
             get { return this.lazyDate.Value; }
@@ -77,9 +77,8 @@ namespace AshMind.Gallery.Core {
                 return this;
 
             return new Album(
-                this.Descriptor, this.Name,
-                () => this.lazyItems.Value.Select(item => item.AsWritable()).ToArray(),
-                this.SecurableToken
+                this.Descriptor, this.Name, this.ProviderData,
+                () => this.lazyItems.Value.Select(item => item.AsWritable()).ToArray()
             );
         }
 

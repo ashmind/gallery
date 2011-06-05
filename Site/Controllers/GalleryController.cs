@@ -92,7 +92,7 @@ namespace AshMind.Gallery.Site.Controllers {
 
             var realUser = user as KnownUser;
             var indexOfUserAlbum = realUser != null
-                                 ? personAlbums.FindIndex(m => m.Album.Descriptor.ProviderSpecificPath == realUser.Email)
+                                 ? personAlbums.FindIndex(m => (string)m.Album.ProviderData == realUser.Email)
                                  : -1;
             var userAlbum = (AlbumViewModel)null;
             if (indexOfUserAlbum >= 0) {
@@ -155,7 +155,7 @@ namespace AshMind.Gallery.Site.Controllers {
                 album, this.gallery.GetAlbumID, this.User,
                 this.requestStrategy,
                 true, (
-                    from @group in this.authorization.GetAuthorizedTo(SecurableActions.View(album.SecurableToken))
+                    from @group in this.authorization.GetAuthorizedTo(SecurableActions.View(album))
                     select new UserGroupViewModel(@group)
                 ).ToList()        
             );

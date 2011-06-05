@@ -10,18 +10,9 @@ namespace AshMind.Gallery.Core.AlbumSupport {
             this.nameTransforms = nameTransforms;
         }
 
-        public Album Create(
-            AlbumDescriptor descriptor,
-            string proposedName, Func<IList<AlbumItem>> itemsFactory,
-            object securableToken
-        ) {
+        public Album Create(AlbumDescriptor descriptor, string proposedName, object providerData, Func<IList<AlbumItem>> itemsFactory) {
             var name = nameTransforms.Aggregate(proposedName, (n, t) => t.Transform(n, descriptor));
-
-            return new Album(
-                descriptor,
-                name, itemsFactory,
-                securableToken
-            );
+            return new Album(descriptor, name, providerData, itemsFactory);
         }
     }
 }

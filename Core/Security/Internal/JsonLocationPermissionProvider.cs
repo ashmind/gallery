@@ -7,7 +7,7 @@ using AshMind.Gallery.Core.Metadata;
 using AshMind.Gallery.Core.Security.Actions;
 
 namespace AshMind.Gallery.Core.Security.Internal {
-    internal class JsonLocationPermissionProvider : AbstractPermissionProvider<ViewAction<ILocation>> {
+    internal class JsonLocationPermissionProvider : AbstractPermissionProvider<ViewAction<Album>> {
         private const string PermissionsMetadataKey = "Permissions";
 
         private readonly ILocationMetadataProvider metadataProvider;
@@ -24,8 +24,14 @@ namespace AshMind.Gallery.Core.Security.Internal {
             this.getUserGroupReferenceSupport = getUserGroupReferenceSupport;
         }
 
-        public override IEnumerable<IUserGroup> GetPermissions(ViewAction<ILocation> action) {
-            var permissionSet = this.metadataProvider.GetMetadata<IDictionary<string, IList<string>>>(action.Target, PermissionsMetadataKey);
+        public override bool CanGetPermissions(ViewAction<Album> action) {
+            return base.CanGetPermissions(action) && action.Target.ProviderData is ILocation;
+        }
+
+        public override IEnumerable<IUserGroup> GetPermissions(ViewAction<Album> action) {
+            var permissionSet = this.metadataProvider.GetMetadata<IDictionary<string, IList<string>>>(
+                (ILocation)action.Target.ProviderData, PermissionsMetadataKey
+            );
             if (permissionSet == null)
                 return Enumerable.Empty<IUserGroup>();
 
@@ -38,13 +44,19 @@ namespace AshMind.Gallery.Core.Security.Internal {
                    select @group;
         }
 
-        public override void SetPermissions(ViewAction<ILocation> action, IEnumerable<IUserGroup> userGroups) {
+        public override bool CanSetPermissions(ViewAction<Album> action) {
+            return base.CanSetPermissions(action) && action.Target.ProviderData is ILocation;
+        }
+
+        public override void SetPermissions(ViewAction<Album> action, IEnumerable<IUserGroup> userGroups) {
             var referenceSupport = getUserGroupReferenceSupport();
             var permissionSet = new Dictionary<string, IList<string>> {
                 { "View", userGroups.Select(referenceSupport.GetReference).ToList() }
             };
 
-            this.metadataProvider.ApplyMetadata(action.Target, PermissionsMetadataKey, permissionSet);
+            this.metadataProvider.ApplyMetadata(
+                (ILocation)action.Target.ProviderData, PermissionsMetadataKey, permissionSet
+            );
         }
     }
 }
