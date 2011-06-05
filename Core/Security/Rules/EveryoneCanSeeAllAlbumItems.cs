@@ -10,9 +10,5 @@ namespace AshMind.Gallery.Core.Security.Rules {
         public Authorization GetAuthorization(IUserGroup group, ISecurableAction action) {
             return action is ViewAction<AlbumItem> ? Authorization.Allowed : Authorization.Unknown;
         }
-
-        public bool OverridesAllOther {
-            get { return false; }
-        }
     }
 }

@@ -9,11 +9,7 @@ namespace AshMind.Gallery.Core.Security.Rules {
         public const string Owners = "*Owners";
 
         public Authorization GetAuthorization(IUserGroup group, ISecurableAction action) {
-            return group.Name == Owners ? Authorization.Allowed : Authorization.Unknown;
-        }
-
-        public bool OverridesAllOther {
-            get { return true; }
+            return group.Name == Owners ? Authorization.UndeniablyAllowed : Authorization.Unknown;
         }
     }
 }

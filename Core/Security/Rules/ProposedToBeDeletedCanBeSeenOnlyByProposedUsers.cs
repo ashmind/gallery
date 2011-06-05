@@ -13,9 +13,5 @@ namespace AshMind.Gallery.Core.Security.Rules {
 
             return viewAlbumItem.Target.ProposedToBeDeletedBy == group ? Authorization.Unknown : Authorization.Denied;
         }
-
-        public bool OverridesAllOther {
-            get { return false; }
-        }
     }
 }
