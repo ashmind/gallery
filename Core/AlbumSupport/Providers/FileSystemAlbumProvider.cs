@@ -43,7 +43,7 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
         }
 
         public Album GetAlbum(ILocation location, IUser user, bool ensureNonEmpty = true) {
-            var album = GetReadOnlyAlbum(location, ensureNonEmpty);
+            var album = GetReadOnlyAlbum(location, user, ensureNonEmpty);
             if (album == null)
                 return null;
 
@@ -53,13 +53,13 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
             return album.AsWritable();
         }
 
-        private Album GetReadOnlyAlbum(ILocation location, bool ensureNonEmpty) {
+        private Album GetReadOnlyAlbum(ILocation location, IUser user, bool ensureNonEmpty = true) {
             var cacheKey = "album:" + location.Path;
             var album = (Album)this.cache.Get(cacheKey);
             if (album != null)
                 return album;
 
-            Func<AlbumItem[]> itemsFactory = () => this.GetItemsAtLocation(location).ToArray();
+            Func<AlbumItem[]> itemsFactory = () => this.GetItemsAtLocation(location, user).ToArray();
             if (ensureNonEmpty) {
                 var items = itemsFactory();
                 if (items.Length == 0)
@@ -80,11 +80,12 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
             return album;
         }
 
-        private IEnumerable<AlbumItem> GetItemsAtLocation(ILocation location) {
+        private IEnumerable<AlbumItem> GetItemsAtLocation(ILocation location, IUser user) {
             return from file in location.GetFiles()
                    let itemType = GuessItemType.Of(file.Name)
                    where itemType == AlbumItemType.Image
                    let item = this.itemFactory.CreateFrom(file, itemType)
+                   where this.authorization.IsAuthorized(user, SecurableActions.View(item))
                    select item;
         }
         

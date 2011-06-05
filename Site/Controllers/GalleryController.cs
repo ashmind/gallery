@@ -155,8 +155,9 @@ namespace AshMind.Gallery.Site.Controllers {
                 album, this.gallery.GetAlbumID, this.User,
                 this.requestStrategy,
                 true, (
-                    from @group in this.authorization.GetAuthorizedTo(SecurableActions.View(album))
-                    select new UserGroupViewModel(@group)
+                    from userOrGroup in this.authorization.GetAuthorizedTo(SecurableActions.View(album))
+                    where !(userOrGroup is AnonymousMember)
+                    select new UserGroupViewModel(userOrGroup)
                 ).ToList()        
             );
         }

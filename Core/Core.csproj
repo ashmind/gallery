@@ -112,6 +112,7 @@
     <Compile Include="Security\Actions\SecurableActions.cs" />
     <Compile Include="Security\Actions\ViewAction.cs" />
     <Compile Include="Security\AnonymousMember.cs" />
+    <Compile Include="Security\Authorization.cs" />
     <Compile Include="Security\IAuthorizationService.cs" />
     <Compile Include="Security\Internal\MD5UserGroupSecureReferenceStrategy.cs" />
     <Compile Include="Security\IUser.cs" />
@@ -152,8 +153,10 @@
     <Compile Include="Security\Internal\AuthorizationService.cs" />
     <Compile Include="Security\Internal\JsonSecurityRepository.cs" />
     <Compile Include="Security\IUserGroup.cs" />
+    <Compile Include="Security\Rules\ProposedToBeDeletedCanBeSeenOnlyByProposedUsers.cs" />
+    <Compile Include="Security\Rules\EveryoneCanSeeAllAlbumItems.cs" />
     <Compile Include="Security\Rules\IAuthorizationRule.cs" />
-    <Compile Include="Security\Rules\OwnersAreAllowedEverythingRule.cs" />
+    <Compile Include="Security\Rules\OwnersAreAllowedEverything.cs" />
     <Compile Include="Security\SecurityModule.cs" />
     <Compile Include="Security\UserRepositoryExtensions.cs" />
     <Compile Include="IRepository.cs" />

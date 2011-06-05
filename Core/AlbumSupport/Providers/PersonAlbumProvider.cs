@@ -44,17 +44,12 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
             var albums = (
                 from location in locations
                 from face in GetFaces(location)
-                group face by face.Person into personFaces
-                let uniqueKey = personFaces.Key.Emails.ElementAtOrDefault(0) ?? personFaces.Key.Name
+                group face by face.Person into facesOfPerson
+                let uniqueKey = facesOfPerson.Key.Emails.ElementAtOrDefault(0) ?? facesOfPerson.Key.Name
                 select this.albumFactory.Create(
                     new AlbumDescriptor(this.ProviderKey, uniqueKey),
-                    personFaces.Key.Name, uniqueKey,
-                    () => (
-                        from face in personFaces
-                        let itemType = GuessItemType.Of(face.File.Name)
-                        where itemType == AlbumItemType.Image
-                        select CreateAlbumItem(face, itemType)
-                    ).ToList()
+                    facesOfPerson.Key.Name, uniqueKey,
+                    () => this.CreateAlbumItems(facesOfPerson, user).ToList()
                 )
             ).ToArray();
 
@@ -64,6 +59,15 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
             });
 
             return CorrectAlbums(albums, user);
+        }
+
+        private IEnumerable<AlbumItem> CreateAlbumItems(IEnumerable<Face> faces, IUser user) {
+            return from face in faces
+                   let itemType = GuessItemType.Of(face.File.Name)
+                   where itemType == AlbumItemType.Image
+                   let item = CreateAlbumItem(face, itemType)
+                   where this.authorization.IsAuthorized(user, SecurableActions.View(item))
+                   select item;
         }
 
         private AlbumItem CreateAlbumItem(Face face, AlbumItemType itemType) {

@@ -67,6 +67,7 @@
     <Compile Include="IO\Resource.cs" />
     <Compile Include="Of.AlbumSupport\AlbumIDProviderTest.cs" />
     <Compile Include="Of.Integration\Picasa\PicasaIniParserTest.cs" />
+    <Compile Include="Of.Security\AuthorizationServiceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

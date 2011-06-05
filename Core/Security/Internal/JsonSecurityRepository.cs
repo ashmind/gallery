@@ -36,7 +36,7 @@ namespace AshMind.Gallery.Core.Security.Internal {
             }
             else {
                 this.store = new UserStore {
-                    Groups = { new UserGroup { Name = OwnersAreAllowedEverythingRule.Owners } }
+                    Groups = { new UserGroup { Name = OwnersAreAllowedEverything.Owners } }
                 };
                 this.file.WriteAllText(JsonConvert.SerializeObject(this.store));
             }
