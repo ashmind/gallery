@@ -89,7 +89,7 @@ namespace AshMind.Gallery.Site.Controllers {
                                            .Select(a => ToViewModel(a, false))
                                            .ToList();
 
-            var realUser = user as User;
+            var realUser = user as KnownUser;
             var indexOfUserAlbum = realUser != null
                                  ? personAlbums.FindIndex(m => m.Album.Descriptor.ProviderSpecificPath == realUser.Email)
                                  : -1;
@@ -110,7 +110,7 @@ namespace AshMind.Gallery.Site.Controllers {
         }
 
         public ActionResult Comment(string album, string item, string comment) {
-            var author = (User)this.User;
+            var author = (KnownUser)this.User;
             var path = this.gallery.GetItem(album, item, author).File.Path;
             commentRepository.SaveComment(
                 path, new Comment(author, DateTimeOffset.Now, comment)
@@ -120,11 +120,11 @@ namespace AshMind.Gallery.Site.Controllers {
         }
 
         public ActionResult ProposeDelete(string album, string item) {
-            return ToggleDelete(album, item, albumItem => albumItem.DeleteProposals.Add((User)User));
+            return ToggleDelete(album, item, albumItem => albumItem.ProposedToBeDeletedBy = (KnownUser)User);
         }
 
         public ActionResult RevertDelete(string album, string item) {
-            return ToggleDelete(album, item, albumItem => albumItem.DeleteProposals.Remove((User)User));
+            return ToggleDelete(album, item, albumItem => albumItem.ProposedToBeDeletedBy = null);
         }
 
         private ActionResult ToggleDelete(string albumID, string itemName, Action<AlbumItem> action) {
@@ -140,7 +140,7 @@ namespace AshMind.Gallery.Site.Controllers {
 
             this.gallery.SaveItem(item);
 
-            return Content(item.DeleteProposals.Count.ToString(), MediaTypeNames.Text.Plain);
+            return Content(item.IsProposedToBeDeleted.ToString(), MediaTypeNames.Text.Plain);
         }
 
         private AlbumViewModel ToViewModel(Album album, bool manageSecurity) {

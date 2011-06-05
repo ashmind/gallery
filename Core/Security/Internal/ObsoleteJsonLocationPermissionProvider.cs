@@ -14,11 +14,11 @@ using AshMind.Gallery.Core.IO;
 namespace AshMind.Gallery.Core.Security.Internal {
     [Obsolete("Use JsonLocationPermissionProvider instead.")]
     internal class ObsoleteJsonLocationPermissionProvider : AbstractPermissionProvider<ILocation> {
-        private readonly IRepository<User> userRepository;
+        private readonly IRepository<KnownUser> userRepository;
         private readonly IRepository<UserGroup> groupRepository;
 
         public ObsoleteJsonLocationPermissionProvider(
-            IRepository<User> userRepository,
+            IRepository<KnownUser> userRepository,
             IRepository<UserGroup> groupRepository
         ) {
             this.userRepository = userRepository;
@@ -35,7 +35,7 @@ namespace AshMind.Gallery.Core.Security.Internal {
                 Dictionary<SecurableAction, IList<string>>
             >(json);
 
-            var lazyUsers = new Lazy<IList<User>>(() => this.userRepository.Query().ToList());
+            var lazyUsers = new Lazy<IList<KnownUser>>(() => this.userRepository.Query().ToList());
             var lazyGroups = new Lazy<IDictionary<string, UserGroup>>(() => this.groupRepository.Query().ToDictionary(g => g.Name));
 
             return Using(MD5.Create(), md5 =>
@@ -68,7 +68,7 @@ namespace AshMind.Gallery.Core.Security.Internal {
             return false;
         }
 
-        private IUserGroup ResolveGroup(string key, MD5 md5, Lazy<IList<User>> lazyUsers, Lazy<IDictionary<string, UserGroup>> lazyGroups) {
+        private IUserGroup ResolveGroup(string key, MD5 md5, Lazy<IList<KnownUser>> lazyUsers, Lazy<IDictionary<string, UserGroup>> lazyGroups) {
             if (!key.StartsWith("u:"))
                 return lazyGroups.Value.GetValueOrDefault(key);
 

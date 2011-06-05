@@ -52,7 +52,7 @@ namespace AshMind.Gallery.Site.Logic.ImageRequest {
             var albumID = (string)requestContext.RouteData.Values["album"];
             var item = (string)requestContext.RouteData.Values["item"];
 
-            return this.gallery.GetItem(albumID, item, User.System).File;
+            return this.gallery.GetItem(albumID, item, KnownUser.System).File;
         }
     }
 }

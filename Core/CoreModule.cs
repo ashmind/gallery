@@ -58,7 +58,7 @@ namespace AshMind.Gallery.Core {
             builder.Register(c => new JsonSecurityRepository(
                         this.storageLocation.GetFile("users.jsdb", false)
                     ))
-                   .As<IRepository<User>, IRepository<UserGroup>, IRepository<IUserGroup>>()
+                   .As<IRepository<KnownUser>, IRepository<UserGroup>, IRepository<IUserGroup>>()
                    .SingleInstance();
 
             builder.RegisterType<JsonCommentRepository>()

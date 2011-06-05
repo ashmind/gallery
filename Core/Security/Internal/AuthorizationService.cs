@@ -41,7 +41,7 @@ namespace AshMind.Gallery.Core.Security.Internal {
 
         public bool IsAuthorized(IUser user, SecurableAction action, object target) {
             return GetAuthorizedTo(action, target)
-                        .Any(g => g.GetUsers().Contains(user)) || user == User.System;
+                        .Any(g => g.GetUsers().Contains(user)) || user == KnownUser.System;
         }
 
         public void AuthorizeTo(SecurableAction action, object target, IEnumerable<IUserGroup> userGroups) {

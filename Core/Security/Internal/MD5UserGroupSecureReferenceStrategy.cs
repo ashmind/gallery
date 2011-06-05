@@ -16,7 +16,7 @@ namespace AshMind.Gallery.Core.Security.Internal {
 
             reference = reference.SubstringAfter("u:");
             using (var md5 = MD5.Create()) {
-                return userGroups.OfType<User>().SingleOrDefault(
+                return userGroups.OfType<KnownUser>().SingleOrDefault(
                     u => md5.ComputeHashAsString(Encoding.UTF8.GetBytes(u.Email)) == reference
                 );
             }
@@ -27,7 +27,7 @@ namespace AshMind.Gallery.Core.Security.Internal {
             if (concreteUserGroup != null)
                 return userGroup.Name;
 
-            var user = userGroup as User;
+            var user = userGroup as KnownUser;
             if (user != null) {
                 using (var md5 = MD5.Create()) {
                     return "u:" + md5.ComputeHashAsString(Encoding.UTF8.GetBytes(user.Email));

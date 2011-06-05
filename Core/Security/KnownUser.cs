@@ -5,14 +5,14 @@ using System.Linq;
 using AshMind.Extensions;
 
 namespace AshMind.Gallery.Core.Security {
-    public class User : IUser {
-        public static User System { get; private set; }
+    public class KnownUser : IUser {
+        public static KnownUser System { get; private set; }
 
-        static User() {
-            System = new User("system@gallery.local");
+        static KnownUser() {
+            System = new KnownUser("system@gallery.local");
         }
 
-        public User(string email) {
+        public KnownUser(string email) {
             this.Email = email;
         }
 

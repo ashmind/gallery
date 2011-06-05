@@ -7,12 +7,12 @@ namespace AshMind.Gallery.Core.Security {
         public static string SuperName = "*Owners";
 
         public UserGroup() {
-            this.Users = new HashSet<User>();
+            this.Users = new HashSet<KnownUser>();
             this.Keys = new HashSet<string>();
         }
 
         public string Name                     { get; set; }
-        public HashSet<User> Users             { get; private set; }
+        public HashSet<KnownUser> Users        { get; private set; }
         public HashSet<string> Keys            { get; private set; }
 
         public bool IsSuper {

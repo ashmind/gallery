@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace AshMind.Gallery.Core.Security {
     public static class UserRepositoryExtensions {
-        public static User FindByEmail(this IRepository<User> userRepository, string email) {
+        public static KnownUser FindByEmail(this IRepository<KnownUser> userRepository, string email) {
             return userRepository.Query().SingleOrDefault(u => u.Email == email);
         }
     }

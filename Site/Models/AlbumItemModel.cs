@@ -16,7 +16,7 @@ namespace AshMind.Gallery.Site.Models {
             this.PrimaryAlbumID = primaryAlbumID;
             this.GetImageUrlBase = getImageUrlBase;
 
-            this.WasProposedToBeDeletedByCurrentUser = item.DeleteProposals.Contains(currentUser);
+            this.WasProposedToBeDeletedByCurrentUser = item.ProposedToBeDeletedBy == currentUser;
         }
 
         public string PrimaryAlbumID { get; private set; }

@@ -10,13 +10,13 @@
         @(Model.PrimaryAlbumID != null ? "primaryAlbumID : '" + Model.PrimaryAlbumID + "'" : "") 
 
         actions : {
-            '@(Model.WasProposedToBeDeletedByCurrentUser ? "restore" : "delete")' : {
+            '@(Model.IsProposedToBeDeleted ? "restore" : "delete")' : {
                 action : '@(Url.Action(
-                  (Model.WasProposedToBeDeletedByCurrentUser ? "Revert" : "Propose") + "Delete", "Gallery",
+                  (Model.IsProposedToBeDeleted ? "Revert" : "Propose") + "Delete", "Gallery",
                       new { album = Model.CurrentAlbumID, item = Model.Name }
                 ))',
 
-                text : '@(Model.WasProposedToBeDeletedByCurrentUser ? "Restore" : "Propose to delete")'
+                text : '@(Model.IsProposedToBeDeleted ? "Restore" : "Propose to delete")'
             },
 
             download : {

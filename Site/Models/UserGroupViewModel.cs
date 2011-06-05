@@ -8,7 +8,7 @@ using AshMind.Gallery.Core.Security;
 namespace AshMind.Gallery.Site.Models {
     public class UserGroupViewModel {
         public UserGroupViewModel(IUserGroup userGroup) {
-            var user = userGroup as User;
+            var user = userGroup as KnownUser;
             if (user != null) {
                 this.Key = "user:" + user.Email;
             }
@@ -21,7 +21,7 @@ namespace AshMind.Gallery.Site.Models {
             }
 
             this.UserGroup = userGroup;
-            this.Users = userGroup.GetUsers().OfType<User>().ToList().AsReadOnly();
+            this.Users = userGroup.GetUsers().OfType<KnownUser>().ToList().AsReadOnly();
         }
 
         public string Key { get; private set; }
@@ -30,6 +30,6 @@ namespace AshMind.Gallery.Site.Models {
         }
 
         public IUserGroup UserGroup { get; private set; }
-        public ReadOnlyCollection<User> Users { get; private set; }
+        public ReadOnlyCollection<KnownUser> Users { get; private set; }
     }
 }

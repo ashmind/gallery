@@ -12,6 +12,7 @@ namespace AshMind.Gallery.Core {
         private bool readOnly;
         private Lazy<IList<Comment>> lazyComments;
         private Lazy<Album> lazyPrimaryAlbum;
+        private KnownUser proposedToBeDeletedBy;
 
         public AlbumItem(
             IFile file,
@@ -25,7 +26,6 @@ namespace AshMind.Gallery.Core {
             this.Type = type;
             this.Date = date;
             this.lazyComments = new Lazy<IList<Comment>>(getComments);
-            this.DeleteProposals = new HashSet<User>();
         }
 
         public IFile File { get; private set; }
@@ -37,7 +37,16 @@ namespace AshMind.Gallery.Core {
             get { return this.LazyPrimaryAlbum != null ? this.LazyPrimaryAlbum.Value : null; }
         }
 
-        public ICollection<User> DeleteProposals { get; private set; }
+        public KnownUser ProposedToBeDeletedBy {
+            get { return this.proposedToBeDeletedBy; }
+            set {
+                if (this.readOnly)
+                    throw new InvalidOperationException("The AlbumItem is read-only."); 
+                
+                this.proposedToBeDeletedBy = value;
+            }
+        }
+
         internal Lazy<Album> LazyPrimaryAlbum {
             get { return this.lazyPrimaryAlbum; }
             set {
@@ -53,7 +62,7 @@ namespace AshMind.Gallery.Core {
         }
 
         public bool IsProposedToBeDeleted {
-            get { return this.DeleteProposals.Count > 0; }
+            get { return this.ProposedToBeDeletedBy != null; }
         }
 
         #region IReadOnlySupport<AlbumItem> Members
@@ -65,7 +74,6 @@ namespace AshMind.Gallery.Core {
             this.readOnly = true;
             this.lazyPrimaryAlbum = this.lazyPrimaryAlbum.Apply(album => album.MakeReadOnly());
             this.lazyComments = this.lazyComments.Apply(comments => comments.AsReadOnly());
-            this.DeleteProposals = this.DeleteProposals.ToArray().AsReadOnly();
         }
 
         public bool IsReadOnly {
@@ -79,8 +87,7 @@ namespace AshMind.Gallery.Core {
             var item = new AlbumItem(
                 this.File, this.Name, this.Type, this.Date,
                 () => this.Comments
-            );
-            item.DeleteProposals.AddRange(this.DeleteProposals);
+            ) { ProposedToBeDeletedBy =  this.proposedToBeDeletedBy };
             return item;
         }
 

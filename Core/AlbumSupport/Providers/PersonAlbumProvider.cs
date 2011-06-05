@@ -69,7 +69,7 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
         private AlbumItem CreateAlbumItem(Face face, AlbumItemType itemType) {
             var item = this.itemFactory.CreateFrom(face.File, itemType);
             item.LazyPrimaryAlbum = new Lazy<Album>(
-                () => this.primaryAlbumProvider.GetAlbum(face.File.Location, User.System, ensureNonEmpty: false)
+                () => this.primaryAlbumProvider.GetAlbum(face.File.Location, KnownUser.System, ensureNonEmpty: false)
             );
 
             return item;
@@ -84,7 +84,7 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
         }
 
         private IEnumerable<Album> FilterByAuthorization(IEnumerable<Album> albums, IUser user) {
-            var realUser = user as User;            
+            var realUser = user as KnownUser;            
             return albums.Where(
                 album => (realUser != null && album.Descriptor.ProviderSpecificPath == realUser.Email)
                       || IsAuthorizedTo(album, user)

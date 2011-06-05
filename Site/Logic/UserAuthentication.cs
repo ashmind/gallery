@@ -13,11 +13,11 @@ namespace AshMind.Gallery.Site.Logic {
     public class UserAuthentication : IUserAuthentication {
         private const string GroupMemberNamePrefix = "anonymous-member-of:";
 
-        private readonly IRepository<User> userRepository;
+        private readonly IRepository<KnownUser> userRepository;
         private readonly IRepository<UserGroup> userGroupRepository;
 
         public UserAuthentication(
-            IRepository<User> userRepository,
+            IRepository<KnownUser> userRepository,
             IRepository<UserGroup> userGroupRepository
         ) {
             this.userRepository = userRepository;

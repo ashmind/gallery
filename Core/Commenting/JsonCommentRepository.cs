@@ -31,9 +31,9 @@ namespace AshMind.Gallery.Core.Commenting {
         }
 
         private readonly IFileSystem fileSystem;
-        private readonly IRepository<User> userRepository;
+        private readonly IRepository<KnownUser> userRepository;
 
-        public JsonCommentRepository(IFileSystem fileSystem, IRepository<User> userRepository) {
+        public JsonCommentRepository(IFileSystem fileSystem, IRepository<KnownUser> userRepository) {
             this.fileSystem = fileSystem;
             this.userRepository = userRepository;
         }

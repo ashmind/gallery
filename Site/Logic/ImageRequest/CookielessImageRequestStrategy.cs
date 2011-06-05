@@ -53,7 +53,7 @@ namespace AshMind.Gallery.Site.Logic.ImageRequest {
             var bytes = EncryptOrDecrypt(keyBytes, encrypt: false);
             var arguments = Encoding.UTF8.GetString(bytes).Split('/');
 
-            return this.gallery.GetItem(arguments[0], arguments[1], User.System).File;
+            return this.gallery.GetItem(arguments[0], arguments[1], KnownUser.System).File;
         }
 
         private static byte[] EncryptOrDecrypt(byte[] bytes, bool encrypt) {

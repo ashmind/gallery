@@ -44,11 +44,11 @@ namespace AshMind.Gallery.Core.AlbumSupport {
 
             var userGroups = userGroupRepository.Query().ToList();
 
-            item.DeleteProposals.AddRange(
+            item.ProposedToBeDeletedBy = (
                 metadata.DeleteProposals.Select(
                     p => userGroupReferenceSupport.ResolveReference(p, userGroups)
-                ).OfType<User>()
-            );
+                ).OfType<KnownUser>()
+            ).FirstOrDefault();
         }
 
         public void SaveMetadata(AlbumItem item) {
@@ -59,8 +59,8 @@ namespace AshMind.Gallery.Core.AlbumSupport {
                 metadata = new AlbumItemRawMetadata();
 
             metadata.DeleteProposals.Clear();
-            metadata.DeleteProposals.AddRange(
-                item.DeleteProposals.Select(this.userGroupReferenceSupport.GetReference)
+            metadata.DeleteProposals.Add(
+                this.userGroupReferenceSupport.GetReference(item.ProposedToBeDeletedBy)
             );
 
             locationMetadataProvider.ApplyMetadata(item.File.Location, item.File.Name, metadata);

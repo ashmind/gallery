@@ -11,16 +11,6 @@ using AshMind.Gallery.Site.Logic;
 
 namespace AshMind.Gallery.Site.Models {
     public class AlbumViewModel {
-        private class SetEqualityComparer<T> : IEqualityComparer<ISet<T>> {
-            public bool Equals(ISet<T> x, ISet<T> y) {
-                return x.SetEquals(y);
-            }
-
-            public int GetHashCode(ISet<T> obj) {
-                return obj.Aggregate(0, (hashCode, x) => hashCode ^ x.GetHashCode());
-            }
-        }
-
         public AlbumViewModel(
             Album album,
             Func<Album, string> getAlbumID,
@@ -42,10 +32,9 @@ namespace AshMind.Gallery.Site.Models {
             this.Items = itemModels[false].Select(item => ToItemModel(item, getAlbumID, imageAccess)).ToList().AsReadOnly();
             this.ProposedToBeDeleted = itemModels[true]
                                             .GroupBy(
-                                                item => (ISet<User>)item.DeleteProposals.ToSet(),
+                                                item => item.ProposedToBeDeletedBy,
                                                 item => ToItemModel(item, getAlbumID, imageAccess),
-                                                (key, models) => new DeleteProposalGroupModel(key, models.ToSet()),
-                                                new SetEqualityComparer<User>()
+                                                (key, models) => new DeleteProposalGroupModel(key, models.ToSet())
                                             )
                                             .ToList()
                                             .AsReadOnly();

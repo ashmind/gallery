@@ -162,7 +162,7 @@
     <Compile Include="Security\SecurableAction.cs" />
     <Compile Include="Security\UserRepositoryExtensions.cs" />
     <Compile Include="IRepository.cs" />
-    <Compile Include="Security\User.cs" />
+    <Compile Include="Security\KnownUser.cs" />
     <Compile Include="Security\UserGroup.cs" />
     <Compile Include="CoreModule.cs" />
     <Compile Include="Internal\HashAlgorithmExtensions.cs" />

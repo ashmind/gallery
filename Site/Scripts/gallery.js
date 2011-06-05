@@ -153,10 +153,10 @@ function setupAlbum() {
             $("#fancybox-wrap .delete, #fancybox-wrap .restore").click(function(event) {
                 event.preventDefault();
                 var item = a.parents(".item");
-                $.get($(this).attr('href'), {}, function(deletesCount) {
+                $.get($(this).attr('href'), {}, function(isDeleted) {
                     $.fancybox.close();
                     var deleted = $("section.to-delete");
-                    if (deletesCount > 0) {
+                    if (isDeleted.toLowerCase() == 'true') {
                         deleted.append(item);
                     }
                     else {
