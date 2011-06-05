@@ -5,6 +5,7 @@ using System.Net.Mime;
 using System.Web.Mvc;
 
 using AshMind.Gallery.Core;
+using AshMind.Gallery.Core.Security.Actions;
 using AshMind.Gallery.Site.Models;
 using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Core.Commenting;
@@ -147,14 +148,14 @@ namespace AshMind.Gallery.Site.Controllers {
             if (album == null)
                 return null;
 
-            if (!manageSecurity || !authorization.IsAuthorized(this.User, SecurableAction.ManageSecurity, null))
+            if (!manageSecurity || !authorization.IsAuthorized(this.User, SecurableActions.ManageSecurity))
                 return new AlbumViewModel(album, this.gallery.GetAlbumID, this.User, this.requestStrategy, false, null);
 
             return new AlbumViewModel(
                 album, this.gallery.GetAlbumID, this.User,
                 this.requestStrategy,
                 true, (
-                    from @group in this.authorization.GetAuthorizedTo(SecurableAction.View, album.SecurableToken)
+                    from @group in this.authorization.GetAuthorizedTo(SecurableActions.View(album.SecurableToken))
                     select new UserGroupViewModel(@group)
                 ).ToList()        
             );

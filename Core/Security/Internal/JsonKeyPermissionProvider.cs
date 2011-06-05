@@ -8,14 +8,15 @@ using Newtonsoft.Json;
 using AshMind.Extensions;
 
 using AshMind.Gallery.Core.IO;
+using AshMind.Gallery.Core.Security.Actions;
 
 namespace AshMind.Gallery.Core.Security.Internal {
-    internal class JsonKeyPermissionProvider : AbstractPermissionProvider<SecurableUniqueKey> {
+    internal class JsonKeyPermissionProvider : AbstractPermissionProvider<ViewAction<SecurableUniqueKey>> {
         private readonly IFile permissionStore;
         private readonly IRepository<IUserGroup> userGroupRepository;
 
         private readonly ReaderWriterLockSlim rawPermissionsLock = new ReaderWriterLockSlim();
-        private readonly IDictionary<string, IDictionary<SecurableAction, IList<string>>> rawPermissions = new Dictionary<string, IDictionary<SecurableAction, IList<string>>>();
+        private readonly IDictionary<string, IDictionary<string, IList<string>>> rawPermissions = new Dictionary<string, IDictionary<string, IList<string>>>();
 
         public JsonKeyPermissionProvider(
             IFile permissionStore,
@@ -24,53 +25,40 @@ namespace AshMind.Gallery.Core.Security.Internal {
             this.permissionStore = permissionStore;
             this.userGroupRepository = userGroupRepository;
 
-            if (this.permissionStore.Exists)
-                JsonConvert.PopulateObject(this.permissionStore.ReadAllText(), rawPermissions);
+            if (!this.permissionStore.Exists)
+                return;
+            
+            JsonConvert.PopulateObject(this.permissionStore.ReadAllText(), rawPermissions);
         }
 
-        public override IEnumerable<Permission> GetPermissions(SecurableUniqueKey key) {
-            var permissionsOfKey = (IDictionary<SecurableAction, IList<string>>)null;
+        public override IEnumerable<IUserGroup> GetPermissions(ViewAction<SecurableUniqueKey> action) {
+            var groupKeys = (IList<string>)null;
 
             rawPermissionsLock.EnterReadLock();
             try {
-                permissionsOfKey = this.rawPermissions.GetValueOrDefault(key.Value);
+                groupKeys = this.rawPermissions.GetValueOrDefault(action.Target.Value).GetValueOrDefault("View");
             }
             finally {
                 rawPermissionsLock.ExitReadLock();
             }
 
-            if (permissionsOfKey == null)
-                return Enumerable.Empty<Permission>();
+            if (groupKeys == null)
+                return Enumerable.Empty<IUserGroup>();
 
-            return from rawPermission in permissionsOfKey
-                   from userGroupKey in rawPermission.Value
-                   select new Permission {
-                       Action = rawPermission.Key,
-                       Group = this.userGroupRepository.Load(userGroupKey)
-                   };
+            return from userGroupKey in groupKeys
+                   select this.userGroupRepository.Load(userGroupKey);
         }
 
-        public override void SetPermissions(SecurableUniqueKey key, IEnumerable<Permission> permissions) {
+        public override void SetPermissions(ViewAction<SecurableUniqueKey> action, IEnumerable<IUserGroup> userGroups) {
             rawPermissionsLock.EnterWriteLock();
             try {
-                var permissionsOfKey = this.rawPermissions.GetValueOrDefault(key.Value);
+                var permissionsOfKey = this.rawPermissions.GetValueOrDefault(action.Target.Value);
                 if (permissionsOfKey == null) {
-                    permissionsOfKey = new Dictionary<SecurableAction, IList<string>>();
-                    this.rawPermissions.Add(key.Value, permissionsOfKey);
+                    permissionsOfKey = new Dictionary<string, IList<string>>();
+                    this.rawPermissions.Add(action.Target.Value, permissionsOfKey);
                 }
 
-                foreach (var permissionGroup in permissions.GroupBy(p => p.Action)) {
-                    var permissionsOfAction = permissionsOfKey.GetValueOrDefault(permissionGroup.Key);
-                    if (permissionsOfAction == null) {
-                        permissionsOfAction = new List<string>();
-                        permissionsOfKey.Add(permissionGroup.Key, permissionsOfAction);
-                    }
-
-                    permissionsOfAction.AddRange(
-                        permissionGroup.Select(p => (string)userGroupRepository.GetKey(p.Group))
-                    );
-                }
-
+                permissionsOfKey["View"] = userGroups.Select(g => (string)userGroupRepository.GetKey(g)).ToList();
                 this.permissionStore.WriteAllText(
                     JsonConvert.SerializeObject(rawPermissions, Formatting.Indented)
                 );

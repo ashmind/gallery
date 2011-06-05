@@ -6,6 +6,7 @@ using System.Runtime.Caching;
 using AshMind.Gallery.Core.IO;
 using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Core.Fixes;
+using AshMind.Gallery.Core.Security.Actions;
 
 namespace AshMind.Gallery.Core.AlbumSupport.Providers {
     public class FileSystemAlbumProvider : IAlbumProvider {
@@ -42,7 +43,7 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
         }
 
         public Album GetAlbum(ILocation location, IUser user, bool ensureNonEmpty = true) {
-            if (!authorization.IsAuthorized(user, SecurableAction.View, location))
+            if (!authorization.IsAuthorized(user, SecurableActions.View(location)))
                 return null;
 
             var cacheKey = "album:" + location.Path;

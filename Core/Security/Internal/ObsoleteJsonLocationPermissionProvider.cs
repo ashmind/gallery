@@ -10,10 +10,11 @@ using AshMind.Extensions;
 
 using AshMind.Gallery.Core.Internal;
 using AshMind.Gallery.Core.IO;
+using AshMind.Gallery.Core.Security.Actions;
 
 namespace AshMind.Gallery.Core.Security.Internal {
     [Obsolete("Use JsonLocationPermissionProvider instead.")]
-    internal class ObsoleteJsonLocationPermissionProvider : AbstractPermissionProvider<ILocation> {
+    internal class ObsoleteJsonLocationPermissionProvider : AbstractPermissionProvider<ViewAction<ILocation>> {
         private readonly IRepository<KnownUser> userRepository;
         private readonly IRepository<UserGroup> groupRepository;
 
@@ -25,28 +26,22 @@ namespace AshMind.Gallery.Core.Security.Internal {
             this.groupRepository = groupRepository;
         }
 
-        public override IEnumerable<Permission> GetPermissions(ILocation location) {
-            var securityFile = GetSecurityFile(location, true);
+        public override IEnumerable<IUserGroup> GetPermissions(ViewAction<ILocation> action) {
+            var securityFile = GetSecurityFile(action.Target, true);
             if (securityFile == null)
-                return Enumerable.Empty<Permission>();
+                return Enumerable.Empty<IUserGroup>();
 
             var json = securityFile.ReadAllText();
-            var permissionSet = JsonConvert.DeserializeObject<
-                Dictionary<SecurableAction, IList<string>>
-            >(json);
+            var permissionSet = JsonConvert.DeserializeObject<Dictionary<string, IList<string>>>(json);
 
             var lazyUsers = new Lazy<IList<KnownUser>>(() => this.userRepository.Query().ToList());
             var lazyGroups = new Lazy<IDictionary<string, UserGroup>>(() => this.groupRepository.Query().ToDictionary(g => g.Name));
 
             return Using(MD5.Create(), md5 =>
-                from pair in permissionSet
-                from key in pair.Value
+                from key in (permissionSet.GetValueOrDefault("View") ?? new string[0])
                 let @group = ResolveGroup(key, md5, lazyUsers, lazyGroups)
                 where @group != null
-                select new Permission {
-                    Action = pair.Key,
-                    Group = @group
-                }
+                select @group
             );
         }
 
@@ -59,12 +54,12 @@ namespace AshMind.Gallery.Core.Security.Internal {
                 }
             }
         }
-       
-        public override void SetPermissions(ILocation location, IEnumerable<Permission> permissions) {
+
+        public override void SetPermissions(ViewAction<ILocation> action, IEnumerable<IUserGroup> userGroups) {
             throw new NotSupportedException();
         }
 
-        public override bool CanSetPermissions(ILocation target) {
+        public override bool CanSetPermissions(ViewAction<ILocation> action) {
             return false;
         }
 

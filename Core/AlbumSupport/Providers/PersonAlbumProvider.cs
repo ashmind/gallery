@@ -8,6 +8,7 @@ using AshMind.Extensions;
 using AshMind.Gallery.Core.Integration;
 using AshMind.Gallery.Core.IO;
 using AshMind.Gallery.Core.Security;
+using AshMind.Gallery.Core.Security.Actions;
 
 namespace AshMind.Gallery.Core.AlbumSupport.Providers {
     public class PersonAlbumProvider : IAlbumProvider {
@@ -93,8 +94,7 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
 
         private bool IsAuthorizedTo(Album album, IUser user) {
             return this.authorization.IsAuthorized(
-                user, SecurableAction.View,
-                new SecurableUniqueKey(album.Descriptor.ProviderSpecificPath)
+                user, SecurableActions.View(new SecurableUniqueKey(album.Descriptor.ProviderSpecificPath))
             );
         }
 

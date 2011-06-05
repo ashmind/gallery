@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using AshMind.Extensions;
+using AshMind.Gallery.Core.Security.Actions;
 
 namespace AshMind.Gallery.Core.Security.Internal {
     public class AuthorizationService : IAuthorizationService {
@@ -17,21 +18,20 @@ namespace AshMind.Gallery.Core.Security.Internal {
             this.providers = providers;
         }
         
-        public IEnumerable<IUserGroup> GetAuthorizedTo(SecurableAction action, object target) {
+        public IEnumerable<IUserGroup> GetAuthorizedTo(ISecurableAction action) {
             foreach (var group in superGroups) {
                 yield return group;
             }
 
-            if (action == SecurableAction.ManageSecurity)
+            if (action is ManageSecurityAction)
                 yield break;
             
             var otherGroups = (
                 from provider in this.providers
-                where provider.CanGetPermissions(target)
-                from permission in provider.GetPermissions(target)
-                where permission.Action == action
-                    && !superGroups.Contains(permission.Group)
-                select permission.Group
+                where provider.CanGetPermissions(action)
+                from @group in provider.GetPermissions(action)
+                where !superGroups.Contains(@group)
+                select @group
             ).Distinct();
 
             foreach (var group in otherGroups) {
@@ -39,23 +39,18 @@ namespace AshMind.Gallery.Core.Security.Internal {
             }
         }
 
-        public bool IsAuthorized(IUser user, SecurableAction action, object target) {
-            return GetAuthorizedTo(action, target)
+        public bool IsAuthorized(IUser user, ISecurableAction action) {
+            return GetAuthorizedTo(action)
                         .Any(g => g.GetUsers().Contains(user)) || user == KnownUser.System;
         }
 
-        public void AuthorizeTo(SecurableAction action, object target, IEnumerable<IUserGroup> userGroups) {
-            var permissions = userGroups.Select(group => new Permission {
-                Action = action,
-                Group = group
-            });
-
-            var provider = this.providers.FirstOrDefault(p => p.CanSetPermissions(target));
+        public void AuthorizeTo(ISecurableAction action, IEnumerable<IUserGroup> userGroups) {
+            var provider = this.providers.FirstOrDefault(p => p.CanSetPermissions(action));
 
             if (provider == null)
                 throw new NotSupportedException();
 
-            provider.SetPermissions(target, permissions);
+            provider.SetPermissions(action, userGroups);
         }
     }
 }

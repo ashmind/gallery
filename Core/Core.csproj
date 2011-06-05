@@ -106,6 +106,11 @@
     <Compile Include="IAlbumFacade.cs" />
     <Compile Include="IReadOnlySupport.cs" />
     <Compile Include="LazyExtensions.cs" />
+    <Compile Include="Security\Actions\ManageSecurityAction.cs" />
+    <Compile Include="Security\Actions\ISecurableAction.cs" />
+    <Compile Include="Security\Actions\SecurableActionOn.cs" />
+    <Compile Include="Security\Actions\SecurableActions.cs" />
+    <Compile Include="Security\Actions\ViewAction.cs" />
     <Compile Include="Security\AnonymousMember.cs" />
     <Compile Include="Security\IAuthorizationService.cs" />
     <Compile Include="Security\Internal\MD5UserGroupSecureReferenceStrategy.cs" />
@@ -157,9 +162,8 @@
     <Compile Include="Security\Internal\AuthorizationService.cs" />
     <Compile Include="Security\Internal\JsonSecurityRepository.cs" />
     <Compile Include="Security\IUserGroup.cs" />
+    <Compile Include="Security\Rules\IAuthorizationRule.cs" />
     <Compile Include="Security\SecurableUniqueKey.cs" />
-    <Compile Include="Security\Permission.cs" />
-    <Compile Include="Security\SecurableAction.cs" />
     <Compile Include="Security\UserRepositoryExtensions.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="Security\KnownUser.cs" />
@@ -198,6 +202,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

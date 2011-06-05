@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using AshMind.Gallery.Core.Security.Actions;
+
 namespace AshMind.Gallery.Core.Security {
     public interface IPermissionProvider {
-        bool CanGetPermissions(object target);
-        bool CanSetPermissions(object target);
+        bool CanGetPermissions(ISecurableAction action);
+        bool CanSetPermissions(ISecurableAction action);
 
-        IEnumerable<Permission> GetPermissions(object target);
-        void SetPermissions(object target, IEnumerable<Permission> permissions);
+        IEnumerable<IUserGroup> GetPermissions(ISecurableAction action);
+        void SetPermissions(ISecurableAction action, IEnumerable<IUserGroup> userGroups);
     }
 }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Web.Mvc;
-
+using AshMind.Gallery.Core.Security.Actions;
 using DotNetOpenAuth.Messaging;
 using DotNetOpenAuth.OpenId;
 using DotNetOpenAuth.OpenId.Extensions.SimpleRegistration;
@@ -117,7 +117,7 @@ namespace AshMind.Gallery.Site.Controllers {
             var album = this.gallery.GetAlbum(albumID, this.User);
             return PartialView("GrantForm", new GrantViewModel(
                 albumID,
-                this.authorization.GetAuthorizedTo(SecurableAction.View, album.SecurableToken).ToSet(),
+                this.authorization.GetAuthorizedTo(SecurableActions.View(album.SecurableToken)).ToSet(),
                 this.GetAllGroups().ToList()
             ));
         }
@@ -132,7 +132,7 @@ namespace AshMind.Gallery.Site.Controllers {
                              .Where(g => groupKeys.Contains(g.Key))
                              .Select(g => g.UserGroup);
 
-            this.authorization.AuthorizeTo(SecurableAction.View, album.SecurableToken, groups);
+            this.authorization.AuthorizeTo(SecurableActions.View(album.SecurableToken), groups);
             return new EmptyResult();
         }
 

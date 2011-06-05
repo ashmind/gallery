@@ -1,38 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AshMind.Gallery.Core.Security.Actions;
 
 namespace AshMind.Gallery.Core.Security {
-    public abstract class AbstractPermissionProvider<TTarget> : IPermissionProvider {
-        public virtual bool CanGetPermissions(TTarget target) {
+    public abstract class AbstractPermissionProvider<TAction> : IPermissionProvider
+        where TAction : ISecurableAction
+    {
+        public virtual bool CanGetPermissions(TAction action) {
             return true;
         }
 
-        public virtual bool CanSetPermissions(TTarget target) {
+        public virtual bool CanSetPermissions(TAction action) {
             return true;
         }
 
-        public abstract IEnumerable<Permission> GetPermissions(TTarget target);
-        public abstract void SetPermissions(TTarget target, IEnumerable<Permission> permissions);
+        public abstract IEnumerable<IUserGroup> GetPermissions(TAction action);
+        public abstract void SetPermissions(TAction action, IEnumerable<IUserGroup> userGroups);
 
         #region IPermissionProvider Members
 
-        IEnumerable<Permission> IPermissionProvider.GetPermissions(object target) {
-            return this.GetPermissions((TTarget)target);
+        IEnumerable<IUserGroup> IPermissionProvider.GetPermissions(ISecurableAction action) {
+            return this.GetPermissions((TAction)action);
         }
 
-        void IPermissionProvider.SetPermissions(object target, IEnumerable<Permission> permissions) {
-            this.SetPermissions((TTarget)target, permissions);
+        void IPermissionProvider.SetPermissions(ISecurableAction action, IEnumerable<IUserGroup> userGroups) {
+            this.SetPermissions((TAction)action, userGroups);
         }
 
-        bool IPermissionProvider.CanGetPermissions(object target) {
-            return target is TTarget
-                && this.CanGetPermissions((TTarget)target);
+        bool IPermissionProvider.CanGetPermissions(ISecurableAction action) {
+            return action is TAction
+                && this.CanGetPermissions((TAction)action);
         }
 
-        bool IPermissionProvider.CanSetPermissions(object target) {
-            return target is TTarget
-                && this.CanSetPermissions((TTarget)target);
+        bool IPermissionProvider.CanSetPermissions(ISecurableAction action) {
+            return action is TAction
+                && this.CanSetPermissions((TAction)action);
         }
 
         #endregion
