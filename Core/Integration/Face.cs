@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using AshMind.Gallery.Core.IO;
+using AshMind.IO.Abstraction;
 
 namespace AshMind.Gallery.Core.Integration {
     public class Face {

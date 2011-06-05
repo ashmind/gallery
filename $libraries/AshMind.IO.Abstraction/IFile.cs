@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 
-namespace AshMind.Gallery.Core.IO {
+namespace AshMind.IO.Abstraction {
     public interface IFile : IFileSystemElement {
         DateTimeOffset GetLastWriteTime();
 

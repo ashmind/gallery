@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-using AshMind.Gallery.Core.IO;
+using AshMind.IO.Abstraction;
 
 namespace AshMind.Gallery.Core.Tests.IO {
     public class Resource : IFile {

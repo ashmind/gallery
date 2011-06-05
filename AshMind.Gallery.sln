@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "$libraries", "$libraries", 
 		$libraries\ExifLibrary.dll = $libraries\ExifLibrary.dll
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AshMind.IO.Abstraction", "$libraries\AshMind.IO.Abstraction\AshMind.IO.Abstraction.csproj", "{EB2E231C-3FF4-4FE7-9B51-FDE4127F7DD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,8 +38,15 @@ Global
 		{C56FF232-5221-4297-85CD-1891039D24AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C56FF232-5221-4297-85CD-1891039D24AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C56FF232-5221-4297-85CD-1891039D24AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB2E231C-3FF4-4FE7-9B51-FDE4127F7DD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB2E231C-3FF4-4FE7-9B51-FDE4127F7DD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB2E231C-3FF4-4FE7-9B51-FDE4127F7DD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB2E231C-3FF4-4FE7-9B51-FDE4127F7DD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EB2E231C-3FF4-4FE7-9B51-FDE4127F7DD5} = {BAF74785-A607-4481-84B6-3288545F3493}
 	EndGlobalSection
 EndGlobal

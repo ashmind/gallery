@@ -7,7 +7,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 
 using AshMind.Gallery.Core;
-using AshMind.Gallery.Core.IO;
+using AshMind.IO.Abstraction;
 using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Site.Models;
 using AshMind.Gallery.Site.Fixes;

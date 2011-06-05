@@ -5,7 +5,7 @@ using System.Linq;
 
 using AshMind.Extensions;
 
-using AshMind.Gallery.Core.IO;
+using AshMind.IO.Abstraction;
 
 namespace AshMind.Gallery.Core.Tests.IO {
     public class MemoryLocation : ILocation, IEnumerable {

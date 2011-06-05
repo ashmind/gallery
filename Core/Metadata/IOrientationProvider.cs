@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-using AshMind.Gallery.Core.IO;
+using AshMind.IO.Abstraction;
 
 namespace AshMind.Gallery.Core.Metadata {
     public interface IOrientationProvider {

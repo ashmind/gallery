@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 
 using AshMind.Gallery.Core.Metadata;
-using AshMind.Gallery.Core.IO;
+using AshMind.IO.Abstraction;
 
 namespace AshMind.Gallery.Core.ImageProcessing {
     public class ExifOrientationProvider : IOrientationProvider {

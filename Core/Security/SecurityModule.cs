@@ -4,7 +4,7 @@ using System.Linq;
 using AshMind.Gallery.Core.Security.Rules;
 using Autofac;
 
-using AshMind.Gallery.Core.IO;
+using AshMind.IO.Abstraction;
 using AshMind.Gallery.Core.Security.Internal;
 
 namespace AshMind.Gallery.Core.Security {

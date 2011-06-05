@@ -187,6 +187,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\%24libraries\AshMind.IO.Abstraction\AshMind.IO.Abstraction.csproj">
+      <Project>{EB2E231C-3FF4-4FE7-9B51-FDE4127F7DD5}</Project>
+      <Name>AshMind.IO.Abstraction</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{BF5A70D6-912D-472E-A1F7-607B88F062BB}</Project>
       <Name>Core</Name>

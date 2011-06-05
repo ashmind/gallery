@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using AshMind.Gallery.Core.ImageProcessing;
-using AshMind.Gallery.Core.IO;
+using AshMind.IO.Abstraction;
 using AshMind.Gallery.Core.Metadata;
 
 namespace AshMind.Gallery.Core {

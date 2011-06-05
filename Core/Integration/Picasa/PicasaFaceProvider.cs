@@ -5,7 +5,7 @@ using System.Xml.Linq;
 
 using AshMind.Extensions;
 
-using AshMind.Gallery.Core.IO;
+using AshMind.IO.Abstraction;
 
 namespace AshMind.Gallery.Core.Integration.Picasa {
     using ContactKey = Tuple<string, string>;    

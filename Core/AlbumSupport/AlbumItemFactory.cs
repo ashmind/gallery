@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using AshMind.Gallery.Core.IO;
+using AshMind.IO.Abstraction;
 using AshMind.Gallery.Core.Commenting;
 
 namespace AshMind.Gallery.Core.AlbumSupport {

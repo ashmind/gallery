@@ -14,8 +14,9 @@ using Autofac.Integration.Mvc;
 
 using AshMind.Extensions;
 
+using AshMind.IO.Abstraction.DefaultImplementation;
+
 using AshMind.Gallery.Core;
-using AshMind.Gallery.Core.IO.Implementation;
 using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Site.Fixes;
 using AshMind.Gallery.Site.Routing;

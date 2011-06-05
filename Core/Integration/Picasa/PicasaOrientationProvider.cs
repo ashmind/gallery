@@ -6,7 +6,7 @@ using System.Linq;
 using AshMind.Extensions;
 
 using AshMind.Gallery.Core.Metadata;
-using AshMind.Gallery.Core.IO;
+using AshMind.IO.Abstraction;
 
 namespace AshMind.Gallery.Core.Integration.Picasa {
     public class PicasaOrientationProvider : IOrientationProvider {

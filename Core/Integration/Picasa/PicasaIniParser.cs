@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 using AshMind.Extensions;
 
-using AshMind.Gallery.Core.IO;
+using AshMind.IO.Abstraction;
 using AshMind.Gallery.Core.Integration.Picasa.IniParts;
 
 namespace AshMind.Gallery.Core.Integration.Picasa {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace AshMind.Gallery.Core.IO.Implementation {
+namespace AshMind.IO.Abstraction.DefaultImplementation {
     public class File : IFile {
         private static readonly IDictionary<FileLockMode, FileShare> fileShare = new Dictionary<FileLockMode, FileShare> {
             { FileLockMode.None,        FileShare.ReadWrite },

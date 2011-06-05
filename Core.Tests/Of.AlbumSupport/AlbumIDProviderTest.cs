@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using MbUnit.Framework;
 
 using AshMind.Gallery.Core.AlbumSupport;
-using AshMind.Gallery.Core.IO;
+using AshMind.IO.Abstraction;
 using AshMind.Gallery.Core.Tests.IO;
 
 namespace AshMind.Gallery.Core.Tests.Of.AlbumSupport {

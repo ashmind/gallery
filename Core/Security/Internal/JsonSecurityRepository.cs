@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 using AshMind.Extensions;
 
-using AshMind.Gallery.Core.IO;
+using AshMind.IO.Abstraction;
 using AshMind.Gallery.Core.Security.Rules;
 
 namespace AshMind.Gallery.Core.Security.Internal {

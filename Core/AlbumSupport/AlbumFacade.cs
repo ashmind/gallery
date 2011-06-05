@@ -4,7 +4,7 @@ using System.Linq;
 
 using AshMind.Extensions;
 
-using AshMind.Gallery.Core.IO;
+using AshMind.IO.Abstraction;
 using AshMind.Gallery.Core.Security;
 
 namespace AshMind.Gallery.Core.AlbumSupport {

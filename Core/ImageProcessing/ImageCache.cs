@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 using AshMind.Gallery.Core.Internal;
-using AshMind.Gallery.Core.IO;
+using AshMind.IO.Abstraction;
 
 using Encoder = System.Drawing.Imaging.Encoder;
 

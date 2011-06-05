@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Caching;
 
-using AshMind.Gallery.Core.IO;
+using AshMind.IO.Abstraction;
 using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Core.Fixes;
 using AshMind.Gallery.Core.Security.Actions;

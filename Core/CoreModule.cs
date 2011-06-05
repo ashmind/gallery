@@ -8,13 +8,14 @@ using Autofac.Builder;
 
 using AshMind.Extensions;
 
+using AshMind.IO.Abstraction;
+using AshMind.IO.Abstraction.DefaultImplementation;
+
 using AshMind.Gallery.Core.AlbumSupport;
 using AshMind.Gallery.Core.Commenting;
 using AshMind.Gallery.Core.ImageProcessing;
 using AshMind.Gallery.Core.Integration;
 using AshMind.Gallery.Core.Integration.Picasa;
-using AshMind.Gallery.Core.IO;
-using AshMind.Gallery.Core.IO.Implementation;
 using AshMind.Gallery.Core.Metadata;
 using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Core.Security.Internal;

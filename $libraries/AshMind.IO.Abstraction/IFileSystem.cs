@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AshMind.Gallery.Core.IO {
+namespace AshMind.IO.Abstraction {
     public interface IFileSystem {
         bool IsFileName(string pathOrFileName);
         

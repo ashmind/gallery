@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 using AshMind.Extensions;
 
 using AshMind.Gallery.Core.Internal;
-using AshMind.Gallery.Core.IO;
+using AshMind.IO.Abstraction;
 using AshMind.Gallery.Core.Security.Actions;
 
 namespace AshMind.Gallery.Core.Security.Internal {

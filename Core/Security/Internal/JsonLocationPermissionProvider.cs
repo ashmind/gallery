@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AshMind.Extensions;
-using AshMind.Gallery.Core.IO;
+using AshMind.IO.Abstraction;
 using AshMind.Gallery.Core.Metadata;
 using AshMind.Gallery.Core.Security.Actions;
 

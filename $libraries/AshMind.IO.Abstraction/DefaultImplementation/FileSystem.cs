@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 
-namespace AshMind.Gallery.Core.IO.Implementation {
+namespace AshMind.IO.Abstraction.DefaultImplementation {
     public class FileSystem : IFileSystem {
         public IFile GetFile(string path, bool nullUnlessExists = true) {
             return this.GetLocation(Path.GetDirectoryName(path))

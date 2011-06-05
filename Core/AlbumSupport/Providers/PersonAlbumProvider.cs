@@ -6,7 +6,7 @@ using System.Runtime.Caching;
 using AshMind.Extensions;
 
 using AshMind.Gallery.Core.Integration;
-using AshMind.Gallery.Core.IO;
+using AshMind.IO.Abstraction;
 using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Core.Security.Actions;
 

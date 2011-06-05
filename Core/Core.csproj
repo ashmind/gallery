@@ -139,16 +139,6 @@
     <Compile Include="Integration\Picasa\IniParts\PicasaIniContact.cs" />
     <Compile Include="Integration\Picasa\PicasaIniParser.cs" />
     <Compile Include="Integration\Picasa\PicasaOrientationProvider.cs" />
-    <Compile Include="IO\FileOpenMode.cs" />
-    <Compile Include="IO\IFileSystemElement.cs" />
-    <Compile Include="IO\FileLockMode.cs" />
-    <Compile Include="IO\FileExtensions.cs" />
-    <Compile Include="IO\IFile.cs" />
-    <Compile Include="IO\ILocation.cs" />
-    <Compile Include="IO\Implementation\File.cs" />
-    <Compile Include="IO\Implementation\FileSystem.cs" />
-    <Compile Include="IO\Implementation\Location.cs" />
-    <Compile Include="IO\ActionIfMissing.cs" />
     <Compile Include="Metadata\ILocationMetadataProvider.cs" />
     <Compile Include="Metadata\ImageMirroring.cs" />
     <Compile Include="Metadata\ImageOrientation.cs" />
@@ -174,7 +164,6 @@
     <Compile Include="Internal\HashAlgorithmExtensions.cs" />
     <Compile Include="Argument.cs" />
     <Compile Include="AlbumSupport\AlbumFacade.cs" />
-    <Compile Include="IO\IFileSystem.cs" />
     <Compile Include="AlbumSupport\AlbumIDProvider.cs" />
     <Compile Include="AlbumSupport\GuessItemType.cs" />
     <Compile Include="AlbumSupport\IAlbumIDProvider.cs" />
@@ -204,7 +193,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\%24libraries\AshMind.IO.Abstraction\AshMind.IO.Abstraction.csproj">
+      <Project>{EB2E231C-3FF4-4FE7-9B51-FDE4127F7DD5}</Project>
+      <Name>AshMind.IO.Abstraction</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
