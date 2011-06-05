@@ -6,17 +6,16 @@
   } 
 
   @if (Model.CurrentUserAlbum != null) { 
-      var albumModel = Model.CurrentUserAlbum;
-      var album = albumModel.Album;
+      var album = Model.CurrentUserAlbum;
 
-      <a class="block-link album-name @(Model.IsSelected(album) ? "selected" : "")" data-id='@albumModel.ID' href='@Url.Action("Home", new { album = albumModel.ID })' title="@album.Name">
-        <span class="image-count">(@album.Items.Count(item => !item.IsProposedToBeDeleted))</span>
+      <a class="block-link album-name @(Model.IsSelected(album) ? "selected" : "")" data-id='@album.ID' href='@Url.Action("Home", new { album = album.ID })' title="@album.Name">
+        <span class="image-count">@album.Items.Count</span>
         You: @album.Name
       </a>
    } 
 
   @{ var index = 0; }
-  @foreach (var albumModel in Model.OtherPeopleAlbums) { 
+  @foreach (var album in Model.OtherPeopleAlbums) { 
       index += 1;
 
       if (index == 6) { 
@@ -24,9 +23,9 @@
           WriteLiteral("<div class='more'>");
       } 
 
-      <a class="block-link album-name @(Model.IsSelected(albumModel.Album) ? "selected" : "")" data-id='@albumModel.ID' href='@Url.Action("Home", new { album = albumModel.ID })' title="@albumModel.Album.Name">
-        <span class="image-count">(@albumModel.Album.Items.Count(item => !item.IsProposedToBeDeleted))</span>
-        @albumModel.Album.Name
+      <a class="block-link album-name @(Model.IsSelected(album) ? "selected" : "")" data-id='@album.ID' href='@Url.Action("Home", new { album = album.ID })' title="@album.Name">
+        <span class="image-count">@album.Items.Count</span>
+        @album.Name
       </a>
   }
 

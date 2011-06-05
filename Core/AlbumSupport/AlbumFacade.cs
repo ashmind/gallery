@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 
 using AshMind.Extensions;
-
-using AshMind.IO.Abstraction;
+using AshMind.IO.Abstraction
+;using AshMind.Gallery.Core.Values;
 using AshMind.Gallery.Core.Security;
 
 namespace AshMind.Gallery.Core.AlbumSupport {
@@ -50,7 +50,7 @@ namespace AshMind.Gallery.Core.AlbumSupport {
             return this.idProvider.GetAlbumID(album.Name, album.Descriptor);
         }
 
-        public AlbumItem GetItem(string albumID, string itemName, IUser user) {
+        public IValue<AlbumItem> GetItem(string albumID, string itemName, IUser user) {
             Argument.VerifyNotNullOrEmpty("itemName", itemName);
 
             var album = GetAlbum(albumID, user);

@@ -10,7 +10,7 @@
 }
 
 @section title {
-  @Request.Url.Host gallery @(Model.Selected != null ? ":" + @Model.Selected.Album.Name : "" )
+  @Request.Url.Host gallery @(Model.Selected != null ? ":" + @Model.Selected.Name : "" )
 }
 
 <div id="left">

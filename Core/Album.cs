@@ -6,38 +6,31 @@ using System.Collections.ObjectModel;
 using AshMind.Extensions;
 
 using AshMind.Gallery.Core.AlbumSupport;
+using AshMind.Gallery.Core.Values;
 
 namespace AshMind.Gallery.Core {
     public class Album : IReadOnlySupport<Album> {
         public static Album Empty { get; private set; }
 
         private bool readOnly;
-        private Lazy<ReadOnlyCollection<AlbumItem>> lazyItems;
-        private readonly Lazy<DateTimeOffset> lazyDate;
+        private IValue<IList<AlbumItem>> items;
+        private readonly IValue<DateTimeOffset> date;
 
         static Album() {
-            Empty = new Album(new AlbumDescriptor("", ""), "", null, () => new AlbumItem[0]);
+            Empty = new Album(new AlbumDescriptor("", ""), "", null, To.Just(new AlbumItem[0]));
         }
 
-        public Album(AlbumDescriptor descriptor, string name, object providerData, IList<AlbumItem> items)
-            : this(descriptor, name, providerData, () => items)
+        public Album(AlbumDescriptor descriptor, string name, object providerData, IValue<IEnumerable<AlbumItem>> items)
+            : this(descriptor, name, providerData, items.Get(v => v as IList<AlbumItem> ?? v.ToList()))
         {
         }
 
-        public Album(AlbumDescriptor descriptor, string name, object providerData, Func<IList<AlbumItem>> getItems)
-            : this(descriptor, name, providerData, new Lazy<ReadOnlyCollection<AlbumItem>>(() => getItems().AsReadOnly(), true))
-        {
-        }
-
-        private Album(AlbumDescriptor descriptor, string name, object providerData, Lazy<ReadOnlyCollection<AlbumItem>> items) {
+        public Album(AlbumDescriptor descriptor, string name, object providerData, IValue<IList<AlbumItem>> items) {
             this.Descriptor = descriptor;
             this.Name = name;
             this.ProviderData = providerData;
-            this.lazyItems = items;
-            this.lazyDate = new Lazy<DateTimeOffset>(
-                () => Items.Min(i => (DateTimeOffset?)i.Date) ?? DateTimeOffset.Now,
-                true
-            );
+            this.items = items;
+            this.date = items.Get(v => v.Min(i => (DateTimeOffset?)i.Date) ?? DateTimeOffset.Now);
         }
 
         public AlbumDescriptor Descriptor          { get; private set; }
@@ -45,11 +38,17 @@ namespace AshMind.Gallery.Core {
         public object ProviderData                 { get; private set; }
 
         public DateTimeOffset Date {
-            get { return this.lazyDate.Value; }
+            get { return this.date.Value; }
         }
 
-        public ReadOnlyCollection<AlbumItem> Items {
-            get { return this.lazyItems.Value; }
+        public IValue<IList<AlbumItem>> Items {
+            get { return this.items; }
+            set {
+                if (this.IsReadOnly)
+                    throw new InvalidOperationException("This object is read-only.");
+
+                this.items = value;
+            }
         }
 
         #region IReadOnlySupport<Album> Members
@@ -59,13 +58,14 @@ namespace AshMind.Gallery.Core {
                 return;
 
             this.readOnly = true;
-            this.lazyItems = this.lazyItems.Apply(items => MakeReadOnly(items));
+            this.items = this.items.Get(MakeReadOnly);
         }
 
-        private void MakeReadOnly(IEnumerable<AlbumItem> items) {
+        private ReadOnlyCollection<AlbumItem> MakeReadOnly(IList<AlbumItem> items) {
             foreach (var item in items) {
                 item.MakeReadOnly();
             }
+            return items.AsReadOnly();
         }
         
         public bool IsReadOnly {
@@ -78,7 +78,7 @@ namespace AshMind.Gallery.Core {
 
             return new Album(
                 this.Descriptor, this.Name, this.ProviderData,
-                () => this.lazyItems.Value.Select(item => item.AsWritable()).ToArray()
+                this.Items.Get(v => v.Select(i => i.AsWritable()).ToList())
             );
         }
 

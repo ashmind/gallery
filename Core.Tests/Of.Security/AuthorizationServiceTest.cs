@@ -17,12 +17,19 @@ namespace AshMind.Gallery.Core.Tests.Of.Security {
         [Row(Authorization.Unknown, Authorization.Unknown, false)]
         [Row(Authorization.Unknown, Authorization.Denied,  false)]
         [Row(Authorization.Unknown, Authorization.Allowed, true)]
-        [Row(Authorization.Allowed, Authorization.Unknown, true)]
-        [Row(Authorization.Allowed, Authorization.Allowed, true)]
-        [Row(Authorization.Allowed, Authorization.Denied,  false)]
+        [Row(Authorization.Unknown, Authorization.UndeniablyAllowed, true)]
         [Row(Authorization.Denied,  Authorization.Unknown, false)]
-        [Row(Authorization.Denied,  Authorization.Allowed, false)]
         [Row(Authorization.Denied,  Authorization.Denied, false)]
+        [Row(Authorization.Denied,  Authorization.Allowed, false)]
+        [Row(Authorization.Denied,  Authorization.UndeniablyAllowed, true)]
+        [Row(Authorization.Allowed, Authorization.Unknown, true)]
+        [Row(Authorization.Allowed, Authorization.Denied, false)]
+        [Row(Authorization.Allowed, Authorization.Allowed, true)]
+        [Row(Authorization.Allowed, Authorization.UndeniablyAllowed, true)]
+        [Row(Authorization.UndeniablyAllowed, Authorization.Unknown, true)]
+        [Row(Authorization.UndeniablyAllowed, Authorization.Denied,  true)]
+        [Row(Authorization.UndeniablyAllowed, Authorization.Allowed, true)]
+        [Row(Authorization.UndeniablyAllowed, Authorization.UndeniablyAllowed, true)]
         public void TestAuthorizationInRuleHierarchy(Authorization groupAuthorization, Authorization userAuthorization, bool isAuthorized) {
             var user = new KnownUser("");
             var group = new UserGroup { Users = { user } };

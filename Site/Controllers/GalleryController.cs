@@ -72,7 +72,7 @@ namespace AshMind.Gallery.Site.Controllers {
                 new AlbumListViewModel(
                     albums,
                     start,
-                    count > 0 ? (int?)albums[0].Album.Date.Year : null
+                    count > 0 ? (int?)albums[0].Date.Year : null
                 ),
                 null
             ));
@@ -94,6 +94,7 @@ namespace AshMind.Gallery.Site.Controllers {
             var indexOfUserAlbum = realUser != null
                                  ? personAlbums.FindIndex(m => (string)m.Album.ProviderData == realUser.Email)
                                  : -1;
+
             var userAlbum = (AlbumViewModel)null;
             if (indexOfUserAlbum >= 0) {
                 userAlbum = personAlbums[indexOfUserAlbum];
@@ -104,7 +105,7 @@ namespace AshMind.Gallery.Site.Controllers {
         }
 
         public new ActionResult View(string album, string item) {
-            var albumItem = this.gallery.GetItem(album, item, this.User);
+            var albumItem = this.gallery.GetItem(album, item, this.User).Value;
             return View(
                 new ItemDetailsViewModel(album, albumItem, this.User)
             );
@@ -112,7 +113,7 @@ namespace AshMind.Gallery.Site.Controllers {
 
         public ActionResult Comment(string album, string item, string comment) {
             var author = (KnownUser)this.User;
-            var path = this.gallery.GetItem(album, item, author).File.Path;
+            var path = this.gallery.GetItem(album, item, author).Value.File.Path;
             commentRepository.SaveComment(
                 path, new Comment(author, DateTimeOffset.Now, comment)
             );
@@ -136,7 +137,7 @@ namespace AshMind.Gallery.Site.Controllers {
             if (album == null)
                 return Unauthorized();
 
-            var item = album.Items.Single(i => i.Name == itemName);
+            var item = album.Items.Value.Single(i => i.Name == itemName);
             action(item);
 
             this.gallery.SaveItem(item);

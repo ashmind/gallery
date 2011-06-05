@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using AshMind.Gallery.Core.Values;
 
 namespace AshMind.Gallery.Core.AlbumSupport {
     public class AlbumFactory {
@@ -10,9 +12,9 @@ namespace AshMind.Gallery.Core.AlbumSupport {
             this.nameTransforms = nameTransforms;
         }
 
-        public Album Create(AlbumDescriptor descriptor, string proposedName, object providerData, Func<IList<AlbumItem>> itemsFactory) {
+        public Album Create(AlbumDescriptor descriptor, string proposedName, object providerData, IValue<IEnumerable<AlbumItem>> items) {
             var name = nameTransforms.Aggregate(proposedName, (n, t) => t.Transform(n, descriptor));
-            return new Album(descriptor, name, providerData, itemsFactory);
+            return new Album(descriptor, name, providerData, items);
         }
     }
 }

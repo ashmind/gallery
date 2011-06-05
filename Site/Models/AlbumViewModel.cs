@@ -22,13 +22,15 @@ namespace AshMind.Gallery.Site.Models {
             if (!canManageSecurity && visibleToGroups != null && visibleToGroups.Count > 0)
                 throw new ArgumentException();
 
-            this.Album = album;
             this.ID = getAlbumID(album);
+            this.Name = album.Name;
+            this.Album = album;
+            this.Date = album.Date;
             this.CanManageSecurity = canManageSecurity;
             this.VisibleToGroups = (visibleToGroups ?? new UserGroupViewModel[0]).AsReadOnly();
             this.CurrentUser = currentUser;
 
-            var itemModels = album.Items.ToLookup(item => item.IsProposedToBeDeleted);
+            var itemModels = album.Items.Value.ToLookup(item => item.IsProposedToBeDeleted);
             this.Items = itemModels[false].Select(item => ToItemModel(item, getAlbumID, imageAccess)).ToList().AsReadOnly();
             this.ProposedToBeDeleted = itemModels[true]
                                             .GroupBy(
@@ -50,7 +52,9 @@ namespace AshMind.Gallery.Site.Models {
         }
 
         public string ID { get; private set; }
-        public Album Album { get; private set; }
+        public string Name { get; private set; }
+        internal Album Album { get; private set; }
+        public DateTimeOffset Date { get; private set; }
         public IUser CurrentUser { get; private set; }
         public ReadOnlyCollection<AlbumItemModel> Items { get; private set; }
         public ReadOnlyCollection<DeleteProposalGroupModel> ProposedToBeDeleted { get; private set; }

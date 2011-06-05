@@ -5,8 +5,10 @@ using System.Runtime.Caching;
 
 using AshMind.Extensions;
 
-using AshMind.Gallery.Core.Integration;
 using AshMind.IO.Abstraction;
+
+using AshMind.Gallery.Core.Integration;
+using AshMind.Gallery.Core.Values;
 using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Core.Security.Actions;
 
@@ -49,7 +51,7 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
                 select this.albumFactory.Create(
                     new AlbumDescriptor(this.ProviderKey, uniqueKey),
                     facesOfPerson.Key.Name, uniqueKey,
-                    () => this.CreateAlbumItems(facesOfPerson, user).ToList()
+                    To.Lazy(() => this.CreateAlbumItems(facesOfPerson, user))
                 )
             ).ToArray();
 
@@ -66,7 +68,6 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
                    let itemType = GuessItemType.Of(face.File.Name)
                    where itemType == AlbumItemType.Image
                    let item = CreateAlbumItem(face, itemType)
-                   where this.authorization.IsAuthorized(user, SecurableActions.View(item))
                    select item;
         }
 
@@ -84,7 +85,14 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
         }
 
         private IEnumerable<Album> CorrectAlbums(IEnumerable<Album> albums, IUser user) {
-            return FilterByAuthorization(albums, user).Select(a => a.AsWritable());
+            var filtered = FilterByAuthorization(albums, user).Select(a => a.AsWritable());
+            foreach (var album in filtered) {
+                album.Items = album.Items.Change(
+                    v => v.RemoveWhere(item => !this.authorization.IsAuthorized(user, SecurableActions.View(item)))
+                );
+
+                yield return album;
+            }
         }
 
         private IEnumerable<Album> FilterByAuthorization(IEnumerable<Album> albums, IUser user) {

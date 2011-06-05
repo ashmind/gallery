@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-
+using AshMind.Gallery.Core.Values;
 using Moq;
 
 using MbUnit.Framework;
@@ -42,7 +42,7 @@ namespace AshMind.Gallery.Site.Tests.Of.Controllers {
             return new Album(
                 new AlbumDescriptor(AlbumProviderKeys.Default, ""),
                 name, null,
-                new[] { new AlbumItem(null, "", AlbumItemType.Image, date, () => new Comment[0]) }
+                To.Just(new[] { new AlbumItem(null, "", AlbumItemType.Image, date, () => new Comment[0]) })
             );
         }
 

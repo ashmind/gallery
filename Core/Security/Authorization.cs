@@ -6,6 +6,7 @@ namespace AshMind.Gallery.Core.Security {
     public enum Authorization {
         Unknown,
         Denied,
-        Allowed
+        Allowed,
+        UndeniablyAllowed
     }
 }

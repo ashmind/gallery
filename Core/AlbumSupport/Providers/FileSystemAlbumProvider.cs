@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Caching;
-
+using AshMind.Extensions;
+using AshMind.Gallery.Core.Values;
 using AshMind.IO.Abstraction;
 using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Core.Fixes;
@@ -43,34 +44,39 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
         }
 
         public Album GetAlbum(ILocation location, IUser user, bool ensureNonEmpty = true) {
-            var album = GetReadOnlyAlbum(location, user, ensureNonEmpty);
+            var album = GetReadOnlyAlbum(location, ensureNonEmpty);
             if (album == null)
                 return null;
 
             if (!authorization.IsAuthorized(user, SecurableActions.View(album)))
                 return null;
 
-            return album.AsWritable();
+            var writable = album.AsWritable();
+            writable.Items = writable.Items.Change(
+                items => items.RemoveWhere(i => !authorization.IsAuthorized(user, SecurableActions.View(i)))
+            );
+
+            return writable;
         }
 
-        private Album GetReadOnlyAlbum(ILocation location, IUser user, bool ensureNonEmpty = true) {
+        private Album GetReadOnlyAlbum(ILocation location, bool ensureNonEmpty = true) {
             var cacheKey = "album:" + location.Path;
             var album = (Album)this.cache.Get(cacheKey);
             if (album != null)
                 return album;
 
-            Func<AlbumItem[]> itemsFactory = () => this.GetItemsAtLocation(location, user).ToArray();
+            var itemsValue = To.Lazy(() => this.GetItemsAtLocation(location));
             if (ensureNonEmpty) {
-                var items = itemsFactory();
+                var items = itemsValue.Value.ToArray();
                 if (items.Length == 0)
                     return null;
 
-                itemsFactory = () => items;
+                itemsValue = To.Just(items);
             }
 
             album = this.albumFactory.Create(
                 new AlbumDescriptor(this.ProviderKey, location.Path),
-                location.Name, location, itemsFactory
+                location.Name, location, itemsValue
             );
             album.MakeReadOnly();
             this.cache.Set(cacheKey, album, new CacheItemPolicy {
@@ -80,13 +86,11 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
             return album;
         }
 
-        private IEnumerable<AlbumItem> GetItemsAtLocation(ILocation location, IUser user) {
+        private IEnumerable<AlbumItem> GetItemsAtLocation(ILocation location) {
             return from file in location.GetFiles()
                    let itemType = GuessItemType.Of(file.Name)
                    where itemType == AlbumItemType.Image
-                   let item = this.itemFactory.CreateFrom(file, itemType)
-                   where this.authorization.IsAuthorized(user, SecurableActions.View(item))
-                   select item;
+                   select this.itemFactory.CreateFrom(file, itemType);
         }
         
         public string ProviderKey {

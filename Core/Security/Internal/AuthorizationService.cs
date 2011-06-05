@@ -34,15 +34,18 @@ namespace AshMind.Gallery.Core.Security.Internal {
             var allGroups = this.userGroupRepository.Query().ToList();
             foreach (var group in allGroups) {
                 var groupAuthorization = GetAuthorization(@group, action, authorizedByProviders);
-                if (groupAuthorization == Authorization.Denied)
+                if (groupAuthorization == Authorization.UndeniablyAllowed) {
+                    yield return group;
                     continue;
+                }
 
                 var allMembers = ((IUserGroup) group).GetUsers().ToArray();
                 var authorizedMembers = (
                     from member in allMembers
                     let memberAuthorization = GetAuthorization(member, action, authorizedByProviders)
-                    where memberAuthorization != Authorization.Denied
-                    where memberAuthorization == Authorization.Allowed || groupAuthorization == Authorization.Allowed
+                    where memberAuthorization == Authorization.UndeniablyAllowed
+                       || (groupAuthorization != Authorization.Denied && memberAuthorization == Authorization.Allowed)
+                       || (groupAuthorization == Authorization.Allowed && memberAuthorization != Authorization.Denied)
                     select member
                 ).ToList();
 
@@ -75,7 +78,7 @@ namespace AshMind.Gallery.Core.Security.Internal {
                 if (result == Authorization.Unknown)
                     continue;
 
-                if (rule.OverridesAllOther)
+                if (result == Authorization.UndeniablyAllowed)
                     return result;
 
                 if (result == Authorization.Allowed && authorization == Authorization.Unknown)

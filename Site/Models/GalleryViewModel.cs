@@ -26,9 +26,9 @@ namespace AshMind.Gallery.Site.Models {
         public AlbumListViewModel StandardAlbums    { get; private set; }
         public AlbumViewModel Selected              { get; private set; }
 
-        public bool IsSelected(Album album) {
+        public bool IsSelected(AlbumViewModel albumModel) {
             return this.Selected != null
-                && this.Selected.Album == album;
+                && this.Selected == albumModel;
         }
     }
 }
