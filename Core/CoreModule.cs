@@ -21,7 +21,6 @@ using AshMind.Gallery.Core.Security.Internal;
 
 namespace AshMind.Gallery.Core {
     public class CoreModule : Module {
-        private readonly IFileSystem fileSystem;
         private readonly ILocation albumLocation;
         private readonly ILocation storageLocation;
         private readonly IFile picasaContactsXmlFile;
@@ -29,18 +28,14 @@ namespace AshMind.Gallery.Core {
         private readonly Func<ObjectCache> cacheFactory;
 
         public CoreModule(
-            string albumPath,
-            string storagePath,
-            string picasaContactsXmlPath,
+            ILocation albumLocation,
+            ILocation storageLocation,
+            IFile picasaContactsXmlFile,
             Func<ObjectCache> cacheFactory
         ) {
-            this.fileSystem = new FileSystem();
-
-            this.albumLocation = fileSystem.GetLocation(albumPath);
-            this.storageLocation = fileSystem.GetLocation(storagePath);
-
-            if (picasaContactsXmlPath != null)
-                this.picasaContactsXmlFile = fileSystem.GetFile(picasaContactsXmlPath);
+            this.albumLocation = albumLocation;
+            this.storageLocation = storageLocation;
+            this.picasaContactsXmlFile = picasaContactsXmlFile;
 
             this.cacheFactory = cacheFactory;
         }
@@ -65,16 +60,14 @@ namespace AshMind.Gallery.Core {
                    .As<ICommentRepository>()
                    .SingleInstance();
 
-            builder.RegisterInstance(this.fileSystem)
+            builder.RegisterType<FileSystem>()
                    .As<IFileSystem>()
                    .SingleInstance();
 
             var cacheRoot = this.storageLocation.GetLocation("images", ActionIfMissing.CreateNew);
             builder.Register(c => new ImageCache(cacheRoot, ImageCacheFormat.Jpeg, c.Resolve<ICacheDependencyProvider[]>()))
                    .SingleInstance();
-
-            RegisterSecurity(builder);
-
+            
             RegisterAlbumSupport(builder, types);
 
             builder.RegisterType<PreviewFacade>().SingleInstance();
@@ -84,27 +77,6 @@ namespace AshMind.Gallery.Core {
             RegisterAllImplementationsOf<ILocationMetadataProvider>(builder, types, x => x.SingleInstance());
             RegisterAllImplementationsOf<IOrientationProvider>(builder, types, x => x.SingleInstance());
             RegisterAllImplementationsOf<ICacheDependencyProvider>(builder, types, x => x.SingleInstance());            
-        }
-
-        private void RegisterSecurity(ContainerBuilder builder) {
-            builder.RegisterType<AuthorizationService>().As<IAuthorizationService>().SingleInstance();
-            builder.RegisterType<JsonKeyPermissionProvider>()
-                   .As<IPermissionProvider>()
-                   .WithParameter(new TypedParameter(typeof(IFile), this.storageLocation.GetFile("permissions.jsdb", false)))
-                   .SingleInstance();
-
-            builder.RegisterType<JsonLocationPermissionProvider>()
-                   .As<IPermissionProvider>()
-                   .SingleInstance();
-
-            // because my current gallery has a lot of stuff with permissions set through this:
-            builder.RegisterType<ObsoleteJsonLocationPermissionProvider>()
-                   .As<IPermissionProvider>()
-                   .SingleInstance();
-
-            builder.RegisterType<MD5UserGroupSecureReferenceStrategy>()
-                   .As<IUserGroupSecureReferenceStrategy>()
-                   .InstancePerLifetimeScope();
         }
 
         private void RegisterAlbumSupport(ContainerBuilder builder, IList<Type> types) {

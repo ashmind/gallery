@@ -12,7 +12,11 @@ using System.IO;
 using Autofac;
 using Autofac.Integration.Mvc;
 
+using AshMind.Extensions;
+
 using AshMind.Gallery.Core;
+using AshMind.Gallery.Core.IO.Implementation;
+using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Site.Fixes;
 using AshMind.Gallery.Site.Routing;
 
@@ -101,7 +105,13 @@ namespace AshMind.Gallery.Site {
             var dataRoot = Path.Combine(Server.MapPath("~"), ".Store");
             Directory.CreateDirectory(dataRoot);
 
-            builder.RegisterModule(new CoreModule(albumsRoot, dataRoot, picasaContactsXmlPath, () => new WebCache()));
+            var fileSystem = new FileSystem();
+            var albumLocation = fileSystem.GetLocation(albumsRoot);
+            var dataLocation = fileSystem.GetLocation(dataRoot);
+            var picasaContactsXmlFile = picasaContactsXmlPath.IsNotNullOrEmpty() ? fileSystem.GetFile(picasaContactsXmlPath) : null;
+
+            builder.RegisterModule(new CoreModule(albumLocation, dataLocation, picasaContactsXmlFile, () => new WebCache()));
+            builder.RegisterModule(new SecurityModule(dataLocation));
             builder.RegisterModule(new WebModule());
             
             var container = builder.Build();

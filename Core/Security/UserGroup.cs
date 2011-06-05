@@ -4,8 +4,6 @@ using System.Linq;
 
 namespace AshMind.Gallery.Core.Security {
     public class UserGroup : IUserGroup {
-        public static string SuperName = "*Owners";
-
         public UserGroup() {
             this.Users = new HashSet<KnownUser>();
             this.Keys = new HashSet<string>();
@@ -14,10 +12,6 @@ namespace AshMind.Gallery.Core.Security {
         public string Name                     { get; set; }
         public HashSet<KnownUser> Users        { get; private set; }
         public HashSet<string> Keys            { get; private set; }
-
-        public bool IsSuper {
-            get { return this.Name == SuperName; }
-        }
 
         IEnumerable<IUser> IUserGroup.GetUsers() {
             return Enumerable.Concat(

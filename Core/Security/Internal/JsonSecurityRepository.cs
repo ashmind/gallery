@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using AshMind.Extensions;
 
 using AshMind.Gallery.Core.IO;
+using AshMind.Gallery.Core.Security.Rules;
 
 namespace AshMind.Gallery.Core.Security.Internal {
     internal class JsonSecurityRepository : IRepository<KnownUser>, IRepository<UserGroup>, IRepository<IUserGroup> {
@@ -35,7 +36,7 @@ namespace AshMind.Gallery.Core.Security.Internal {
             }
             else {
                 this.store = new UserStore {
-                    Groups = { new UserGroup { Name = UserGroup.SuperName } }
+                    Groups = { new UserGroup { Name = OwnersAreAllowedEverythingRule.Owners } }
                 };
                 this.file.WriteAllText(JsonConvert.SerializeObject(this.store));
             }

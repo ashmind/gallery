@@ -4,39 +4,37 @@ using System.Linq;
 
 using AshMind.Extensions;
 using AshMind.Gallery.Core.Security.Actions;
+using AshMind.Gallery.Core.Security.Rules;
 
 namespace AshMind.Gallery.Core.Security.Internal {
     public class AuthorizationService : IAuthorizationService {
-        private readonly HashSet<UserGroup> superGroups = new HashSet<UserGroup>();
+        private readonly IRepository<UserGroup> userGroupRepository;
+        private readonly IAuthorizationRule[] rules;
         private readonly IPermissionProvider[] providers;
 
         public AuthorizationService(
             IRepository<UserGroup> userGroupRepository,
+            IAuthorizationRule[] rules,
             IPermissionProvider[] providers
         ) {
-            superGroups.AddRange(userGroupRepository.Query().Where(g => g.IsSuper));
+            this.userGroupRepository = userGroupRepository;
+            this.rules = rules;
             this.providers = providers;
         }
-        
-        public IEnumerable<IUserGroup> GetAuthorizedTo(ISecurableAction action) {
-            foreach (var group in superGroups) {
-                yield return group;
-            }
 
-            if (action is ManageSecurityAction)
-                yield break;
-            
-            var otherGroups = (
+        public IEnumerable<IUserGroup> GetAuthorizedTo(ISecurableAction action) {
+            var groups = Enumerable.Union(
+                from @group in this.userGroupRepository.Query().ToList()
+                where this.rules.Any(r => r.IsAuthorized(@group, action) == true)
+                select @group,
+
                 from provider in this.providers
                 where provider.CanGetPermissions(action)
                 from @group in provider.GetPermissions(action)
-                where !superGroups.Contains(@group)
                 select @group
-            ).Distinct();
+            );
 
-            foreach (var group in otherGroups) {
-                yield return group;
-            }
+            return groups;
         }
 
         public bool IsAuthorized(IUser user, ISecurableAction action) {

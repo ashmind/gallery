@@ -4,7 +4,7 @@ using System.Linq;
 using System.IO;
 
 namespace AshMind.Gallery.Core.IO.Implementation {
-    internal class Location : ILocation {
+    public class Location : ILocation {
         public Location(string path) {
             this.Path = path;            
         }

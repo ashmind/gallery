@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 
 namespace AshMind.Gallery.Core.IO.Implementation {
-    internal class File : IFile {
+    public class File : IFile {
         private static readonly IDictionary<FileLockMode, FileShare> fileShare = new Dictionary<FileLockMode, FileShare> {
             { FileLockMode.None,        FileShare.ReadWrite },
             { FileLockMode.Read,        FileShare.Write },

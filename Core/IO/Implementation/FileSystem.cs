@@ -4,7 +4,7 @@ using System.Linq;
 using System.IO;
 
 namespace AshMind.Gallery.Core.IO.Implementation {
-    internal class FileSystem : IFileSystem {
+    public class FileSystem : IFileSystem {
         public IFile GetFile(string path, bool nullUnlessExists = true) {
             return this.GetLocation(Path.GetDirectoryName(path))
                        .GetFile(Path.GetFileName(path), nullUnlessExists);

@@ -36,7 +36,11 @@ namespace AshMind.Gallery.Core.Security.Internal {
 
             rawPermissionsLock.EnterReadLock();
             try {
-                groupKeys = this.rawPermissions.GetValueOrDefault(action.Target.Value).GetValueOrDefault("View");
+                var permissionDictionary = this.rawPermissions.GetValueOrDefault(action.Target.Value);
+                if (permissionDictionary == null)
+                    return Enumerable.Empty<IUserGroup>();
+
+                groupKeys = permissionDictionary.GetValueOrDefault("View");
             }
             finally {
                 rawPermissionsLock.ExitReadLock();
