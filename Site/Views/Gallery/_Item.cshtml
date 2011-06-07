@@ -1,9 +1,11 @@
 ﻿@model AlbumItemModel
 
 <span class="item">
+  @{ var urlBase = Model.GetImageUrlBase(ViewContext.RequestContext); }
+
   <a @(!Model.IsProposedToBeDeleted ? "rel=normal-gallery-item" : "")
-     href="@(Model.GetImageUrlBase(ViewContext.RequestContext) + "/" + ImageSize.Medium.Name.ToLowerInvariant())"
-     data-name="@Model.Name"
+     href="@(urlBase + "/" + ImageSize.Medium.Name.ToLowerInvariant())"
+     data-name="@Model.Name"     
      data-json="{
         name : '@Model.Name',
 
@@ -20,7 +22,7 @@
             },
 
             download : {
-                action : '@Model.GetImageUrlBase(ViewContext.RequestContext)',
+                action : '@urlBase',
                 sizes : {
                     '@(ImageSize.Small.Size)px' : '@ImageSize.Small.Name.ToLowerInvariant()',
                     '@(ImageSize.Medium.Size)px' : '@ImageSize.Medium.Name.ToLowerInvariant()',
@@ -32,6 +34,7 @@
       }"
       class="image-view"> 
       <img src="@Url.Content("~/content/images/blank.gif")"
-           data-lazysrc="@(Model.GetImageUrlBase(ViewContext.RequestContext) + "/" + ImageSize.Thumbnail.Name.ToLowerInvariant())" />
+           data-lazysrc="@(urlBase + "/" + ImageSize.Thumbnail.Name.ToLowerInvariant())"
+           data-downloadurl="image/jpg:@Model.Name:@(urlBase + "/" + ImageSize.Large.Name.ToLowerInvariant())" />
   </a>
 </span>

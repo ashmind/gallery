@@ -214,7 +214,7 @@ function setupAlbum() {
         placeholder : imgs.eq(0).attr('src'),
         container   : $("#main"),
         effect      : "fadeIn"
-    });
+    }).dragout();
 
     setupSecurityPanel();
 
