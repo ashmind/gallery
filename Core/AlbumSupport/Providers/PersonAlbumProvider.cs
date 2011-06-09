@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.Caching;
 
 using AshMind.Extensions;
-
+using AshMind.Gallery.Integration;
 using AshMind.IO.Abstraction;
 
 using AshMind.Gallery.Core.Integration;

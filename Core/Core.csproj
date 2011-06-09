@@ -123,9 +123,6 @@
     <Compile Include="AlbumSupport\IAlbumProvider.cs" />
     <Compile Include="ImageProcessing\ExifOrientationProvider.cs" />
     <Compile Include="ImageProcessing\ICacheDependencyProvider.cs" />
-    <Compile Include="Integration\Face.cs" />
-    <Compile Include="Integration\IFaceProvider.cs" />
-    <Compile Include="Integration\Person.cs" />
     <Compile Include="Integration\Picasa\IniParts\PicasaIniFace.cs" />
     <Compile Include="Integration\Picasa\IniParts\PicasaIniMetadata.cs" />
     <Compile Include="Integration\Picasa\PicasaDatabase.cs" />
@@ -201,6 +198,10 @@
     <ProjectReference Include="..\%24libraries\AshMind.IO.Abstraction\AshMind.IO.Abstraction.csproj">
       <Project>{EB2E231C-3FF4-4FE7-9B51-FDE4127F7DD5}</Project>
       <Name>AshMind.IO.Abstraction</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Integration\Integration.csproj">
+      <Project>{343737E8-EA84-4965-8BD9-C38A422F52AD}</Project>
+      <Name>Integration</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using AshMind.IO.Abstraction;
 
-namespace AshMind.Gallery.Core.Integration {
+namespace AshMind.Gallery.Integration {
     public class Face {
         public Face(Person person, IFile file) {
             Argument.VerifyNotNull("person", person);

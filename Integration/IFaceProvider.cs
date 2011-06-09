@@ -4,7 +4,7 @@ using System.Linq;
 
 using AshMind.IO.Abstraction;
 
-namespace AshMind.Gallery.Core.Integration {
+namespace AshMind.Gallery.Integration {
     public interface IFaceProvider {
         IEnumerable<Face> GetFaces(ILocation location);
     }

@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "$libraries", "$libraries", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AshMind.IO.Abstraction", "$libraries\AshMind.IO.Abstraction\AshMind.IO.Abstraction.csproj", "{EB2E231C-3FF4-4FE7-9B51-FDE4127F7DD5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integration", "Integration\Integration.csproj", "{343737E8-EA84-4965-8BD9-C38A422F52AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +44,10 @@ Global
 		{EB2E231C-3FF4-4FE7-9B51-FDE4127F7DD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB2E231C-3FF4-4FE7-9B51-FDE4127F7DD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB2E231C-3FF4-4FE7-9B51-FDE4127F7DD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{343737E8-EA84-4965-8BD9-C38A422F52AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{343737E8-EA84-4965-8BD9-C38A422F52AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{343737E8-EA84-4965-8BD9-C38A422F52AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{343737E8-EA84-4965-8BD9-C38A422F52AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
