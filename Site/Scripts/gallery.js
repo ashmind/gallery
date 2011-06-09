@@ -154,7 +154,7 @@ function setupAlbum() {
                 event.preventDefault();
                 var item = a.parents(".item");
                 $.get($(this).attr('href'), {}, function(isDeleted) {
-                    $.fancybox.close();
+                    $.fancybox.next();
                     var deleted = $("section.to-delete");
                     if (isDeleted.toLowerCase() == 'true') {
                         deleted.append(item);
