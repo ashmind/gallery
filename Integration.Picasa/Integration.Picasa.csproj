@@ -3,16 +3,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{93813FFE-7AD9-40A3-96DF-A00A8C5137F8}</ProjectGuid>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{48284DFD-9467-4B44-B4F3-F4B3CFCFD0E0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AshMind.Gallery.Core.Tests</RootNamespace>
-    <AssemblyName>AshMind.Gallery.Core.Tests</AssemblyName>
+    <RootNamespace>AshMind.Gallery.Integration.Picasa</RootNamespace>
+    <AssemblyName>AshMind.Gallery.Integration.Picasa</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,41 +33,42 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AshMind.Extensions, Version=1.0.4.0, Culture=neutral, PublicKeyToken=32a35e6126a2a893, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="AshMind.Extensions">
       <HintPath>..\$packages\AshMind.Extensions.1.0.4\lib\3.5\AshMind.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="Gallio" />
-    <Reference Include="MbUnit" />
-    <Reference Include="Moq, Version=4.0.10827.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\$packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
+    <Reference Include="Autofac">
+      <HintPath>..\$packages\Autofac.2.4.5.724\lib\NET40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Configuration">
+      <HintPath>..\$packages\Autofac.2.4.5.724\lib\NET40\Autofac.Configuration.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Gallio35" />
-    <Reference Include="MbUnit35" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
-    <Compile Include="IO\MemoryFile.cs" />
-    <Compile Include="IO\MemoryFileSystem.cs" />
-    <Compile Include="IO\MemoryLocation.cs" />
-    <Compile Include="IO\Resource.cs" />
-    <Compile Include="Of.AlbumSupport\AlbumIDProviderTest.cs" />
-    <Compile Include="Of.Security\AuthorizationServiceTest.cs" />
+    <Compile Include="..\Core\Argument.cs">
+      <Link>Argument.cs</Link>
+    </Compile>
+    <Compile Include="IniParts\PicasaIniContact.cs" />
+    <Compile Include="IniParts\PicasaIniFace.cs" />
+    <Compile Include="IniParts\PicasaIniMetadata.cs" />
+    <Compile Include="PicasaDatabase.cs" />
+    <Compile Include="PicasaFaceProvider.cs" />
+    <Compile Include="PicasaIni.cs" />
+    <Compile Include="PicasaIniDependencyProvider.cs" />
+    <Compile Include="PicasaIniFileFinder.cs" />
+    <Compile Include="PicasaIniParser.cs" />
+    <Compile Include="PicasaModule.cs" />
+    <Compile Include="PicasaOrientationProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -78,12 +80,13 @@
       <Project>{BF5A70D6-912D-472E-A1F7-607B88F062BB}</Project>
       <Name>Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Integration\Integration.csproj">
+      <Project>{343737E8-EA84-4965-8BD9-C38A422F52AD}</Project>
+      <Name>Integration</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Of.Integration\Picasa\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

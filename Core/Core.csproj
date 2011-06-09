@@ -17,7 +17,8 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkProfile />
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -123,16 +124,6 @@
     <Compile Include="AlbumSupport\IAlbumProvider.cs" />
     <Compile Include="ImageProcessing\ExifOrientationProvider.cs" />
     <Compile Include="ImageProcessing\ICacheDependencyProvider.cs" />
-    <Compile Include="Integration\Picasa\IniParts\PicasaIniFace.cs" />
-    <Compile Include="Integration\Picasa\IniParts\PicasaIniMetadata.cs" />
-    <Compile Include="Integration\Picasa\PicasaDatabase.cs" />
-    <Compile Include="Integration\Picasa\PicasaFaceProvider.cs" />
-    <Compile Include="Integration\Picasa\PicasaIni.cs" />
-    <Compile Include="Integration\Picasa\PicasaIniDependencyProvider.cs" />
-    <Compile Include="Integration\Picasa\PicasaIniFileFinder.cs" />
-    <Compile Include="Integration\Picasa\IniParts\PicasaIniContact.cs" />
-    <Compile Include="Integration\Picasa\PicasaIniParser.cs" />
-    <Compile Include="Integration\Picasa\PicasaOrientationProvider.cs" />
     <Compile Include="Metadata\ILocationMetadataProvider.cs" />
     <Compile Include="Metadata\ImageMirroring.cs" />
     <Compile Include="Metadata\ImageOrientation.cs" />

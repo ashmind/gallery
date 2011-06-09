@@ -4,7 +4,7 @@ using System.Linq;
 
 using AshMind.IO.Abstraction;
 
-namespace AshMind.Gallery.Core.Integration.Picasa {
+namespace AshMind.Gallery.Integration.Picasa {
     public class PicasaIniFileFinder {
         private static readonly string[] fileNames = { ".picasa.ini", "picasa.ini" };
 

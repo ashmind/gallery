@@ -4,10 +4,9 @@ using System.Linq;
 using System.Xml.Linq;
 
 using AshMind.Extensions;
-using AshMind.Gallery.Integration;
 using AshMind.IO.Abstraction;
 
-namespace AshMind.Gallery.Core.Integration.Picasa {
+namespace AshMind.Gallery.Integration.Picasa {
     using ContactKey = Tuple<string, string>;    
 
     public class PicasaFaceProvider : IFaceProvider {

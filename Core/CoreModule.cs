@@ -13,8 +13,6 @@ using AshMind.IO.Abstraction.DefaultImplementation;
 
 using AshMind.Gallery.Core.AlbumSupport;
 using AshMind.Gallery.Core.ImageProcessing;
-using AshMind.Gallery.Core.Integration;
-using AshMind.Gallery.Core.Integration.Picasa;
 using AshMind.Gallery.Core.Metadata;
 using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Core.Security.Internal;
@@ -23,19 +21,16 @@ namespace AshMind.Gallery.Core {
     public class CoreModule : Module {
         private readonly ILocation albumLocation;
         private readonly ILocation storageLocation;
-        private readonly IFile picasaContactsXmlFile;
 
         private readonly Func<ObjectCache> cacheFactory;
 
         public CoreModule(
             ILocation albumLocation,
             ILocation storageLocation,
-            IFile picasaContactsXmlFile,
             Func<ObjectCache> cacheFactory
         ) {
             this.albumLocation = albumLocation;
             this.storageLocation = storageLocation;
-            this.picasaContactsXmlFile = picasaContactsXmlFile;
 
             this.cacheFactory = cacheFactory;
         }
@@ -67,8 +62,6 @@ namespace AshMind.Gallery.Core {
             RegisterAlbumSupport(builder, types);
 
             builder.RegisterType<PreviewFacade>().SingleInstance();
-            
-            RegisterPicasaIntegration(builder);
                         
             RegisterAllImplementationsOf<ILocationMetadataProvider>(builder, types, x => x.SingleInstance());
             RegisterAllImplementationsOf<IOrientationProvider>(builder, types, x => x.SingleInstance());
@@ -90,20 +83,6 @@ namespace AshMind.Gallery.Core {
             RegisterAllImplementationsOf<IAlbumItemMetadataProvider>(builder, types, x => x.SingleInstance());
             RegisterAllImplementationsOf<IAlbumProvider>(builder, types, x => x.SingleInstance());
             RegisterAllImplementationsOf<IAlbumFilter>(builder, types, x => x.SingleInstance());
-        }
-
-        private void RegisterPicasaIntegration(ContainerBuilder builder) {
-            builder.RegisterType<PicasaIniFileFinder>();
-            builder.RegisterType<PicasaIniParser>();
-
-            if (this.picasaContactsXmlFile == null)
-                return;
-
-            builder.Register(c => new PicasaDatabase(this.picasaContactsXmlFile));
-
-            builder.RegisterType<PicasaFaceProvider>()
-                   .As<IFaceProvider>()
-                   .SingleInstance();
         }
 
         private void RegisterAllImplementationsOf<TService>(

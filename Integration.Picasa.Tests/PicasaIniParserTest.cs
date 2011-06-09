@@ -4,10 +4,9 @@ using System.Linq;
 
 using MbUnit.Framework;
 
-using AshMind.Gallery.Core.Integration.Picasa;
 using AshMind.Gallery.Core.Tests.IO;
 
-namespace AshMind.Gallery.Core.Tests.Of.Integration.Picasa {
+namespace AshMind.Gallery.Integration.Picasa.Tests {
     [TestFixture]
     public class PicasaIniParserTest {
         [Test]

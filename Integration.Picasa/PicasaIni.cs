@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using AshMind.Gallery.Core.Integration.Picasa.IniParts;
+using AshMind.Gallery.Integration.Picasa.IniParts;
 
-namespace AshMind.Gallery.Core.Integration.Picasa {
+namespace AshMind.Gallery.Integration.Picasa {
     public class PicasaIni {
         public PicasaIni() {
             this.Contacts = new List<PicasaIniContact>();

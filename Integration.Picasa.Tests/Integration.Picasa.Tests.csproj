@@ -5,12 +5,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{93813FFE-7AD9-40A3-96DF-A00A8C5137F8}</ProjectGuid>
+    <ProjectGuid>{90D45E07-3BF4-4F54-BFD8-82CB33BD5798}</ProjectGuid>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AshMind.Gallery.Core.Tests</RootNamespace>
-    <AssemblyName>AshMind.Gallery.Core.Tests</AssemblyName>
+    <RootNamespace>AshMind.Gallery.Integration.Picasa.Tests</RootNamespace>
+    <AssemblyName>AshMind.Gallery.Integration.Picasa.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -32,16 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AshMind.Extensions, Version=1.0.4.0, Culture=neutral, PublicKeyToken=32a35e6126a2a893, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\$packages\AshMind.Extensions.1.0.4\lib\3.5\AshMind.Extensions.dll</HintPath>
-    </Reference>
     <Reference Include="Gallio" />
     <Reference Include="MbUnit" />
-    <Reference Include="Moq, Version=4.0.10827.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\$packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -61,29 +53,28 @@
     <Compile Include="..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
-    <Compile Include="IO\MemoryFile.cs" />
-    <Compile Include="IO\MemoryFileSystem.cs" />
-    <Compile Include="IO\MemoryLocation.cs" />
-    <Compile Include="IO\Resource.cs" />
-    <Compile Include="Of.AlbumSupport\AlbumIDProviderTest.cs" />
-    <Compile Include="Of.Security\AuthorizationServiceTest.cs" />
+    <Compile Include="PicasaIniParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\picasa.complex.ini" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\picasa.simple.ini" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\%24libraries\AshMind.IO.Abstraction\AshMind.IO.Abstraction.csproj">
       <Project>{EB2E231C-3FF4-4FE7-9B51-FDE4127F7DD5}</Project>
       <Name>AshMind.IO.Abstraction</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Core\Core.csproj">
-      <Project>{BF5A70D6-912D-472E-A1F7-607B88F062BB}</Project>
-      <Name>Core</Name>
+    <ProjectReference Include="..\Core.Tests\Core.Tests.csproj">
+      <Project>{93813FFE-7AD9-40A3-96DF-A00A8C5137F8}</Project>
+      <Name>Core.Tests</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Of.Integration\Picasa\" />
+    <ProjectReference Include="..\Integration.Picasa\Integration.Picasa.csproj">
+      <Project>{48284DFD-9467-4B44-B4F3-F4B3CFCFD0E0}</Project>
+      <Name>Integration.Picasa</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

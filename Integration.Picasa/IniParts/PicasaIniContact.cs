@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AshMind.Gallery.Core.Integration.Picasa.IniParts {
+namespace AshMind.Gallery.Integration.Picasa.IniParts {
     public class PicasaIniContact {
         public PicasaIniContact(string hash, string userCode, string id) {
             this.Hash = hash;

@@ -4,7 +4,7 @@ using System.Linq;
 
 using AshMind.IO.Abstraction;
 
-namespace AshMind.Gallery.Core.Integration.Picasa {
+namespace AshMind.Gallery.Integration.Picasa {
     public class PicasaDatabase {
         public PicasaDatabase(IFile contactsXml) {
             this.ContactsXml = contactsXml;

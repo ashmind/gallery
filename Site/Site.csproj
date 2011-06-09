@@ -196,6 +196,10 @@
       <Project>{BF5A70D6-912D-472E-A1F7-607B88F062BB}</Project>
       <Name>Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Integration.Picasa\Integration.Picasa.csproj">
+      <Project>{48284DFD-9467-4B44-B4F3-F4B3CFCFD0E0}</Project>
+      <Name>Integration.Picasa</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

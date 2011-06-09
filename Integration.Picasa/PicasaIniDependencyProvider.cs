@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using AshMind.Gallery.Core.ImageProcessing;
 using AshMind.IO.Abstraction;
 
-namespace AshMind.Gallery.Core.Integration.Picasa {
+using AshMind.Gallery.Core.ImageProcessing;
+
+namespace AshMind.Gallery.Integration.Picasa {
     public class PicasaIniDependencyProvider : ICacheDependencyProvider {
         private readonly PicasaIniFileFinder iniFileFinder;
 
