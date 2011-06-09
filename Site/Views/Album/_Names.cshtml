@@ -8,7 +8,7 @@
   @if (Model.CurrentUserAlbum != null) { 
       var album = Model.CurrentUserAlbum;
 
-      <a class="block-link album-name @(Model.IsSelected(album) ? "selected" : "")" data-id='@album.ID' href='@Url.Action("Home", new { album = album.ID })' title="@album.Name">
+      <a class="block-link album-name @(Model.IsSelected(album) ? "selected" : "")" data-id='@album.ID' href='@Url.Action("Gallery", new { album = album.ID })' title="@album.Name">
         <span class="image-count">@album.Items.Count</span>
         You: @album.Name
       </a>
@@ -23,7 +23,7 @@
           WriteLiteral("<div class='more'>");
       } 
 
-      <a class="block-link album-name @(Model.IsSelected(album) ? "selected" : "")" data-id='@album.ID' href='@Url.Action("Home", new { album = album.ID })' title="@album.Name">
+      <a class="block-link album-name @(Model.IsSelected(album) ? "selected" : "")" data-id='@album.ID' href='@Url.Action("Gallery", new { album = album.ID })' title="@album.Name">
         <span class="image-count">@album.Items.Count</span>
         @album.Name
       </a>
@@ -35,5 +35,5 @@
 </section>
 
 <section class="folders">
-   @{Html.RenderPartial("StandardAlbumNames");}
+   @{Html.RenderPartial("_StandardNames");}
 </section>

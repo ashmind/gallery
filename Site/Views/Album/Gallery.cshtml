@@ -15,11 +15,11 @@
 }
 
 <div id="left">
-    @{Html.RenderPartial("AlbumNames");}
+    @{Html.RenderPartial("_Names");}
 </div>
   
 <div id="main">    
   @if (Model.Selected != null) { 
-      Html.RenderPartial("Album", Model.Selected);
+      Html.RenderPartial("_View", Model.Selected);
    } 
 </div>

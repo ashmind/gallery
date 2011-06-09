@@ -16,9 +16,9 @@ using AshMind.Gallery.Site.Models;
 
 namespace AshMind.Gallery.Site.Tests.Of.Controllers {
     [TestFixture]
-    public class GalleryControllerTest {
+    public class AlbumControllerTest {
         [Test]
-        public void TestStandardAlbumNamesReturnsAlbumsWithoutGaps() {
+        public void TestStandardNamesReturnsAlbumsWithoutGaps() {
             var now = DateTimeOffset.Now;
             var albums = Enumerable.Range(0, 40).Select(
                 i => MakeAlbum("Album_" + (i + 1), now.AddDays(-i))
@@ -30,8 +30,8 @@ namespace AshMind.Gallery.Site.Tests.Of.Controllers {
             var controller = this.CreateController(facadeMock.Object);
 
             var loadedNames = Enumerable.Concat(
-                GetModel<GalleryViewModel>(controller.StandardAlbumNames(0, 20)).StandardAlbums.List,
-                GetModel<GalleryViewModel>(controller.StandardAlbumNames(21, 40)).StandardAlbums.List
+                GetModel<GalleryViewModel>(controller.StandardNames(0, 20)).StandardAlbums.List,
+                GetModel<GalleryViewModel>(controller.StandardNames(21, 40)).StandardAlbums.List
             ).Select(a => a.Name);
 
             Assert.AreElementsEqual(albums.Select(a => a.Name), loadedNames);
@@ -49,8 +49,8 @@ namespace AshMind.Gallery.Site.Tests.Of.Controllers {
             return (T)((ViewResultBase)result).ViewData.Model;
         }
 
-        private GalleryController CreateController(IAlbumFacade facade = null) {
-            return new GalleryController(
+        private AlbumController CreateController(IAlbumFacade facade = null) {
+            return new AlbumController(
                 facade ?? new Mock<IAlbumFacade>().Object,
                 new Mock<IAuthorizationService>().Object,
                 new Mock<IUserAuthentication>().Object,

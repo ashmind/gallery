@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mime;
 using System.Web.Mvc;
 
 using AshMind.Gallery.Core;
@@ -12,12 +11,12 @@ using AshMind.Gallery.Site.Logic;
 
 namespace AshMind.Gallery.Site.Controllers {
     [Authorize]
-    public class GalleryController : ControllerBase {
+    public class AlbumController : ControllerBase {
         private readonly IAlbumFacade gallery;
         private readonly IAuthorizationService authorization;
         private readonly IImageRequestStrategy requestStrategy;
 
-        public GalleryController(
+        public AlbumController(
             IAlbumFacade gallery,
             IAuthorizationService authorization,
             IUserAuthentication authentication,
@@ -28,12 +27,12 @@ namespace AshMind.Gallery.Site.Controllers {
             this.requestStrategy = requestStrategy;
         }
 
-        public ActionResult Home(string album, int albumCount = 20) {
+        public ActionResult Gallery(string album, int albumCount = 20) {
             var user = this.User;
             if (Request.IsAjaxRequest())
                 return AjaxAlbum(album, user);
 
-            var standardAlbums = this.GetStandardAlbums(user).Take(albumCount).ToArray();
+            var standardAlbums = this.GetAllStandard(user).Take(albumCount).ToArray();
             var peopleAlbumsAndCurrentPerson = this.GetPeopleAlbumsAndCurrentUserAlbum(user);
             var peopleAlbums = peopleAlbumsAndCurrentPerson.Item1;
             var currentUserAlbum = peopleAlbumsAndCurrentPerson.Item2;
@@ -54,15 +53,15 @@ namespace AshMind.Gallery.Site.Controllers {
 
         private ActionResult AjaxAlbum(string albumID, IUser user) {
             var album = this.gallery.GetAlbum(albumID, user) ?? Album.Empty;
-            return PartialView("Album", ToViewModel(album, true));
+            return PartialView("_View", ToViewModel(album, true));
         }
 
-        public ActionResult StandardAlbumNames(int start, int count) {
-            var albums = GetStandardAlbums(this.User)
+        public ActionResult StandardNames(int start, int count) {
+            var albums = GetAllStandard(this.User)
                                      .Skip(start - 1).Take(count)
                                      .ToArray();
 
-            return PartialView(new GalleryViewModel(
+            return PartialView("_StandardNames", new GalleryViewModel(
                 null,
                 new AlbumViewModel[0],
                 new AlbumListViewModel(
@@ -74,7 +73,7 @@ namespace AshMind.Gallery.Site.Controllers {
             ));
         }
 
-        private IEnumerable<AlbumViewModel> GetStandardAlbums(IUser user) {
+        private IEnumerable<AlbumViewModel> GetAllStandard(IUser user) {
             return this.gallery.GetAlbums(AlbumProviderKeys.Default, user)
                                .OrderByDescending(a => a.Date)
                                .Select(a => ToViewModel(a, false));
@@ -98,30 +97,6 @@ namespace AshMind.Gallery.Site.Controllers {
             }
 
             return new Tuple<IList<AlbumViewModel>, AlbumViewModel>(personAlbums, userAlbum);
-        }
-
-        public ActionResult ProposeDelete(string album, string item) {
-            return ToggleDelete(album, item, albumItem => albumItem.ProposedToBeDeletedBy = (KnownUser)User);
-        }
-
-        public ActionResult RevertDelete(string album, string item) {
-            return ToggleDelete(album, item, albumItem => albumItem.ProposedToBeDeletedBy = null);
-        }
-
-        private ActionResult ToggleDelete(string albumID, string itemName, Action<AlbumItem> action) {
-            if (!Request.IsAjaxRequest())
-                throw new NotImplementedException();          
-
-            var album = this.gallery.GetAlbum(albumID, User);
-            if (album == null)
-                return Unauthorized();
-
-            var item = album.Items.Value.Single(i => i.Name == itemName);
-            action(item);
-
-            this.gallery.SaveItem(item);
-
-            return Content(item.IsProposedToBeDeleted.ToString(), MediaTypeNames.Text.Plain);
         }
 
         private AlbumViewModel ToViewModel(Album album, bool manageSecurity) {

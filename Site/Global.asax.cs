@@ -67,15 +67,15 @@ namespace AshMind.Gallery.Site {
             routes.MapLowerCaseRoute(
                 "Ajax",
                 "ajax/{action}",
-                new { controller = "gallery" },
-                new { action = "(standardalbumnames)" }
+                new { controller = "album" },
+                new { action = "(standardnames)" }
             );
 
             routes.MapRoute(
                 "Item Action",
                 "{album}/{item}/{action}",
-                new { controller = "gallery" },
-                new { action = "(view|comment|proposedelete|revertdelete)" }
+                new { controller = "albumitem" },
+                new { action = "(view|proposedelete|revertdelete)" }
             );
 
             DependencyResolver.Current.GetService<Logic.IImageRequestStrategy>()
@@ -84,7 +84,7 @@ namespace AshMind.Gallery.Site {
             routes.MapRoute(
                 "Home",
                 "{album}",
-                new { controller = "gallery", action = "home", album = "" }
+                new { controller = "album", action = "gallery", album = "" }
             );
 
             routes.MapRoute(

@@ -59,9 +59,8 @@ namespace AshMind.Gallery.Core.AlbumSupport {
                 metadata = new AlbumItemRawMetadata();
 
             metadata.DeleteProposals.Clear();
-            metadata.DeleteProposals.Add(
-                this.userGroupReferenceSupport.GetReference(item.ProposedToBeDeletedBy)
-            );
+            if (item.ProposedToBeDeletedBy != null)
+                metadata.DeleteProposals.Add(this.userGroupReferenceSupport.GetReference(item.ProposedToBeDeletedBy));
 
             locationMetadataProvider.ApplyMetadata(item.File.Location, item.File.Name, metadata);
         }

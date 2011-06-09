@@ -14,7 +14,7 @@
         actions : {
             '@(Model.IsProposedToBeDeleted ? "restore" : "delete")' : {
                 action : '@(Url.Action(
-                  (Model.IsProposedToBeDeleted ? "Revert" : "Propose") + "Delete", "Gallery",
+                  (Model.IsProposedToBeDeleted ? "Revert" : "Propose") + "Delete", "AlbumItem",
                       new { album = Model.CurrentAlbumID, item = Model.Name }
                 ))',
 
