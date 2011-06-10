@@ -87,7 +87,10 @@ namespace AshMind.Gallery.Site.Controllers {
             var zipFile = this.zipLocation.GetFile(album.Name + ".zip", ActionIfMissing.ReturnAsIs);
             using (var zip = new ZipFile()) {
                 foreach (var item in album.Items.Value) {
-                    zip.AddFile(item.File.Path);
+                    if (item.IsProposedToBeDeleted)
+                        continue;
+
+                    zip.AddFile(item.File.Path, "");
                 }
                 
                 zip.Save(zipFile.Path);
