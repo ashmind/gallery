@@ -19,10 +19,19 @@ namespace AshMind.IO.Abstraction.DefaultImplementation {
                             .Select(name => new File(name, this));
         }
 
-        public IFile GetFile(string name, bool nullUnlessExists = true) {
+        public IFile GetFile(string name, ActionIfMissing actionIfMissing = ActionIfMissing.ReturnNull) {
             var path = System.IO.Path.Combine(this.Path, name);
-            if (nullUnlessExists && !System.IO.File.Exists(path))
-                return null;
+            if (!System.IO.File.Exists(path) && actionIfMissing != ActionIfMissing.ReturnAsIs) {
+                if (actionIfMissing == ActionIfMissing.CreateNew) {
+                    System.IO.File.Create(path).Close();
+                }
+                else if (actionIfMissing == ActionIfMissing.ReturnNull) {
+                    return null;
+                }
+                else if (actionIfMissing == ActionIfMissing.ThrowException) {
+                    throw new FileNotFoundException("File was not found.", path);
+                }
+            }
 
             return new File(path, this);
         }

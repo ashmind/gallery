@@ -18,7 +18,7 @@ namespace AshMind.Gallery.Core.Tests.IO {
             throw new NotImplementedException();
         }
 
-        public IFile GetFile(string path, bool nullUnlessExists = true) {
+        public IFile GetFile(string path, ActionIfMissing actionIfMissing) {
             throw new NotImplementedException();
         }
 

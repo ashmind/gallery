@@ -79,7 +79,7 @@ namespace AshMind.Gallery.Core.Metadata.Internal {
         }
 
         private IFile GetMetadataFile(ILocation location, bool nullUnlessExists) {
-            return location.GetFile(".gallery.info", nullUnlessExists);
+            return location.GetFile(".gallery.info", nullUnlessExists ? ActionIfMissing.ReturnNull : ActionIfMissing.ReturnAsIs);
         }
     }
 }

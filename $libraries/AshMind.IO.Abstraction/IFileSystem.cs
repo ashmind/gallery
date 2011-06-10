@@ -8,7 +8,7 @@ namespace AshMind.IO.Abstraction {
         
         string BuildPath(params string[] parts);
 
-        IFile GetFile(string path, bool nullUnlessExists = true);
+        IFile GetFile(string path, ActionIfMissing actionIfMissing = ActionIfMissing.ReturnNull);
 
         bool IsLocation(string path);
         ILocation GetLocation(string path, ActionIfMissing actionIfMissing = ActionIfMissing.ThrowException);

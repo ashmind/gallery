@@ -25,7 +25,7 @@ namespace AshMind.Gallery.Core.Security {
 
             builder.RegisterType<JsonKeyPermissionProvider>()
                    .As<IPermissionProvider>()
-                   .WithParameter(new TypedParameter(typeof(IFile), this.storageLocation.GetFile("permissions.jsdb", false)))
+                   .WithParameter(new TypedParameter(typeof(IFile), this.storageLocation.GetFile("permissions.jsdb", ActionIfMissing.ReturnAsIs)))
                    .SingleInstance();
 
             builder.RegisterType<JsonLocationPermissionProvider>()

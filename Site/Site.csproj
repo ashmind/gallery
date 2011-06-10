@@ -52,6 +52,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\$packages\DotNetOpenAuth.3.4.7.11121\lib\DotNetOpenAuth.dll</HintPath>
     </Reference>
+    <Reference Include="Ionic.Zip">
+      <HintPath>..\$packages\DotNetZip.1.9\lib\Ionic.Zip.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />

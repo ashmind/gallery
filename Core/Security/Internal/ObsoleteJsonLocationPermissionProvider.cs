@@ -74,7 +74,7 @@ namespace AshMind.Gallery.Core.Security.Internal {
         }
 
         private IFile GetSecurityFile(ILocation location, bool nullUnlessExists) {
-            return location.GetFile(".album.security", nullUnlessExists);
+            return location.GetFile(".album.security", nullUnlessExists ? ActionIfMissing.ReturnNull : ActionIfMissing.ReturnAsIs);
         }
     }
 }

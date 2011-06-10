@@ -72,6 +72,13 @@ namespace AshMind.Gallery.Site {
             );
 
             routes.MapRoute(
+                "Album Action",
+                "{albumID}/{action}",
+                new { controller = "album" },
+                new { action = "download" }
+            );
+
+            routes.MapRoute(
                 "Item Action",
                 "{album}/{item}/{action}",
                 new { controller = "albumitem" },
@@ -115,6 +122,8 @@ namespace AshMind.Gallery.Site {
             builder.RegisterModule(new SecurityModule(dataLocation));
             builder.RegisterModule(new PicasaModule(picasaContactsXmlFile));
             builder.RegisterModule(new WebModule());
+
+            builder.RegisterInstance(dataLocation);
             
             var container = builder.Build();
             var dependencyResolver = new AutofacDependencyResolver(container);

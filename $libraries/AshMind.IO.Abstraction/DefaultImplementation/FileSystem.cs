@@ -5,9 +5,9 @@ using System.IO;
 
 namespace AshMind.IO.Abstraction.DefaultImplementation {
     public class FileSystem : IFileSystem {
-        public IFile GetFile(string path, bool nullUnlessExists = true) {
+        public IFile GetFile(string path, ActionIfMissing actionIfMissing = ActionIfMissing.ReturnNull) {
             return this.GetLocation(Path.GetDirectoryName(path))
-                       .GetFile(Path.GetFileName(path), nullUnlessExists);
+                       .GetFile(Path.GetFileName(path), actionIfMissing);
         }
        
         public string BuildPath(params string[] parts) {

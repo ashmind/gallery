@@ -12,7 +12,7 @@ namespace AshMind.Gallery.Core.AlbumSupport {
         private readonly ConcurrentDictionary<string, AlbumDescriptor> idMap;
 
         public AlbumIDProvider(ILocation dataRoot) {
-            this.idMapFile = dataRoot.GetFile("idmap", false);
+            this.idMapFile = dataRoot.GetFile("idmap", ActionIfMissing.ReturnAsIs);
             this.idMap = new ConcurrentDictionary<string, AlbumDescriptor>(this.LoadMap());
         }
 

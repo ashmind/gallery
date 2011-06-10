@@ -46,7 +46,7 @@ namespace AshMind.Gallery.Core {
                    .InstancePerDependency();
 
             builder.Register(c => new JsonSecurityRepository(
-                        this.storageLocation.GetFile("users.jsdb", false)
+                        this.storageLocation.GetFile("users.jsdb", ActionIfMissing.ReturnAsIs)
                     ))
                    .As<IRepository<KnownUser>, IRepository<UserGroup>, IRepository<IUserGroup>>()
                    .SingleInstance();

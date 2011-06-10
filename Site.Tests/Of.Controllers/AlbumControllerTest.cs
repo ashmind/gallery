@@ -54,7 +54,8 @@ namespace AshMind.Gallery.Site.Tests.Of.Controllers {
                 facade ?? new Mock<IAlbumFacade>().Object,
                 new Mock<IAuthorizationService>().Object,
                 new Mock<IUserAuthentication>().Object,
-                new Mock<IImageRequestStrategy>().Object
+                new Mock<IImageRequestStrategy>().Object,
+                null
             );
         }
     }

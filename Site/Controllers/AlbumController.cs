@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Web.Mvc;
 
 using AshMind.Gallery.Core;
@@ -8,6 +9,8 @@ using AshMind.Gallery.Core.Security.Actions;
 using AshMind.Gallery.Site.Models;
 using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Site.Logic;
+using AshMind.IO.Abstraction;
+using Ionic.Zip;
 
 namespace AshMind.Gallery.Site.Controllers {
     [Authorize]
@@ -15,16 +18,19 @@ namespace AshMind.Gallery.Site.Controllers {
         private readonly IAlbumFacade gallery;
         private readonly IAuthorizationService authorization;
         private readonly IImageRequestStrategy requestStrategy;
+        private readonly ILocation zipLocation;
 
         public AlbumController(
             IAlbumFacade gallery,
             IAuthorizationService authorization,
             IUserAuthentication authentication,
-            IImageRequestStrategy requestStrategy
+            IImageRequestStrategy requestStrategy,
+            ILocation dataLocation
         ) : base(authentication) {
             this.gallery = gallery;
             this.authorization = authorization;
             this.requestStrategy = requestStrategy;
+            this.zipLocation = dataLocation.GetLocation("zips", ActionIfMissing.CreateNew);
         }
 
         public ActionResult Gallery(string album, int albumCount = 20) {
@@ -71,6 +77,27 @@ namespace AshMind.Gallery.Site.Controllers {
                 ),
                 null
             ));
+        }
+
+        public ActionResult Download(string albumID) {
+            var album = this.gallery.GetAlbum(albumID, this.User) ?? Album.Empty;
+            if (album.Items.Value.Count == 0)
+                return Empty();
+
+            var zipFile = this.zipLocation.GetFile(album.Name + ".zip", ActionIfMissing.ReturnAsIs);
+            using (var zip = new ZipFile()) {
+                foreach (var item in album.Items.Value) {
+                    zip.AddFile(item.File.Path);
+                }
+                
+                zip.Save(zipFile.Path);
+            }
+
+            return File(
+                zipFile.Open(FileLockMode.Write, FileOpenMode.ReadOrWrite),
+                MediaTypeNames.Application.Zip,
+                zipFile.Name
+            );
         }
 
         private IEnumerable<AlbumViewModel> GetAllStandard(IUser user) {

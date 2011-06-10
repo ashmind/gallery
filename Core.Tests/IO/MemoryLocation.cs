@@ -23,10 +23,10 @@ namespace AshMind.Gallery.Core.Tests.IO {
         public void Add(IFile file) {
             this.files.Add(file.Name, file);
         }
-        
-        public IFile GetFile(string name, bool nullUnlessExists = true) {
+
+        public IFile GetFile(string name, ActionIfMissing actionIfMissing) {
             var file = this.files.GetValueOrDefault(name);
-            if (!nullUnlessExists)
+            if (actionIfMissing != ActionIfMissing.ReturnNull)
                 file = file ?? new MemoryFile(this, name, false);
 
             return file;

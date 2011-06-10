@@ -77,7 +77,7 @@ namespace AshMind.Gallery.Core.ImageProcessing {
 
         private IFile GetCacheFile(IFile imageFile, int size) {
             var cacheKey = this.GetCacheKey(imageFile.Path, size);
-            return this.CacheRoot.GetFile(cacheKey, false);
+            return this.CacheRoot.GetFile(cacheKey, ActionIfMissing.ReturnAsIs);
         }
         
         private string GetCacheKey(string imagePath, int size) {
