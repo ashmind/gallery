@@ -11,9 +11,9 @@ namespace AshMind.Gallery.Core.Tests.IO {
         private readonly string resourcePath;
         private readonly Assembly assembly;
 
-        public Resource(string resourcePath) {
+        public Resource(string resourcePath, Assembly assembly) {
             this.resourcePath = resourcePath;
-            this.assembly = Assembly.GetExecutingAssembly();
+            this.assembly = assembly;
         }
 
         public DateTimeOffset GetLastWriteTime() {
@@ -45,7 +45,7 @@ namespace AshMind.Gallery.Core.Tests.IO {
         }
 
         public bool Exists {
-            get { return true; }
+            get { return this.assembly.GetManifestResourceNames().Contains(this.Name); }
         }
 
         public ILocation Location {

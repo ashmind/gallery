@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Reflection;
 using MbUnit.Framework;
 
 using AshMind.Gallery.Core.Tests.IO;
@@ -33,7 +33,7 @@ namespace AshMind.Gallery.Integration.Picasa.Tests {
         }
 
         private Resource Resource(string name) {
-            return new Resource(this.GetType().Namespace + ".Resources." + name);
+            return new Resource(this.GetType().Namespace + ".Resources." + name, Assembly.GetExecutingAssembly());
         }
     }
 }
