@@ -15,7 +15,7 @@ namespace AshMind.Gallery.Core.AlbumSupport {
         private readonly IAlbumIDProvider idProvider;
         private readonly IDictionary<string, IAlbumProvider> albumProviders;
         private readonly IAlbumFilter[] albumFilters;
-        private readonly IMetadataStore<AlbumItem>[] metadataStores;
+        private readonly IMetadataStore<object>[] metadataStores;
 
         internal ILocation Root { private set; get; }
 
@@ -24,7 +24,7 @@ namespace AshMind.Gallery.Core.AlbumSupport {
             IAlbumIDProvider idProvider,
             IEnumerable<IAlbumProvider> albumProviders,
             IAlbumFilter[] albumFilters,
-            IMetadataStore<AlbumItem>[] metadataStores
+            IMetadataStore<object>[] metadataStores
         ) {
             this.Root = root;
 
@@ -70,9 +70,13 @@ namespace AshMind.Gallery.Core.AlbumSupport {
             return provider.GetAlbum(GetAlbumLocations(), descriptor.ProviderSpecificPath, user);
         }
 
+        public void SaveAlbum(Album album) {
+            Argument.VerifyNotNull("album", album);
+            this.metadataStores.ForEach(p => p.SaveMetadata(album));
+        }
+
         public void SaveItem(AlbumItem item) {
             Argument.VerifyNotNull("item", item);
-
             this.metadataStores.ForEach(p => p.SaveMetadata(item));
         }
     }

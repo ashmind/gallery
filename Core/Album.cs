@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using AshMind.Extensions;
 
 using AshMind.Gallery.Core.AlbumSupport;
+using AshMind.Gallery.Core.Internal;
 using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Core.Values;
 
@@ -31,7 +32,7 @@ namespace AshMind.Gallery.Core {
             this.Name = name;
             this.items = items;
             this.date = items.Get(v => v.Min(i => (DateTimeOffset?)i.Date) ?? DateTimeOffset.Now);
-            this.ViewedBy = new List<IUser>();
+            this.ViewedBy = new HashSet<IUser>();
         }
 
         public AlbumDescriptor Descriptor          { get; private set; }
@@ -51,7 +52,7 @@ namespace AshMind.Gallery.Core {
             }
         }
 
-        public IList<IUser> ViewedBy { get; private set; }
+        public ISet<IUser> ViewedBy { get; private set; }
 
         #region IReadOnlySupport<Album> Members
 
@@ -61,7 +62,7 @@ namespace AshMind.Gallery.Core {
 
             this.readOnly = true;
             this.items = this.items.Get(MakeReadOnly);
-            this.ViewedBy = this.ViewedBy.AsReadOnly();
+            this.ViewedBy = new ReadOnlySet<IUser>(this.ViewedBy);
         }
 
         private ReadOnlyCollection<AlbumItem> MakeReadOnly(IList<AlbumItem> items) {

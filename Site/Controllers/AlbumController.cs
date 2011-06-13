@@ -50,8 +50,11 @@ namespace AshMind.Gallery.Site.Controllers {
             if (selected == null && currentUserAlbum != null && currentUserAlbum.ID == album)
                 selected = currentUserAlbum;
 
-            if (selected != null)
+            if (selected != null) {
                 this.SetupSecurityManagement(selected);
+                if (selected.Album.ViewedBy.Add(user))
+                    this.gallery.SaveAlbum(selected.Album);
+            }
 
             return View(new GalleryViewModel(
                 currentUserAlbum,
@@ -62,10 +65,18 @@ namespace AshMind.Gallery.Site.Controllers {
         }
 
         private ActionResult AjaxAlbum(string albumID, IUser user) {
-            var album = this.gallery.GetAlbum(albumID, user) ?? Album.Empty;
+            var album = this.gallery.GetAlbum(albumID, user);
+            
+            if (album != null) {
+                if (album.ViewedBy.Add(user))
+                    this.gallery.SaveAlbum(album);
+            }
+            else {
+                album = Album.Empty;
+            }
             var albumModel = ToViewModel(album);
             this.SetupSecurityManagement(albumModel);
-
+            
             return PartialView("_View", albumModel);
         }
 

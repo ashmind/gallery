@@ -12,6 +12,7 @@ namespace AshMind.Gallery.Core {
         IValue<AlbumItem> GetItem(string albumID, string itemName, IUser user);
         string GetAlbumID(Album album);
 
-        void SaveItem(AlbumItem item);        
+        void SaveAlbum(Album album);
+        void SaveItem(AlbumItem item);
     }
 }

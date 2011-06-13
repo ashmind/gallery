@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Caching;
-using AshMind.Gallery.Integration;
+using AshMind.Gallery.Core.AlbumSupport.Metadata;
 using Autofac;
 using Autofac.Builder;
 
@@ -72,7 +72,7 @@ namespace AshMind.Gallery.Core {
             builder.Register(c => new AlbumIDProvider(this.storageLocation))
                    .As<IAlbumIDProvider>();
 
-            builder.RegisterType<AlbumFactory>();
+            builder.RegisterGeneric(typeof(AlbumFactory<>));
             builder.RegisterType<AlbumItemFactory>();
 
             builder.RegisterType<AlbumFacade>()
@@ -81,6 +81,16 @@ namespace AshMind.Gallery.Core {
                    .SingleInstance();
 
             RegisterAllImplementationsOf<IMetadataStore<AlbumItem>>(builder, types, x => x.SingleInstance());
+            RegisterAllImplementationsOf<IMetadataStore<Album>>(builder, types, x => x.SingleInstance());
+
+            builder.RegisterType<MetadataStoreUntypedAdapter<AlbumItem>>()
+                   .As<IMetadataStore<object>>()
+                   .SingleInstance();
+
+            builder.RegisterType<MetadataStoreUntypedAdapter<Album>>()
+               .As<IMetadataStore<object>>()
+               .SingleInstance();
+
             RegisterAllImplementationsOf<IAlbumProvider>(builder, types, x => x.SingleInstance());
             RegisterAllImplementationsOf<IAlbumFilter>(builder, types, x => x.SingleInstance());
         }

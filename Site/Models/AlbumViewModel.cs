@@ -18,9 +18,7 @@ namespace AshMind.Gallery.Site.Models {
             IImageRequestStrategy imageAccess
         ) {
             this.ID = getAlbumID(album);
-            this.Name = album.Name;
             this.Album = album;
-            this.Date = album.Date;
             this.VisibleToGroups = new UserGroupViewModel[0].AsReadOnly();
             this.CurrentUser = currentUser;
 
@@ -46,9 +44,20 @@ namespace AshMind.Gallery.Site.Models {
         }
 
         public string ID { get; private set; }
-        public string Name { get; private set; }
+
+        public string Name {
+            get { return this.Album.Name; }
+        }
+
+        public DateTimeOffset Date {
+            get { return this.Album.Date; }
+        }
+
+        public bool WasViewedByCurrentUser {
+            get { return this.Album.ViewedBy.Contains(this.CurrentUser); }
+        }
+
         internal Album Album { get; private set; }
-        public DateTimeOffset Date { get; private set; }
         public IUser CurrentUser { get; private set; }
         public ReadOnlyCollection<AlbumItemModel> Items { get; private set; }
         public ReadOnlyCollection<DeleteProposalGroupModel> ProposedToBeDeleted { get; private set; }
@@ -60,5 +69,7 @@ namespace AshMind.Gallery.Site.Models {
             this.CanManageSecurity = true;
             this.VisibleToGroups = visibleToGroups.ToList().AsReadOnly();
         }
+
+
     }
 }

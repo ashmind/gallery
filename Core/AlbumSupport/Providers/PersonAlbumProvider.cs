@@ -14,7 +14,7 @@ using AshMind.Gallery.Integration;
 
 namespace AshMind.Gallery.Core.AlbumSupport.Providers {
     public class PersonAlbumProvider : IAlbumProvider {
-        private readonly AlbumFactory albumFactory;
+        private readonly AlbumFactory<PersonAlbum> albumFactory;
         private readonly AlbumItemFactory itemFactory;
         private readonly IFaceProvider[] faceProviders;
         private readonly FileSystemAlbumProvider primaryAlbumProvider;
@@ -22,7 +22,7 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
         private readonly ObjectCache faceCache;
 
         public PersonAlbumProvider(
-            AlbumFactory albumFactory,
+            AlbumFactory<PersonAlbum> albumFactory,
             AlbumItemFactory itemFactory,
             FileSystemAlbumProvider primaryAlbumProvider,
             IFaceProvider[] faceProviders,

@@ -13,14 +13,14 @@ using AshMind.Gallery.Core.Security.Actions;
 namespace AshMind.Gallery.Core.AlbumSupport.Providers {
     public class FileSystemAlbumProvider : IAlbumProvider {
         private readonly IFileSystem fileSystem;
-        private readonly AlbumFactory albumFactory;
+        private readonly AlbumFactory<FileSystemAlbum> albumFactory;
         private readonly AlbumItemFactory itemFactory;
         private readonly IAuthorizationService authorization;
         private readonly ObjectCache cache;
 
         public FileSystemAlbumProvider(
             IFileSystem fileSystem,
-            AlbumFactory albumFactory,
+            AlbumFactory<FileSystemAlbum> albumFactory,
             AlbumItemFactory itemFactory,
             IAuthorizationService authorization,
             ObjectCache cache
