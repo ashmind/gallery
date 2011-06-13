@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Caching;
 using AshMind.Extensions;
+using AshMind.Gallery.Core.Albums;
 using AshMind.Gallery.Core.Values;
 using AshMind.IO.Abstraction;
 using AshMind.Gallery.Core.Security;
@@ -74,10 +75,10 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
                 itemsValue = To.Just(items);
             }
 
-            album = this.albumFactory.Create(
-                new AlbumDescriptor(this.ProviderKey, location.Path),
-                location.Name, location, itemsValue
-            );
+            var descriptor = new AlbumDescriptor(this.ProviderKey, location.Path);
+            album = this.albumFactory.Process(new FileSystemAlbum(
+                descriptor, this.albumFactory.GetAlbumName(location.Name, descriptor), location, itemsValue
+            ));
             album.MakeReadOnly();
             this.cache.Set(cacheKey, album, new CacheItemPolicy {
                 ChangeMonitors = { new FixedFileChangeMonitor(new[] { location.Path }) }

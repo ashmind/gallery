@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using AshMind.Extensions;
+
 using AshMind.IO.Abstraction;
+
+using AshMind.Gallery.Core.Albums;
 using AshMind.Gallery.Core.Metadata;
 using AshMind.Gallery.Core.Security.Actions;
 
@@ -25,12 +29,12 @@ namespace AshMind.Gallery.Core.Security.Internal {
         }
 
         public override bool CanGetPermissions(ViewAction<Album> action) {
-            return base.CanGetPermissions(action) && action.Target.ProviderData is ILocation;
+            return base.CanGetPermissions(action) && action.Target is FileSystemAlbum;
         }
 
         public override IEnumerable<IUserGroup> GetPermissions(ViewAction<Album> action) {
             var permissionSet = this.metadataProvider.GetMetadata<IDictionary<string, IList<string>>>(
-                (ILocation)action.Target.ProviderData, PermissionsMetadataKey
+                ((FileSystemAlbum)action.Target).Location, PermissionsMetadataKey
             );
             if (permissionSet == null)
                 return Enumerable.Empty<IUserGroup>();
@@ -45,7 +49,7 @@ namespace AshMind.Gallery.Core.Security.Internal {
         }
 
         public override bool CanSetPermissions(ViewAction<Album> action) {
-            return base.CanSetPermissions(action) && action.Target.ProviderData is ILocation;
+            return base.CanSetPermissions(action) && action.Target is FileSystemAlbum;
         }
 
         public override void SetPermissions(ViewAction<Album> action, IEnumerable<IUserGroup> userGroups) {
@@ -55,7 +59,7 @@ namespace AshMind.Gallery.Core.Security.Internal {
             };
 
             this.metadataProvider.ApplyMetadata(
-                (ILocation)action.Target.ProviderData, PermissionsMetadataKey, permissionSet
+                ((FileSystemAlbum)action.Target).Location, PermissionsMetadataKey, permissionSet
             );
         }
     }

@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using AshMind.Extensions;
 
 using AshMind.Gallery.Core.AlbumSupport;
+using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Core.Values;
 
 namespace AshMind.Gallery.Core {
@@ -17,25 +18,24 @@ namespace AshMind.Gallery.Core {
         private readonly IValue<DateTimeOffset> date;
 
         static Album() {
-            Empty = new Album(new AlbumDescriptor("", ""), "", null, To.Just(new AlbumItem[0]));
+            Empty = new Album(new AlbumDescriptor("", ""), "", To.Just(new AlbumItem[0]));
         }
 
-        public Album(AlbumDescriptor descriptor, string name, object providerData, IValue<IEnumerable<AlbumItem>> items)
-            : this(descriptor, name, providerData, items.Get(v => v as IList<AlbumItem> ?? v.ToList()))
+        protected Album(AlbumDescriptor descriptor, string name, IValue<IEnumerable<AlbumItem>> items)
+            : this(descriptor, name, items.Get(v => v as IList<AlbumItem> ?? v.ToList()))
         {
         }
 
-        public Album(AlbumDescriptor descriptor, string name, object providerData, IValue<IList<AlbumItem>> items) {
+        protected Album(AlbumDescriptor descriptor, string name, IValue<IList<AlbumItem>> items) {
             this.Descriptor = descriptor;
             this.Name = name;
-            this.ProviderData = providerData;
             this.items = items;
             this.date = items.Get(v => v.Min(i => (DateTimeOffset?)i.Date) ?? DateTimeOffset.Now);
+            this.ViewedBy = new List<IUser>();
         }
 
         public AlbumDescriptor Descriptor          { get; private set; }
         public string Name                         { get; private set; }
-        public object ProviderData                 { get; private set; }
 
         public DateTimeOffset Date {
             get { return this.date.Value; }
@@ -51,6 +51,8 @@ namespace AshMind.Gallery.Core {
             }
         }
 
+        public IList<IUser> ViewedBy { get; private set; }
+
         #region IReadOnlySupport<Album> Members
 
         public void MakeReadOnly() {
@@ -59,6 +61,7 @@ namespace AshMind.Gallery.Core {
 
             this.readOnly = true;
             this.items = this.items.Get(MakeReadOnly);
+            this.ViewedBy = this.ViewedBy.AsReadOnly();
         }
 
         private ReadOnlyCollection<AlbumItem> MakeReadOnly(IList<AlbumItem> items) {
@@ -76,8 +79,15 @@ namespace AshMind.Gallery.Core {
             if (!this.readOnly)
                 return this;
 
+            var album = this.Recreate();
+            album.ViewedBy.AddRange(this.ViewedBy);
+
+            return album;
+        }
+
+        protected virtual Album Recreate() {
             return new Album(
-                this.Descriptor, this.Name, this.ProviderData,
+                this.Descriptor, this.Name,
                 this.Items.Get(v => v.Select(i => i.AsWritable()).ToList())
             );
         }

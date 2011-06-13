@@ -99,9 +99,11 @@
     <Compile Include="AlbumProviderKeys.cs" />
     <Compile Include="AlbumSupport\AlbumDescriptor.cs" />
     <Compile Include="AlbumSupport\AlbumItemFactory.cs" />
-    <Compile Include="AlbumSupport\AlbumItemLocationBasedMetadataProvider.cs" />
+    <Compile Include="AlbumSupport\Metadata\AlbumItemLocationBasedMetadataStore.cs" />
     <Compile Include="AlbumSupport\AlbumFactory.cs" />
-    <Compile Include="AlbumSupport\IAlbumItemMetadataProvider.cs" />
+    <Compile Include="Albums\PersonAlbum.cs" />
+    <Compile Include="Albums\FileSystemAlbum.cs" />
+    <Compile Include="Metadata\IMetadataStore.cs" />
     <Compile Include="AlbumSupport\IAlbumNameTransform.cs" />
     <Compile Include="Fixes\FixedFileChangeMonitor.cs" />
     <Compile Include="IAlbumFacade.cs" />

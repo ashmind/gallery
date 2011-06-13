@@ -5,6 +5,7 @@ using System.Net.Mime;
 using System.Web.Mvc;
 
 using AshMind.Gallery.Core;
+using AshMind.Gallery.Core.Albums;
 using AshMind.Gallery.Core.Security.Actions;
 using AshMind.Gallery.Site.Models;
 using AshMind.Gallery.Core.Security;
@@ -123,7 +124,7 @@ namespace AshMind.Gallery.Site.Controllers {
 
             var realUser = user as KnownUser;
             var indexOfUserAlbum = realUser != null
-                                 ? personAlbums.FindIndex(m => (string)m.Album.ProviderData == realUser.Email)
+                                 ? personAlbums.FindIndex(m => ((PersonAlbum)m.Album).IsOf(realUser))
                                  : -1;
 
             var userAlbum = (AlbumViewModel)null;

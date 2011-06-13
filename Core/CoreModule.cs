@@ -80,7 +80,7 @@ namespace AshMind.Gallery.Core {
                    .WithParameter(new TypedParameter(typeof(ILocation), this.albumLocation))
                    .SingleInstance();
 
-            RegisterAllImplementationsOf<IAlbumItemMetadataProvider>(builder, types, x => x.SingleInstance());
+            RegisterAllImplementationsOf<IMetadataStore<AlbumItem>>(builder, types, x => x.SingleInstance());
             RegisterAllImplementationsOf<IAlbumProvider>(builder, types, x => x.SingleInstance());
             RegisterAllImplementationsOf<IAlbumFilter>(builder, types, x => x.SingleInstance());
         }

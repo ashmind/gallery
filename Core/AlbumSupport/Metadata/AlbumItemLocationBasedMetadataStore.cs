@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using AshMind.Extensions;
-
 using AshMind.Gallery.Core.Metadata;
 using AshMind.Gallery.Core.Security;
 
-namespace AshMind.Gallery.Core.AlbumSupport {
-    public class AlbumItemLocationBasedMetadataProvider : IAlbumItemMetadataProvider {
+namespace AshMind.Gallery.Core.AlbumSupport.Metadata {
+    public class AlbumItemLocationBasedMetadataStore : IMetadataStore<AlbumItem> {
         #region AlbumItemRawMetadata Class
 
         private class AlbumItemRawMetadata {
@@ -25,7 +23,7 @@ namespace AshMind.Gallery.Core.AlbumSupport {
         private readonly IRepository<IUserGroup> userGroupRepository;
         private readonly IUserGroupSecureReferenceStrategy userGroupReferenceSupport;
 
-        public AlbumItemLocationBasedMetadataProvider(
+        public AlbumItemLocationBasedMetadataStore(
             ILocationMetadataProvider locationMetadataProvider,
             IRepository<IUserGroup> userGroupRepository,
             IUserGroupSecureReferenceStrategy userGroupReferenceSupport

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.Caching;
 
 using AshMind.Extensions;
-
+using AshMind.Gallery.Core.Albums;
 using AshMind.IO.Abstraction;
 
 using AshMind.Gallery.Core.Values;
@@ -41,18 +41,19 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
             const string albumsCacheKey = "faces:all_albums";
             var cached = this.faceCache.Get(albumsCacheKey);
             if (cached != null)
-                return CorrectAlbums((Album[])cached, user);
+                return CorrectAlbums((PersonAlbum[])cached, user);
 
             var albums = (
                 from location in locations
                 from face in GetFaces(location)
                 group face by face.Person into facesOfPerson
                 let uniqueKey = facesOfPerson.Key.Emails.ElementAtOrDefault(0) ?? facesOfPerson.Key.Name
-                select this.albumFactory.Create(
-                    new AlbumDescriptor(this.ProviderKey, uniqueKey),
-                    facesOfPerson.Key.Name, uniqueKey,
+                let descriptor = new AlbumDescriptor(this.ProviderKey, uniqueKey)
+                let name = this.albumFactory.GetAlbumName(facesOfPerson.Key.Name, descriptor)
+                select this.albumFactory.Process(new PersonAlbum(
+                    descriptor, name, facesOfPerson.Key,
                     To.Lazy(() => this.CreateAlbumItems(facesOfPerson, user))
-                )
+                ))
             ).ToArray();
 
             albums.ForEach(a => a.MakeReadOnly());
@@ -84,7 +85,7 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
             return this.GetAllAlbums(locations, user).Single(a => a.Descriptor.ProviderSpecificPath == providerSpecificPath);
         }
 
-        private IEnumerable<Album> CorrectAlbums(IEnumerable<Album> albums, IUser user) {
+        private IEnumerable<PersonAlbum> CorrectAlbums(IEnumerable<PersonAlbum> albums, IUser user) {
             var filtered = FilterByAuthorization(albums, user).Select(a => a.AsWritable());
             foreach (var album in filtered) {
                 album.Items = album.Items.Change(
@@ -95,10 +96,10 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
             }
         }
 
-        private IEnumerable<Album> FilterByAuthorization(IEnumerable<Album> albums, IUser user) {
+        private IEnumerable<PersonAlbum> FilterByAuthorization(IEnumerable<PersonAlbum> albums, IUser user) {
             var realUser = user as KnownUser;            
             return albums.Where(
-                album => (realUser != null && (string)album.ProviderData == realUser.Email)
+                album => (realUser != null && album.IsOf(realUser))
                       || this.authorization.IsAuthorized(user, SecurableActions.View(album))
             );
         }

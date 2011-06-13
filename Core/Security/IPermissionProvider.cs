@@ -11,5 +11,7 @@ namespace AshMind.Gallery.Core.Security {
 
         IEnumerable<IUserGroup> GetPermissions(ISecurableAction action);
         void SetPermissions(ISecurableAction action, IEnumerable<IUserGroup> userGroups);
+
+        int Priority { get; }
     }
 }

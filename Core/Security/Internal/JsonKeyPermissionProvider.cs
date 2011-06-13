@@ -31,10 +31,6 @@ namespace AshMind.Gallery.Core.Security.Internal {
             JsonConvert.PopulateObject(this.permissionStore.ReadAllText(), rawPermissions);
         }
 
-        public override bool CanGetPermissions(ViewAction<Album> action) {
-            return base.CanGetPermissions(action) && action.Target.ProviderData != null;
-        }
-
         public override bool CanSetPermissions(ViewAction<Album> action) {
             return base.CanSetPermissions(action) && this.CanGetPermissions(action);
         }
@@ -44,7 +40,7 @@ namespace AshMind.Gallery.Core.Security.Internal {
 
             rawPermissionsLock.EnterReadLock();
             try {
-                var permissionDictionary = this.rawPermissions.GetValueOrDefault(action.Target.ProviderData.ToString());
+                var permissionDictionary = this.rawPermissions.GetValueOrDefault(action.Target.Descriptor.ProviderSpecificPath);
                 if (permissionDictionary == null)
                     return Enumerable.Empty<IUserGroup>();
 
@@ -64,10 +60,10 @@ namespace AshMind.Gallery.Core.Security.Internal {
         public override void SetPermissions(ViewAction<Album> action, IEnumerable<IUserGroup> userGroups) {
             rawPermissionsLock.EnterWriteLock();
             try {
-                var permissionsOfKey = this.rawPermissions.GetValueOrDefault(action.Target.ProviderData.ToString());
+                var permissionsOfKey = this.rawPermissions.GetValueOrDefault(action.Target.Descriptor.ProviderSpecificPath);
                 if (permissionsOfKey == null) {
                     permissionsOfKey = new Dictionary<string, IList<string>>();
-                    this.rawPermissions.Add(action.Target.ProviderData.ToString(), permissionsOfKey);
+                    this.rawPermissions.Add(action.Target.Descriptor.ProviderSpecificPath, permissionsOfKey);
                 }
 
                 permissionsOfKey["View"] = userGroups.Select(g => (string)userGroupRepository.GetKey(g)).ToList();
@@ -78,6 +74,10 @@ namespace AshMind.Gallery.Core.Security.Internal {
             finally {
                 rawPermissionsLock.ExitWriteLock();
             }
+        }
+
+        public override int Priority {
+            get { return -1; }
         }
     }
 }

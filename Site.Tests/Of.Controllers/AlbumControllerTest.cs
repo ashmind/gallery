@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using AshMind.Gallery.Core.Albums;
 using AshMind.Gallery.Core.Values;
 using Moq;
 
@@ -38,7 +39,7 @@ namespace AshMind.Gallery.Site.Tests.Of.Controllers {
         }
 
         private static Album MakeAlbum(string name, DateTimeOffset date) {
-            return new Album(
+            return new FileSystemAlbum(
                 new AlbumDescriptor(AlbumProviderKeys.Default, ""),
                 name, null,
                 To.Just(new[] { new AlbumItem(null, "", AlbumItemType.Image, date) })

@@ -4,12 +4,14 @@ using System.Linq;
 
 using AshMind.IO.Abstraction;
 
+using AshMind.Gallery.Core.Metadata;
+
 namespace AshMind.Gallery.Core.AlbumSupport {
     public class AlbumItemFactory {
-        private readonly IAlbumItemMetadataProvider[] metadataProviders;
+        private readonly IMetadataStore<AlbumItem>[] metadataStores;
 
-        public AlbumItemFactory(IAlbumItemMetadataProvider[] metadataProviders) {
-            this.metadataProviders = metadataProviders;
+        public AlbumItemFactory(IMetadataStore<AlbumItem>[] metadataStores) {
+            this.metadataStores = metadataStores;
         }
 
         public AlbumItem CreateFrom(IFile file, AlbumItemType itemType) {
@@ -19,8 +21,8 @@ namespace AshMind.Gallery.Core.AlbumSupport {
                 itemType,
                 file.GetLastWriteTime()
             );
-            foreach (var provider in this.metadataProviders) {
-                provider.LoadMetadataTo(item);
+            foreach (var store in this.metadataStores) {
+                store.LoadMetadataTo(item);
             }
 
             return item;

@@ -18,6 +18,10 @@ namespace AshMind.Gallery.Core.Security {
         public abstract IEnumerable<IUserGroup> GetPermissions(TAction action);
         public abstract void SetPermissions(TAction action, IEnumerable<IUserGroup> userGroups);
 
+        public virtual int Priority {
+            get { return 0; }
+        }
+
         #region IPermissionProvider Members
 
         IEnumerable<IUserGroup> IPermissionProvider.GetPermissions(ISecurableAction action) {

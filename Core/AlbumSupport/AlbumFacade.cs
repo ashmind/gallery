@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 
 using AshMind.Extensions;
-using AshMind.IO.Abstraction
-;using AshMind.Gallery.Core.Values;
+
+using AshMind.IO.Abstraction;
+
+using AshMind.Gallery.Core.Metadata;
+using AshMind.Gallery.Core.Values;
 using AshMind.Gallery.Core.Security;
 
 namespace AshMind.Gallery.Core.AlbumSupport {
@@ -12,7 +15,7 @@ namespace AshMind.Gallery.Core.AlbumSupport {
         private readonly IAlbumIDProvider idProvider;
         private readonly IDictionary<string, IAlbumProvider> albumProviders;
         private readonly IAlbumFilter[] albumFilters;
-        private readonly IAlbumItemMetadataProvider[] metadataProviders;
+        private readonly IMetadataStore<AlbumItem>[] metadataStores;
 
         internal ILocation Root { private set; get; }
 
@@ -21,14 +24,14 @@ namespace AshMind.Gallery.Core.AlbumSupport {
             IAlbumIDProvider idProvider,
             IEnumerable<IAlbumProvider> albumProviders,
             IAlbumFilter[] albumFilters,
-            IAlbumItemMetadataProvider[] metadataProviders
+            IMetadataStore<AlbumItem>[] metadataStores
         ) {
             this.Root = root;
 
             this.idProvider = idProvider;
             this.albumProviders = albumProviders.ToDictionary(p => p.ProviderKey);
             this.albumFilters = albumFilters;
-            this.metadataProviders = metadataProviders;
+            this.metadataStores = metadataStores;
         }
 
         public IEnumerable<Album> GetAlbums(string providerKey, IUser user) {
@@ -70,7 +73,7 @@ namespace AshMind.Gallery.Core.AlbumSupport {
         public void SaveItem(AlbumItem item) {
             Argument.VerifyNotNull("item", item);
 
-            this.metadataProviders.ForEach(p => p.SaveMetadata(item));
+            this.metadataStores.ForEach(p => p.SaveMetadata(item));
         }
     }
 }
