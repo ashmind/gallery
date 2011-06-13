@@ -5,8 +5,6 @@ using System.Linq;
 
 using AshMind.Extensions;
 
-using AshMind.Gallery.Core;
-
 namespace AshMind.Gallery.Site.Models {
     public class GalleryViewModel {
         public GalleryViewModel(

@@ -157,6 +157,8 @@
     <Content Include="Content\Images\openid\google.png" />
     <Content Include="Content\jquery.dragToSelect.css" />
     <Content Include="Content\jquery.fancybox-1.3.1.css" />
+    <Content Include="Scripts\gallery.history.js" />
+    <Content Include="Scripts\jquery.ba-hashchange.min.js" />
     <Content Include="Scripts\jquery.cookie.js" />
     <Content Include="Scripts\jquery.dragout.js" />
     <Content Include="Scripts\jquery.dragToSelect.js" />

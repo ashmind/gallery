@@ -49,17 +49,23 @@ namespace AshMind.Gallery.Site.Controllers {
             if (selected == null && currentUserAlbum != null && currentUserAlbum.ID == album)
                 selected = currentUserAlbum;
 
+            if (selected != null)
+                this.SetupSecurityManagement(selected);
+
             return View(new GalleryViewModel(
                 currentUserAlbum,
                 peopleAlbums,
                 new AlbumListViewModel(standardAlbums, 0, null),
-                selected != null ? ToViewModel(selected.Album, true) : null
+                selected
             ));
         }
 
         private ActionResult AjaxAlbum(string albumID, IUser user) {
             var album = this.gallery.GetAlbum(albumID, user) ?? Album.Empty;
-            return PartialView("_View", ToViewModel(album, true));
+            var albumModel = ToViewModel(album);
+            this.SetupSecurityManagement(albumModel);
+
+            return PartialView("_View", albumModel);
         }
 
         public ActionResult StandardNames(int start, int count) {
@@ -106,13 +112,13 @@ namespace AshMind.Gallery.Site.Controllers {
         private IEnumerable<AlbumViewModel> GetAllStandard(IUser user) {
             return this.gallery.GetAlbums(AlbumProviderKeys.Default, user)
                                .OrderByDescending(a => a.Date)
-                               .Select(a => ToViewModel(a, false));
+                               .Select(ToViewModel);
         }
 
         private Tuple<IList<AlbumViewModel>, AlbumViewModel> GetPeopleAlbumsAndCurrentUserAlbum(IUser user) {
             var personAlbums = this.gallery.GetAlbums(AlbumProviderKeys.People, user)
                                            .OrderBy(p => p.Name)
-                                           .Select(a => ToViewModel(a, false))
+                                           .Select(ToViewModel)
                                            .ToList();
 
             var realUser = user as KnownUser;
@@ -129,21 +135,21 @@ namespace AshMind.Gallery.Site.Controllers {
             return new Tuple<IList<AlbumViewModel>, AlbumViewModel>(personAlbums, userAlbum);
         }
 
-        private AlbumViewModel ToViewModel(Album album, bool manageSecurity) {
+        private AlbumViewModel ToViewModel(Album album) {
             if (album == null)
                 return null;
+            
+            return new AlbumViewModel(album, this.gallery.GetAlbumID, this.User, this.requestStrategy);
+        }
 
-            if (!manageSecurity || !authorization.IsAuthorized(this.User, SecurableActions.ManageSecurity))
-                return new AlbumViewModel(album, this.gallery.GetAlbumID, this.User, this.requestStrategy, false, null);
+        private void SetupSecurityManagement(AlbumViewModel album) {
+            if (!authorization.IsAuthorized(this.User, SecurableActions.ManageSecurity))
+                return;
 
-            return new AlbumViewModel(
-                album, this.gallery.GetAlbumID, this.User,
-                this.requestStrategy,
-                true, (
-                    from userOrGroup in this.authorization.GetAuthorizedTo(SecurableActions.View(album))
-                    where !(userOrGroup is AnonymousMember)
-                    select new UserGroupViewModel(userOrGroup)
-                ).ToList()        
+            album.SetupSecurityManagement(
+                from userOrGroup in this.authorization.GetAuthorizedTo(SecurableActions.View(album))
+                where !(userOrGroup is AnonymousMember)
+                select new UserGroupViewModel(userOrGroup)
             );
         }
     }

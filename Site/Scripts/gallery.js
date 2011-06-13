@@ -1,5 +1,4 @@
 ﻿global = {
-    lightboxNotYetShown : true,
     noHistoryRecordWhileClosingLightbox : false
 };
 
@@ -16,49 +15,197 @@ if (Array.prototype.filter) {
     };
 }
 
-$(function() {
-    $.history.init(function(hash) {
-        if ($.history.noaction)
-            return;
-
-        var parts = hash.replace(/^\//, '').split('/');
-        var albumLink = $("#left a.album-name[data-id='" + parts[0] + "']");
-
+var gallery = {
+    openAlbum : function(album, options) {
+        options = options || {};
+        var albumLink = $("#left a.album-name[data-id='" + album + "']");
         if (albumLink.length == 0)
             return;
 
-        var selectItem = function() {
-            if (parts.length == 1)
-                return;
-            
-            var a = $(".wall a[data-name='" + parts[1] + "']");
-            $("#main").scrollTop(a.position().top);
-            
-            $.history.noaction = true;
-            if (global.lightboxNotYetShown) {
-                a.click();
-            }
-            else {
-                a.parent().toggleClass('selected');
-            }
-            $.history.noaction = false;
-        };
-
-        global.noHistoryRecordWhileClosingLightbox = true;
-        $.fancybox.close();
-
         if (!albumLink.hasClass('selected')) {
-            loadAlbum(albumLink, selectItem);
+            this._loadAlbum(album, albumLink, options.whenOpened);
+            return true;
         }
-        else {            
-            selectItem();
+        else if (options.whenOpened) {
+            options.whenOpened();
+            return false;
         }
-    });
-    setupAlbum();
+    },
+    
+    openItem : function(item, album) {
+        if (album) {
+            var that = this;
+            this.openAlbum(album, { whenOpened: function() { that.openItem(item); }});
+            return;
+        }
+        
+//        global.noHistoryRecordWhileClosingLightbox = true;
+//        $.fancybox.close();        
+        
+        if (!item)
+            return;
+            
+        var a = $(".wall a[data-name='" + item + "']");
+        $("#main").scrollTop(a.position().top);
+        
+        a.click();
+
+        this.history.add(album || this.history.current().album, item);
+    },
+    
+    _loadAlbum : function(album, albumLink, whenLoaded) {
+        if(window.stop) {
+            window.stop();
+        }
+        else if(document.execCommand) {
+            document.execCommand("Stop", false);
+        }
+        
+        $('#left').find('.selected').removeClass('selected');
+        albumLink.addClass('selected');
+
+        $('#main').hide();
+        this.history.add(album);
+        
+        document.title = document.title.replace(/:.+$/, "") + ": " + albumLink.text();
+        
+        $.get(albumLink.attr('href'), {}, function(html) {
+            $('#main').html(html).show();
+            gallery.setupCurrentAlbum();
+
+            if (whenLoaded)
+                whenLoaded();
+        });        
+    },
+    
+    setupCurrentAlbum : function() {
+        function getItemData(a) {
+            var data = a.data('data');
+            if (!data) {
+                data = eval('(' + a.attr('data-json') + ')');
+                a.data('data', data);
+            }
+
+            return data;
+        }
+
+        $(".wall a.image-view").fancybox({
+            type            : 'image',
+            padding	        : 0,
+            transitionIn	: 'fade',
+            transitionOut	: 'fade',
+            overlayOpacity  : 0.8,
+            overlayColor    : '#000',
+            titlePosition   : 'over',
+
+            onComplete : function(currentArray, currentIndex) {
+                gallery.lightboxOpen = true;
+
+                var a = $(currentArray).eq(currentIndex);
+                var data = getItemData(a);
+                gallery.history.add(a.parents('.album-view').attr('data-id'), data.name);
+
+                $("#fancybox-wrap .locate").click(function(event) {
+                    event.preventDefault();
+                    gallery.openItem($(this).attr('data-itemname'), $(this).attr('data-albumid'));
+                });
+
+                $("#fancybox-wrap .delete, #fancybox-wrap .restore").click(function(event) {
+                    event.preventDefault();
+                    var item = a.parents(".item");
+                    $.get($(this).attr('href'), {}, function(isDeleted) {
+                        $.fancybox.next();
+                        var deleted = $("section.to-delete");
+                        if (isDeleted.toLowerCase() == 'true') {
+                            deleted.append(item);
+                        }
+                        else {
+                            deleted.prevAll('section').append(item);
+                        }
+                    });
+                });
+            },
+
+            titleFormat : function(title, currentArray, currentIndex) {
+                var a = $(currentArray).eq(currentIndex);
+                var data = getItemData(a);
+
+                var locate = "";
+                if (data.primaryAlbumID) {
+                    locate = "<a class='locate' " +
+                        "data-albumID='" + data.primaryAlbumID + "' " +
+                        "data-itemname='" + data.name + "' " +
+                        "href='javascript:void(\"locate\")'" +
+                    ">Locate</a>";
+                }
+
+                var deleteOrRestoreKey = data.actions['delete'] ? 'delete' : 'restore';
+                var deleteOrRestoreData = data.actions[deleteOrRestoreKey];
+                var deleteOrRestore = "<a class='" + deleteOrRestoreKey + "' href='" + deleteOrRestoreData.action + "'>" + deleteOrRestoreData.text + "</a>";
+                var download = "<span>Download: ";
+                var downloadData = data.actions.download;
+                for (var name in downloadData.sizes) {
+                    download += "<a href='" + downloadData.action + "/" + downloadData.sizes[name] + "'>" + name + "</a>";
+                }
+                download += "</span>";
+
+                return "<span id='fancybox-title-over' class='image-actions'>" +
+                    [ locate, deleteOrRestore, download ]
+                        .filter(function(item) { return !!item; })
+                        .join('<span class="separator">|</span>') +
+                "</span>";
+            },
+
+            onClosed : function(currentArray, currentIndex) {
+                var a = $(currentArray).eq(currentIndex);
+                if (!global.noHistoryRecordWhileClosingLightbox)
+                    gallery.history.add(a.parents('.album-view').attr('data-id'));
+                
+                global.noHistoryRecordWhileClosingLightbox = false;
+                gallery.lightboxOpen = false;
+            }
+        });
+
+        $("#main").scrollTop(0);
+        var imgs = $(".wall img");
+        imgs.lazyload({
+            placeholder : imgs.eq(0).attr('src'),
+            container   : $("#main"),
+            effect      : "fadeIn"
+        }).dragout();
+
+        setupSecurityPanel();
+
+        /*$('.wall').dragToSelect({
+            selectables  : '.item',
+            selectOnMove : true/ *,
+            onHide       : function () {
+                var selected = $('.wall .item.selected');
+                if (selected.length > 0) {
+                    $("#main").css('right', '12.6em');
+                    $("#right-menu").show();
+                }
+                else {
+                    $("#right-menu").hide();
+                    $("#main").css('right', '0');
+                }
+            }* /
+        });*/
+    }
+};
+
+$(function() {
+    gallery.history.setup(global.rootUrl);
+    gallery.history.subscribe(function(album, item) { gallery.openItem(item, album); });
+    var current = gallery.history.current();
+    if (!gallery.openAlbum(current.album))
+        gallery.setupCurrentAlbum();
+    
+    gallery.openItem(current.item);
 
     $("#left a.album-name").live('click', function(event) {
         event.preventDefault();
-        $.history.load("/" + $(this).attr('data-id'));
+        gallery.openAlbum($(this).attr('data-id'));
     });
 
     $("#left section.folders a.more").live('click', function(event) {
@@ -85,154 +232,8 @@ $(function() {
     });
 });
 
-function loadAlbum(a, onsuccess) {
-    if(window.stop) {
-        window.stop();
-    }
-    else if(document.execCommand) {
-        document.execCommand("Stop", false);
-    }
-
-    $.get(a.attr('href'), {}, function(html) {
-        $('#main').html(html);
-
-        $('#left').find('.selected').removeClass('selected');
-        a.addClass('selected');
-
-        setupAlbum();
-
-        document.title = document.title.replace(/:.+$/, "") + ": " + a.text();
-
-        if (onsuccess)
-            onsuccess();
-    });        
-}
-
 function reloadAlbum() {
-    loadAlbum($("#left a.album-name.selected"));
-}
-
-function setupAlbum() {
-    function getItemData(a) {
-        var data = a.data('data');
-        if (!data) {
-            data = eval('(' + a.attr('data-json') + ')');
-            a.data('data', data);
-        }
-
-        return data;
-    }
-
-    $(".wall a.image-view").fancybox({
-        type            : 'image',
-        padding	        : 0,
-        transitionIn	: 'fade',
-        transitionOut	: 'fade',
-        overlayOpacity  : 0.8,
-        overlayColor    : '#000',
-        titlePosition   : 'over',
-
-        onComplete : function(currentArray, currentIndex) {
-            global.lightboxNotYetShown = false;
-
-            var a = $(currentArray).eq(currentIndex);
-            var data = getItemData(a);
-
-            a.parent().toggleClass('selected');
-            if (!$.history.noaction) {
-                $.history.noaction = true;
-                $.history.load("/" + a.parents('.album-view').attr('data-id') + '/' + data.name);
-                $.history.noaction = false;
-            }
-
-            $("#fancybox-wrap .locate").click(function(event) {
-                event.preventDefault();                
-                $.history.load("/" + $(this).attr('data-albumid') + '/' + $(this).attr('data-itemname'));
-            });
-
-            $("#fancybox-wrap .delete, #fancybox-wrap .restore").click(function(event) {
-                event.preventDefault();
-                var item = a.parents(".item");
-                $.get($(this).attr('href'), {}, function(isDeleted) {
-                    $.fancybox.next();
-                    var deleted = $("section.to-delete");
-                    if (isDeleted.toLowerCase() == 'true') {
-                        deleted.append(item);
-                    }
-                    else {
-                        deleted.prevAll('section').append(item);
-                    }
-                });
-            });
-        },
-
-        titleFormat : function(title, currentArray, currentIndex) {
-            var a = $(currentArray).eq(currentIndex);
-            var data = getItemData(a);
-
-            var locate = "";
-            if (data.primaryAlbumID) {
-                locate = "<a class='locate' " +
-                    "data-albumID='" + data.primaryAlbumID + "' " +
-                    "data-itemname='" + data.name + "' " +
-                    "href='javascript:void(\"locate\")'" +
-                ">Locate</a>";
-            }
-
-            var deleteOrRestoreKey = data.actions['delete'] ? 'delete' : 'restore';
-            var deleteOrRestoreData = data.actions[deleteOrRestoreKey];
-            var deleteOrRestore = "<a class='" + deleteOrRestoreKey + "' href='" + deleteOrRestoreData.action + "'>" + deleteOrRestoreData.text + "</a>";
-            var download = "<span>Download: ";
-            var downloadData = data.actions.download;
-            for (var name in downloadData.sizes) {
-                download += "<a href='" + downloadData.action + "/" + downloadData.sizes[name] + "'>" + name + "</a>";
-            }
-            download += "</span>";
-
-            return "<span id='fancybox-title-over' class='image-actions'>" +
-                [ locate, deleteOrRestore, download ]
-                    .filter(function(item) { return !!item; })
-                    .join('<span class="separator">|</span>') +
-            "</span>";
-        },
-
-        onClosed : function(currentArray, currentIndex) {
-            var a = $(currentArray).eq(currentIndex);
-
-            if (!global.noHistoryRecordWhileClosingLightbox) {
-                $.history.noaction = true;
-                $.history.load("/" + a.parents('.album-view').attr('data-id'));
-                $.history.noaction = false;
-            }
-            global.noHistoryRecordWhileClosingLightbox = false;
-        }
-    });
-
-    $("#main").scrollTop(0);
-    var imgs = $(".wall img");
-    imgs.lazyload({
-        placeholder : imgs.eq(0).attr('src'),
-        container   : $("#main"),
-        effect      : "fadeIn"
-    }).dragout();
-
-    setupSecurityPanel();
-
-    /*$('.wall').dragToSelect({
-        selectables  : '.item',
-        selectOnMove : true/ *,
-        onHide       : function () {
-            var selected = $('.wall .item.selected');
-            if (selected.length > 0) {
-                $("#main").css('right', '12.6em');
-                $("#right-menu").show();
-            }
-            else {
-                $("#right-menu").hide();
-                $("#main").css('right', '0');
-            }
-        }* /
-    });*/
+    gallery._loadAlbum($("#left a.album-name.selected"));
 }
 
 function setupSecurityPanel() {

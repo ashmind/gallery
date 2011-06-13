@@ -15,19 +15,13 @@ namespace AshMind.Gallery.Site.Models {
             Album album,
             Func<Album, string> getAlbumID,
             IUser currentUser,
-            IImageRequestStrategy imageAccess,
-            bool canManageSecurity,
-            IList<UserGroupViewModel> visibleToGroups
+            IImageRequestStrategy imageAccess
         ) {
-            if (!canManageSecurity && visibleToGroups != null && visibleToGroups.Count > 0)
-                throw new ArgumentException();
-
             this.ID = getAlbumID(album);
             this.Name = album.Name;
             this.Album = album;
             this.Date = album.Date;
-            this.CanManageSecurity = canManageSecurity;
-            this.VisibleToGroups = (visibleToGroups ?? new UserGroupViewModel[0]).AsReadOnly();
+            this.VisibleToGroups = new UserGroupViewModel[0].AsReadOnly();
             this.CurrentUser = currentUser;
 
             var itemModels = album.Items.Value.ToLookup(item => item.IsProposedToBeDeleted);
@@ -61,5 +55,10 @@ namespace AshMind.Gallery.Site.Models {
 
         public bool CanManageSecurity { get; private set; }
         public ReadOnlyCollection<UserGroupViewModel> VisibleToGroups { get; private set; }
+
+        public void SetupSecurityManagement(IEnumerable<UserGroupViewModel> visibleToGroups) {
+            this.CanManageSecurity = true;
+            this.VisibleToGroups = visibleToGroups.ToList().AsReadOnly();
+        }
     }
 }
