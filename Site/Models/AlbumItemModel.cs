@@ -10,14 +10,17 @@ namespace AshMind.Gallery.Site.Models {
     public class AlbumItemModel {
         private readonly AlbumItem item;
 
-        public AlbumItemModel(AlbumItem item, string currentAlbumID, string primaryAlbumID, Func<RequestContext, string> getImageUrlBase, IUser currentUser) {
+        public AlbumItemModel(AlbumItem item, int itemIndex, string currentAlbumID, string primaryAlbumID, Func<RequestContext, string> getImageUrlBase, IUser currentUser) {
             this.item = item;
+            this.ItemIndex = itemIndex;
             this.CurrentAlbumID = currentAlbumID;
             this.PrimaryAlbumID = primaryAlbumID;
             this.GetImageUrlBase = getImageUrlBase;
 
             this.WasProposedToBeDeletedByCurrentUser = item.ProposedToBeDeletedBy == currentUser;
         }
+
+        public int ItemIndex { get; private set; }
 
         public string PrimaryAlbumID { get; private set; }
         public string CurrentAlbumID { get; private set; }

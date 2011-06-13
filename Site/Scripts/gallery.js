@@ -168,11 +168,14 @@ var gallery = {
 
         $("#main").scrollTop(0);
         var imgs = $(".wall img");
-        imgs.lazyload({
-            placeholder : imgs.eq(0).attr('src'),
+        imgs.dragout();
+
+        var lazyImgs = imgs.filter("[data-lazysrc]");
+        lazyImgs.lazyload({
+            placeholder : lazyImgs.eq(0).attr('src'),
             container   : $("#main"),
             effect      : "fadeIn"
-        }).dragout();
+        });
 
         setupSecurityPanel();
 

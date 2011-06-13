@@ -1,6 +1,7 @@
 ﻿@model AlbumItemModel
 
 <span class="item">
+  @{ const int ImmediateImageCount = 20; /* TODO: config */ }
   @{ var urlBase = Model.GetImageUrlBase(ViewContext.RequestContext); }
 
   <a @(!Model.IsProposedToBeDeleted ? "rel=normal-gallery-item" : "")
@@ -32,9 +33,19 @@
             }
         }
       }"
-      class="image-view"> 
-      <img src="@Url.Content("~/content/images/blank.gif")"
-           data-lazysrc="@(urlBase + "/" + ImageSize.Thumbnail.Name.ToLowerInvariant())"
-           data-downloadurl="image/jpg:@Model.Name:@(urlBase + "/" + ImageSize.Large.Name.ToLowerInvariant())" />
+      class="image-view">
+
+      @{ 
+        var src = urlBase + "/" + ImageSize.Thumbnail.Name.ToLowerInvariant();
+        var downloadUrl = "image/jpg:" + Model.Name + ":" + (urlBase + "/" + ImageSize.Large.Name.ToLowerInvariant());
+      }
+      @if (Model.ItemIndex < ImmediateImageCount) {
+        <img src="@src" data-downloadurl="@downloadUrl" />
+      }
+      else { 
+        <img src="@Url.Content("~/content/images/blank.gif")"
+             data-lazysrc="@src"
+             data-downloadurl="@downloadUrl" />          
+      }
   </a>
 </span>

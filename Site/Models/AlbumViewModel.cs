@@ -25,20 +25,20 @@ namespace AshMind.Gallery.Site.Models {
             this.CurrentUser = currentUser;
 
             var itemModels = album.Items.Value.ToLookup(item => item.IsProposedToBeDeleted);
-            this.Items = itemModels[false].Select(item => ToItemModel(item, getAlbumID, imageAccess)).ToList().AsReadOnly();
+            this.Items = itemModels[false].Select((item, index) => ToItemModel(item, index, getAlbumID, imageAccess)).ToList().AsReadOnly();
             this.ProposedToBeDeleted = itemModels[true]
                                             .GroupBy(
                                                 item => item.ProposedToBeDeletedBy,
-                                                item => ToItemModel(item, getAlbumID, imageAccess),
+                                                item => ToItemModel(item, 1000, getAlbumID, imageAccess),
                                                 (key, models) => new DeleteProposalGroupModel(key, models.ToSet())
                                             )
                                             .ToList()
                                             .AsReadOnly();
         }
 
-        private AlbumItemModel ToItemModel(AlbumItem item, Func<Album, string> getAlbumID, IImageRequestStrategy imageAccess) {
+        private AlbumItemModel ToItemModel(AlbumItem item, int itemIndex, Func<Album, string> getAlbumID, IImageRequestStrategy imageAccess) {
             return new AlbumItemModel(
-                item, this.ID,
+                item, itemIndex, this.ID,
                 item.PrimaryAlbum.Get(getAlbumID).Value,
                 request => imageAccess.GetActionUrl(request, this.ID, item.Name),
                 this.CurrentUser
