@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using AshMind.Gallery.Core.Albums;
-using AshMind.Gallery.Core.Values;
-using Moq;
 
 using MbUnit.Framework;
 
+using Moq;
+
+using AshMind.IO.Abstraction;
+
 using AshMind.Gallery.Core;
+using AshMind.Gallery.Core.Albums;
 using AshMind.Gallery.Core.AlbumSupport;
 using AshMind.Gallery.Core.Security;
+using AshMind.Gallery.Core.Values;
 using AshMind.Gallery.Site.Controllers;
 using AshMind.Gallery.Site.Logic;
 using AshMind.Gallery.Site.Models;
@@ -56,7 +59,7 @@ namespace AshMind.Gallery.Site.Tests.Of.Controllers {
                 new Mock<IAuthorizationService>().Object,
                 new Mock<IUserAuthentication>().Object,
                 new Mock<IImageRequestStrategy>().Object,
-                null
+                new Mock<ILocation>().Object
             );
         }
     }
