@@ -154,12 +154,12 @@ namespace AshMind.Gallery.Site.Controllers {
             return new AlbumViewModel(album, this.gallery.GetAlbumID, this.User, this.requestStrategy);
         }
 
-        private void SetupSecurityManagement(AlbumViewModel album) {
+        private void SetupSecurityManagement(AlbumViewModel model) {
             if (!authorization.IsAuthorized(this.User, SecurableActions.ManageSecurity))
                 return;
 
-            album.SetupSecurityManagement(
-                from userOrGroup in this.authorization.GetAuthorizedTo(SecurableActions.View(album))
+            model.SetupSecurityManagement(
+                from userOrGroup in this.authorization.GetAuthorizedTo(SecurableActions.View(model.Album))
                 where !(userOrGroup is AnonymousMember)
                 select new UserGroupViewModel(userOrGroup)
             );

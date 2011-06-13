@@ -97,7 +97,8 @@ namespace AshMind.Gallery.Core.Security.Internal {
         }
 
         public void AuthorizeTo(ISecurableAction action, IEnumerable<IUserGroup> userGroups) {
-            var provider = this.providers.FirstOrDefault(p => p.CanSetPermissions(action));
+            var provider = this.providers.OrderByDescending(p => p.Priority)
+                                         .FirstOrDefault(p => p.CanSetPermissions(action));
 
             if (provider == null)
                 throw new NotSupportedException();
