@@ -59,8 +59,8 @@ namespace AshMind.Gallery.Core {
             var cacheRoot = this.storageLocation.GetLocation("images", ActionIfMissing.CreateNew);
             builder.Register(c => new ImageCache(
                         cacheRoot,
-                        c.Resolve<IImageWriter>(),
-                        c.Resolve<IImageReader>(),
+                        c.Resolve<IImageFormat[]>().Single(f => f.FileExtensions.Contains("jpeg")),
+                        c.Resolve<IImageLoader>(),
                         c.Resolve<ICacheDependencyProvider[]>()
                    ))
                    .SingleInstance();

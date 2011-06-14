@@ -12,21 +12,21 @@ namespace AshMind.Gallery.Core.ImageProcessing {
         private readonly object DiskAccessLock = new object();
 
         public ILocation CacheRoot { get; private set; }
-        public IImageWriter CacheWriter { get; private set; }
+        public IImageFormat CacheFormat { get; private set; }
 
-        private readonly IImageReader inputReader;
+        private readonly IImageLoader imageLoader;
         private readonly ICacheDependencyProvider[] dependencyProviders;
         
         public ImageCache(
             ILocation cacheRoot,
-            IImageWriter cacheWriter,
-            IImageReader inputReader,
+            IImageFormat cacheFormat,
+            IImageLoader imageLoader,
             ICacheDependencyProvider[] dependencyProviders
         ) {
             this.CacheRoot = cacheRoot;
 
-            this.CacheWriter = cacheWriter;
-            this.inputReader = inputReader;
+            this.CacheFormat = cacheFormat;
+            this.imageLoader = imageLoader;
             this.dependencyProviders = dependencyProviders;
         }
 
@@ -53,7 +53,7 @@ namespace AshMind.Gallery.Core.ImageProcessing {
         private IFile CacheTransform(IFile imageFile, IFile cacheFile, Converter<IImage, IImage> transform) {
             using (var original = LoadOriginalImage(imageFile))
             using (var result = transform(original)) {
-                this.CacheWriter.Write(cacheFile, result);
+                this.CacheFormat.Save(result, cacheFile);
             }
 
             return cacheFile;
@@ -61,7 +61,7 @@ namespace AshMind.Gallery.Core.ImageProcessing {
 
         private IImage LoadOriginalImage(IFile imageFile) {
             lock (DiskAccessLock) {
-                return this.inputReader.Read(imageFile);
+                return this.imageLoader.Load(imageFile);
             }
         }
 
@@ -74,7 +74,7 @@ namespace AshMind.Gallery.Core.ImageProcessing {
             return string.Format(
                 "{0}-x{1}.{2}",
                 GetCacheKey(imagePath), size,
-                this.CacheWriter.FileExtensions[0]
+                this.CacheFormat.FileExtensions[0]
             );
         }
 

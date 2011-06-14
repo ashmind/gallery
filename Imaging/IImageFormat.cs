@@ -6,8 +6,8 @@ using System.Linq;
 using AshMind.IO.Abstraction;
 
 namespace AshMind.Gallery.Imaging {
-    public interface IImageWriter {
-        void Write(IFile file, IImage image);
+    public interface IImageFormat : IImageLoader {
+        void Save(IImage image, IFile file);
 
         ReadOnlyCollection<string> FileExtensions { get; }
         ReadOnlyCollection<string> MediaTypeNames { get; }

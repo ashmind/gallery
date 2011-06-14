@@ -6,8 +6,8 @@ using System.Linq;
 using AshMind.IO.Abstraction;
 
 namespace AshMind.Gallery.Imaging.GdiPlus {
-    public class ImageReader : IImageReader {
-        public IImage Read(IFile file) {
+    public class ImageLoader : IImageLoader {
+        public IImage Load(IFile file) {
             //using (var stream = file.Read(FileLockMode.Write)) {
             //    return new ImageAdapter(Image.FromStream(stream));
             //}

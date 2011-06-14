@@ -39,7 +39,7 @@ namespace AshMind.Gallery.Core {
         }
         
         public string ImageMediaTypeName {
-            get { return this.cache.CacheWriter.MediaTypeNames[0]; }
+            get { return this.cache.CacheFormat.MediaTypeNames[0]; }
         }
     }
 }

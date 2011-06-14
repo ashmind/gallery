@@ -43,10 +43,10 @@
     <Compile Include="..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
+    <Compile Include="IImageLoader.cs" />
     <Compile Include="IImageMetadata.cs" />
-    <Compile Include="IImageReader.cs" />
+    <Compile Include="IImageFormat.cs" />
     <Compile Include="IImage.cs" />
-    <Compile Include="IImageWriter.cs" />
     <Compile Include="ImageMirroring.cs" />
     <Compile Include="ImageOrientation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

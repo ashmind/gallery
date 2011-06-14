@@ -54,9 +54,9 @@
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
     <Compile Include="ImageMetadataAdapter.cs" />
-    <Compile Include="ImageWriter.cs" />
+    <Compile Include="ImageCodecAdapter.cs" />
     <Compile Include="ImageAdapter.cs" />
-    <Compile Include="ImageReader.cs" />
+    <Compile Include="ImageLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GdiImagingModule.cs" />
   </ItemGroup>

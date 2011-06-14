@@ -10,18 +10,18 @@ namespace AshMind.Gallery.Imaging.GdiPlus {
         protected override void Load(ContainerBuilder builder) {
             base.Load(builder);
 
-            builder.RegisterType<ImageReader>()
-                   .As<IImageReader>()
+            builder.RegisterType<ImageLoader>()
+                   .As<IImageLoader>()
+                   .SingleInstance();
+            
+            builder.RegisterAdapter<ImageCodecInfo, ImageCodecAdapter>(c => new ImageCodecAdapter(c))
+                   .As<IImageFormat>()
                    .SingleInstance();
 
-            builder.RegisterType<ImageWriter>()
-                   .As<IImageWriter>()
-                   .SingleInstance();
-
-            var jpegCodecInfo = ImageCodecInfo.GetImageEncoders().Single(c => c.FormatID == ImageFormat.Jpeg.Guid);
-            builder.RegisterInstance(jpegCodecInfo)
-                   .As<ImageCodecInfo>()
-                   .SingleInstance();
+            var codecs = ImageCodecInfo.GetImageEncoders();
+            foreach (var codec in codecs) {
+                builder.RegisterInstance(codec);
+            }
         }
     }
 }
