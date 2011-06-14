@@ -80,17 +80,16 @@ namespace AshMind.Gallery.Core {
             if (!this.readOnly)
                 return this;
 
-            var album = this.Recreate();
+            var album = this.Recreate(
+                this.Items.Get(v => v.Select(i => i.AsWritable()).ToList())
+            );
             album.ViewedBy.AddRange(this.ViewedBy);
 
             return album;
         }
 
-        protected virtual Album Recreate() {
-            return new Album(
-                this.Descriptor, this.Name,
-                this.Items.Get(v => v.Select(i => i.AsWritable()).ToList())
-            );
+        protected virtual Album Recreate(IValue<IList<AlbumItem>> items) {
+            return new Album(this.Descriptor, this.Name, items);
         }
 
         #endregion

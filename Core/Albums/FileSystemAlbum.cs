@@ -17,8 +17,8 @@ namespace AshMind.Gallery.Core.Albums {
 
         public ILocation Location { get; private set; }
 
-        protected override Album Recreate() {
-            return new FileSystemAlbum(this.Descriptor, this.Name, this.Location, this.Items);
+        protected override Album Recreate(IValue<IList<AlbumItem>> items) {
+            return new FileSystemAlbum(this.Descriptor, this.Name, this.Location, items);
         }
     }
 }

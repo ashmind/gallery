@@ -20,8 +20,8 @@ namespace AshMind.Gallery.Core.Albums {
             return this.Person.Emails.Contains(realUser.Email);
         }
 
-        protected override Album Recreate() {
-            return new PersonAlbum(this.Descriptor, this.Name, this.Person, this.Items);
+        protected override Album Recreate(IValue<IList<AlbumItem>> items) {
+            return new PersonAlbum(this.Descriptor, this.Name, this.Person, items);
         }
 
         public new PersonAlbum AsWritable() {
