@@ -5,15 +5,13 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{48284DFD-9467-4B44-B4F3-F4B3CFCFD0E0}</ProjectGuid>
+    <ProjectGuid>{64AF3419-B540-4FF3-AE25-2DF5D359E555}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AshMind.Gallery.Integration.Picasa</RootNamespace>
-    <AssemblyName>AshMind.Gallery.Integration.Picasa</AssemblyName>
+    <RootNamespace>AshMind.Gallery.Imaging.Wpf</RootNamespace>
+    <AssemblyName>AshMind.Gallery.Imaging.Wpf</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,50 +40,36 @@
     <Reference Include="Autofac.Configuration">
       <HintPath>..\$packages\Autofac.2.4.5.724\lib\NET40\Autofac.Configuration.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
-    <Compile Include="..\Core\Argument.cs">
-      <Link>Argument.cs</Link>
-    </Compile>
-    <Compile Include="IniParts\PicasaIniContact.cs" />
-    <Compile Include="IniParts\PicasaIniFace.cs" />
-    <Compile Include="IniParts\PicasaIniMetadata.cs" />
-    <Compile Include="PicasaDatabase.cs" />
-    <Compile Include="PicasaFaceProvider.cs" />
-    <Compile Include="PicasaIni.cs" />
-    <Compile Include="PicasaIniDependencyProvider.cs" />
-    <Compile Include="PicasaIniFileFinder.cs" />
-    <Compile Include="PicasaIniParser.cs" />
-    <Compile Include="PicasaModule.cs" />
-    <Compile Include="PicasaOrientationProvider.cs" />
+    <Compile Include="BitmapDecoderAdapter.cs" />
+    <Compile Include="BitmapMetadataAdapter.cs" />
+    <Compile Include="BitmapSourceAdapter.cs" />
+    <Compile Include="BitmapEncoderAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WpfImagingModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\%24libraries\AshMind.IO.Abstraction\AshMind.IO.Abstraction.csproj">
       <Project>{EB2E231C-3FF4-4FE7-9B51-FDE4127F7DD5}</Project>
       <Name>AshMind.IO.Abstraction</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Core\Core.csproj">
-      <Project>{BF5A70D6-912D-472E-A1F7-607B88F062BB}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Imaging\Imaging.csproj">
       <Project>{7B242166-BEE1-48DF-9D40-FE3CD8C773AB}</Project>
       <Name>Imaging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Integration\Integration.csproj">
-      <Project>{343737E8-EA84-4965-8BD9-C38A422F52AD}</Project>
-      <Name>Integration</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

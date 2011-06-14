@@ -1,40 +1,36 @@
 ﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-
-using AshMind.Gallery.Core.Internal;
+using AshMind.Gallery.Imaging;
 using AshMind.IO.Abstraction;
 
-using Encoder = System.Drawing.Imaging.Encoder;
+using AshMind.Gallery.Core.Internal;
 
 namespace AshMind.Gallery.Core.ImageProcessing {
     public class ImageCache {
         private readonly object DiskAccessLock = new object();
 
         public ILocation CacheRoot { get; private set; }
-        public ImageCacheFormat Format { get; private set; }
+        public IImageWriter CacheWriter { get; private set; }
 
+        private readonly IImageReader inputReader;
         private readonly ICacheDependencyProvider[] dependencyProviders;
-
-        private readonly ImageCodecInfo imageEncoder;
-        private readonly EncoderParameters imageEncoderParameters;
-
-        public ImageCache(ILocation cacheRoot, ImageCacheFormat format, ICacheDependencyProvider[] dependencyProviders) {
+        
+        public ImageCache(
+            ILocation cacheRoot,
+            IImageWriter cacheWriter,
+            IImageReader inputReader,
+            ICacheDependencyProvider[] dependencyProviders
+        ) {
             this.CacheRoot = cacheRoot;
-            this.Format = format;
 
+            this.CacheWriter = cacheWriter;
+            this.inputReader = inputReader;
             this.dependencyProviders = dependencyProviders;
-
-            this.imageEncoder = ImageCodecInfo.GetImageEncoders().First(c => c.MimeType == format.MimeType);
-            this.imageEncoderParameters = new EncoderParameters {
-                Param = new[] { new EncoderParameter(Encoder.Quality, 100L) }
-            };
         }
 
-        public IFile GetTransform(IFile imageFile, int size, Func<Image, int, Image> transform) {
+        public IFile GetTransform(IFile imageFile, int size, Func<IImage, int, IImage> transform) {
             var cacheFile = GetCacheFile(imageFile, size);
             if (!IsCachedAndUpToDate(imageFile, cacheFile))
                 return this.CacheTransform(imageFile, cacheFile, image => transform(image, size));
@@ -54,24 +50,18 @@ namespace AshMind.Gallery.Core.ImageProcessing {
             return relatedChanges.All(change => change < cacheLastWriteTime);
         }
                 
-        private IFile CacheTransform(IFile imageFile, IFile cacheFile, Converter<Image, Image> transform) {
+        private IFile CacheTransform(IFile imageFile, IFile cacheFile, Converter<IImage, IImage> transform) {
             using (var original = LoadOriginalImage(imageFile))
-            using (var result = transform(original)) 
-            using (var stream = cacheFile.Open(FileLockMode.ReadWrite, FileOpenMode.Recreate))
-            {
-                result.Save(stream, this.imageEncoder, this.imageEncoderParameters);                
+            using (var result = transform(original)) {
+                this.CacheWriter.Write(cacheFile, result);
             }
 
             return cacheFile;
         }
 
-        private Image LoadOriginalImage(IFile imageFile) {
+        private IImage LoadOriginalImage(IFile imageFile) {
             lock (DiskAccessLock) {
-                // using (var stream = imageFile.Read(FileLockMode.Write)) {
-                //     return Image.FromStream(stream);
-                // }
-                // TEMPHACK: for some reason above code does not load exif
-                return Image.FromFile(imageFile.Path);
+                return this.inputReader.Read(imageFile);
             }
         }
 
@@ -84,7 +74,7 @@ namespace AshMind.Gallery.Core.ImageProcessing {
             return string.Format(
                 "{0}-x{1}.{2}",
                 GetCacheKey(imagePath), size,
-                this.Format.FileExtension
+                this.CacheWriter.FileExtensions[0]
             );
         }
 

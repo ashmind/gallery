@@ -46,9 +46,9 @@
     <Compile Include="..\Core\Argument.cs">
       <Link>Argument.cs</Link>
     </Compile>
-    <Compile Include="Face.cs" />
-    <Compile Include="IFaceProvider.cs" />
-    <Compile Include="Person.cs" />
+    <Compile Include="Faces\Face.cs" />
+    <Compile Include="Faces\IFaceProvider.cs" />
+    <Compile Include="Faces\Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

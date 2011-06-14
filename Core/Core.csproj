@@ -78,7 +78,6 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -132,8 +131,6 @@
     <Compile Include="ImageProcessing\ExifOrientationProvider.cs" />
     <Compile Include="ImageProcessing\ICacheDependencyProvider.cs" />
     <Compile Include="Metadata\ILocationMetadataProvider.cs" />
-    <Compile Include="Metadata\ImageMirroring.cs" />
-    <Compile Include="Metadata\ImageOrientation.cs" />
     <Compile Include="Metadata\Internal\JsonLocationMetadataProvider.cs" />
     <Compile Include="Metadata\IOrientationProvider.cs" />
     <Compile Include="Security\AbstractPermissionProvider.cs" />
@@ -161,7 +158,6 @@
     <Compile Include="AlbumSupport\GuessItemType.cs" />
     <Compile Include="AlbumSupport\IAlbumIDProvider.cs" />
     <Compile Include="ImageProcessing\ImageCache.cs" />
-    <Compile Include="ImageProcessing\ImageCacheFormat.cs" />
     <Compile Include="ImageProcessing\ImageProcessor.cs" />
     <Compile Include="PreviewFacade.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -196,6 +192,10 @@
     <ProjectReference Include="..\%24libraries\AshMind.IO.Abstraction\AshMind.IO.Abstraction.csproj">
       <Project>{EB2E231C-3FF4-4FE7-9B51-FDE4127F7DD5}</Project>
       <Name>AshMind.IO.Abstraction</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Imaging\Imaging.csproj">
+      <Project>{7B242166-BEE1-48DF-9D40-FE3CD8C773AB}</Project>
+      <Name>Imaging</Name>
     </ProjectReference>
     <ProjectReference Include="..\Integration\Integration.csproj">
       <Project>{343737E8-EA84-4965-8BD9-C38A422F52AD}</Project>

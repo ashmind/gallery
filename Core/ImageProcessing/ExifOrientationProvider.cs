@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 
 using AshMind.Gallery.Core.Metadata;
+using AshMind.Gallery.Imaging;
 using AshMind.IO.Abstraction;
 
 namespace AshMind.Gallery.Core.ImageProcessing {
     public class ExifOrientationProvider : IOrientationProvider {
-        private const int ExifOrientationId = 274;
-
         private static readonly IDictionary<int, ImageOrientation> orientations = new Dictionary<int, ImageOrientation> {
             { 1, new ImageOrientation(0) },
             { 2, new ImageOrientation(0, ImageMirroring.Horizontal) },
@@ -21,11 +19,11 @@ namespace AshMind.Gallery.Core.ImageProcessing {
             { 8, new ImageOrientation(90) },
         };
 
-        public ImageOrientation GetOrientation(Image image, IFile imageFile) {
-            if (!image.PropertyIdList.Contains(ExifOrientationId))
+        public ImageOrientation GetOrientation(IImage image, IFile imageFile) {
+            if (image.Metadata == null)
                 return null;
 
-            var exifOrientation = image.GetPropertyItem(ExifOrientationId).Value[0];
+            var exifOrientation = image.Metadata.GetValue<byte>("exif/orientation");
             if (exifOrientation == 0)
                 return null;
 

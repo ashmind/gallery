@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AshMind.IO.Abstraction;
 
-namespace AshMind.Gallery.Integration {
+namespace AshMind.Gallery.Integration.Faces {
     public class Face {
         public Face(Person person, IFile file) {
             Argument.VerifyNotNull("person", person);

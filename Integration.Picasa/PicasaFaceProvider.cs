@@ -4,6 +4,7 @@ using System.Linq;
 using System.Xml.Linq;
 
 using AshMind.Extensions;
+using AshMind.Gallery.Integration.Faces;
 using AshMind.IO.Abstraction;
 
 namespace AshMind.Gallery.Integration.Picasa {

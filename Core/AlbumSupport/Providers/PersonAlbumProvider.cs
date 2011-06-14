@@ -5,6 +5,7 @@ using System.Runtime.Caching;
 
 using AshMind.Extensions;
 using AshMind.Gallery.Core.Albums;
+using AshMind.Gallery.Integration.Faces;
 using AshMind.IO.Abstraction;
 
 using AshMind.Gallery.Core.Values;

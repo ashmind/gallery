@@ -202,6 +202,10 @@
       <Project>{BF5A70D6-912D-472E-A1F7-607B88F062BB}</Project>
       <Name>Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Imaging.GdiPlus\Imaging.GdiPlus.csproj">
+      <Project>{C6C4B0DA-D4EA-45C2-AABD-9B2E609FDBEF}</Project>
+      <Name>Imaging.GdiPlus</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Integration.Picasa\Integration.Picasa.csproj">
       <Project>{48284DFD-9467-4B44-B4F3-F4B3CFCFD0E0}</Project>
       <Name>Integration.Picasa</Name>

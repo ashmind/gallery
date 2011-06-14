@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Caching;
 using AshMind.Gallery.Core.AlbumSupport.Metadata;
+using AshMind.Gallery.Imaging;
 using Autofac;
 using Autofac.Builder;
 
@@ -56,7 +57,12 @@ namespace AshMind.Gallery.Core {
                    .SingleInstance();
 
             var cacheRoot = this.storageLocation.GetLocation("images", ActionIfMissing.CreateNew);
-            builder.Register(c => new ImageCache(cacheRoot, ImageCacheFormat.Jpeg, c.Resolve<ICacheDependencyProvider[]>()))
+            builder.Register(c => new ImageCache(
+                        cacheRoot,
+                        c.Resolve<IImageWriter>(),
+                        c.Resolve<IImageReader>(),
+                        c.Resolve<ICacheDependencyProvider[]>()
+                   ))
                    .SingleInstance();
             
             RegisterAlbumSupport(builder, types);

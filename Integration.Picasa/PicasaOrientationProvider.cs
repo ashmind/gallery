@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 
 using AshMind.Extensions;
 
-using AshMind.Gallery.Core.Metadata;
-
 using AshMind.IO.Abstraction;
+
+using AshMind.Gallery.Core.Metadata;
+using AshMind.Gallery.Imaging;
 
 namespace AshMind.Gallery.Integration.Picasa {
     public class PicasaOrientationProvider : IOrientationProvider {
@@ -19,7 +19,7 @@ namespace AshMind.Gallery.Integration.Picasa {
             this.picasaIniParser = picasaIniParser;
         }
 
-        public ImageOrientation GetOrientation(Image image, IFile imageFile) {
+        public ImageOrientation GetOrientation(IImage image, IFile imageFile) {
             var picasaIniFile = this.picasaIniFileFinder.FindIn(imageFile.Location);
             if (picasaIniFile == null)
                 return null;

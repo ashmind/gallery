@@ -8,7 +8,7 @@ using System.Web.Compilation;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.IO;
-using AshMind.Gallery.Integration.Picasa;
+
 using Autofac;
 using Autofac.Integration.Mvc;
 
@@ -18,6 +18,8 @@ using AshMind.IO.Abstraction.DefaultImplementation;
 
 using AshMind.Gallery.Core;
 using AshMind.Gallery.Core.Security;
+using AshMind.Gallery.Imaging.GdiPlus;
+using AshMind.Gallery.Integration.Picasa;
 using AshMind.Gallery.Site.Fixes;
 using AshMind.Gallery.Site.Routing;
 
@@ -118,9 +120,11 @@ namespace AshMind.Gallery.Site {
             var dataLocation = fileSystem.GetLocation(dataRoot);
             var picasaContactsXmlFile = picasaContactsXmlPath.IsNotNullOrEmpty() ? fileSystem.GetFile(picasaContactsXmlPath) : null;
 
+            // TODO: enable autodiscovery
             builder.RegisterModule(new CoreModule(albumLocation, dataLocation, () => new WebCache()));
             builder.RegisterModule(new SecurityModule(dataLocation));
             builder.RegisterModule(new PicasaModule(picasaContactsXmlFile));
+            builder.RegisterModule(new GdiImagingModule());
             builder.RegisterModule(new WebModule());
 
             builder.RegisterInstance(dataLocation);

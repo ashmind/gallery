@@ -28,6 +28,7 @@ namespace AshMind.Gallery.Core {
                                           .Select(p => p.GetOrientation(image, originalFile))
                                           .Where(o => o != null)
                                           .FirstOrDefault();
+
                     image = ImageProcessor.ReduceSize(image, desiredSize);
                     if (orientation != null)
                         image = ImageProcessor.CorrectOrientation(image, orientation);
@@ -37,8 +38,8 @@ namespace AshMind.Gallery.Core {
             );
         }
         
-        public string ImageMimeType {
-            get { return this.cache.Format.MimeType; }
+        public string ImageMediaTypeName {
+            get { return this.cache.CacheWriter.MediaTypeNames[0]; }
         }
     }
 }
