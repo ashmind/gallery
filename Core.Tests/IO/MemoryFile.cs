@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+using AshMind.Extensions;
 using AshMind.IO.Abstraction;
 
 namespace AshMind.Gallery.Core.Tests.IO {
@@ -60,6 +61,9 @@ namespace AshMind.Gallery.Core.Tests.IO {
         }
 
         public string Name { get; set; }
+        public string Extension {
+            get { return this.Name.SubstringAfterLast("."); }
+        }
 
         public string Path {
             get { throw new NotImplementedException(); }

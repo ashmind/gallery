@@ -67,7 +67,7 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
 
         private IEnumerable<AlbumItem> CreateAlbumItems(IEnumerable<Face> faces, IUser user) {
             return from face in faces
-                   let itemType = GuessItemType.Of(face.File.Name)
+                   let itemType = this.itemFactory.GetItemType(face.File)
                    where itemType == AlbumItemType.Image
                    let item = CreateAlbumItem(face, itemType)
                    select item;

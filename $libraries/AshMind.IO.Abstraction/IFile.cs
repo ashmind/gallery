@@ -5,6 +5,7 @@ using System.IO;
 
 namespace AshMind.IO.Abstraction {
     public interface IFile : IFileSystemElement {
+        string Extension { get; }
         DateTimeOffset GetLastWriteTime();
 
         Stream Read(FileLockMode lockMode);

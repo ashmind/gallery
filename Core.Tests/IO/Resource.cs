@@ -32,6 +32,10 @@ namespace AshMind.Gallery.Core.Tests.IO {
             get { throw new NotImplementedException(); }
         }
 
+        public string Extension {
+            get { throw new NotImplementedException(); }
+        }
+
         public string Path {
             get { return this.resourcePath; }
         }

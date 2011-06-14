@@ -68,6 +68,10 @@ namespace AshMind.IO.Abstraction.DefaultImplementation {
             get { return System.IO.Path.GetFileName(this.path); }
         }
 
+        public string Extension {
+            get { return System.IO.Path.GetExtension(this.path).TrimStart('.'); }
+        }
+
         public string Path {
             get { return this.path; }
         }

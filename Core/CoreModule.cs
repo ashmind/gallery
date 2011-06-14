@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Caching;
-using AshMind.Gallery.Core.AlbumSupport.Metadata;
-using AshMind.Gallery.Imaging;
+
 using Autofac;
 using Autofac.Builder;
 
@@ -17,6 +16,7 @@ using AshMind.Gallery.Core.ImageProcessing;
 using AshMind.Gallery.Core.Metadata;
 using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Core.Security.Internal;
+using AshMind.Gallery.Imaging;
 
 namespace AshMind.Gallery.Core {
     public class CoreModule : Module {

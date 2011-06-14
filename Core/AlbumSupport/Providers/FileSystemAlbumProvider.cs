@@ -89,7 +89,7 @@ namespace AshMind.Gallery.Core.AlbumSupport.Providers {
 
         private IEnumerable<AlbumItem> GetItemsAtLocation(ILocation location) {
             return from file in location.GetFiles()
-                   let itemType = GuessItemType.Of(file.Name)
+                   let itemType = this.itemFactory.GetItemType(file)
                    where itemType == AlbumItemType.Image
                    select this.itemFactory.CreateFrom(file, itemType);
         }

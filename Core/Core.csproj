@@ -103,6 +103,7 @@
     <Compile Include="AlbumSupport\Metadata\AlbumLocationBasedMetadataStore.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Internal\ReadOnlySortedSet.cs" />
     <Compile Include="Metadata\MetadataStoreUntypedAdapter.cs" />
     <Compile Include="Albums\PersonAlbum.cs" />
     <Compile Include="Albums\FileSystemAlbum.cs" />
@@ -155,7 +156,6 @@
     <Compile Include="Argument.cs" />
     <Compile Include="AlbumSupport\AlbumFacade.cs" />
     <Compile Include="AlbumSupport\AlbumIDProvider.cs" />
-    <Compile Include="AlbumSupport\GuessItemType.cs" />
     <Compile Include="AlbumSupport\IAlbumIDProvider.cs" />
     <Compile Include="ImageProcessing\ImageCache.cs" />
     <Compile Include="ImageProcessing\ImageProcessor.cs" />
