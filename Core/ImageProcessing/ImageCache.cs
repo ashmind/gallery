@@ -1,32 +1,39 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using AshMind.Gallery.Imaging;
+
 using AshMind.IO.Abstraction;
 
 using AshMind.Gallery.Core.Internal;
+using AshMind.Gallery.Imaging;
 
 namespace AshMind.Gallery.Core.ImageProcessing {
     public class ImageCache {
-        private readonly object DiskAccessLock = new object();
-
         public ILocation CacheRoot { get; private set; }
         public IImageFormat CacheFormat { get; private set; }
 
-        private readonly IImageLoader imageLoader;
+        private readonly IDictionary<string, IImageLoader> imageLoaders;
         private readonly ICacheDependencyProvider[] dependencyProviders;
         
         public ImageCache(
             ILocation cacheRoot,
             IImageFormat cacheFormat,
-            IImageLoader imageLoader,
+            IImageLoader[] imageLoaders,
             ICacheDependencyProvider[] dependencyProviders
         ) {
             this.CacheRoot = cacheRoot;
 
             this.CacheFormat = cacheFormat;
-            this.imageLoader = imageLoader;
+            this.imageLoaders = imageLoaders.SelectMany(
+                                    loader => loader.FileExtensions,
+                                    (loader, extension) => new { extension, loader }
+                                ).ToDictionary(
+                                    x => x.extension,
+                                    x => x.loader,
+                                    StringComparer.InvariantCultureIgnoreCase
+                                );
             this.dependencyProviders = dependencyProviders;
         }
 
@@ -60,9 +67,7 @@ namespace AshMind.Gallery.Core.ImageProcessing {
         }
 
         private IImage LoadOriginalImage(IFile imageFile) {
-            lock (DiskAccessLock) {
-                return this.imageLoader.Load(imageFile);
-            }
+            return this.imageLoaders[imageFile.Extension].Load(imageFile);
         }
 
         private IFile GetCacheFile(IFile imageFile, int size) {

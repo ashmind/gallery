@@ -16,6 +16,7 @@ namespace AshMind.Gallery.Imaging.GdiPlus {
             
             builder.RegisterAdapter<ImageCodecInfo, ImageCodecAdapter>(c => new ImageCodecAdapter(c))
                    .As<IImageFormat>()
+                   .As<ImageCodecAdapter>()
                    .SingleInstance();
 
             var codecs = ImageCodecInfo.GetImageEncoders();

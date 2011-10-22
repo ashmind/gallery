@@ -60,7 +60,7 @@ namespace AshMind.Gallery.Core {
             builder.Register(c => new ImageCache(
                         cacheRoot,
                         c.Resolve<IImageFormat[]>().Single(f => f.FileExtensions.Contains("jpeg")),
-                        c.Resolve<IImageLoader>(),
+                        c.Resolve<IImageLoader[]>(),
                         c.Resolve<ICacheDependencyProvider[]>()
                    ))
                    .SingleInstance();

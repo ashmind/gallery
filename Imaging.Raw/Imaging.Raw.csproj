@@ -3,14 +3,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{90D45E07-3BF4-4F54-BFD8-82CB33BD5798}</ProjectGuid>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{A3C984B2-2728-4549-9F6C-57E7FD8BE77D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AshMind.Gallery.Integration.Picasa.Tests</RootNamespace>
-    <AssemblyName>AshMind.Gallery.Integration.Picasa.Tests</AssemblyName>
+    <RootNamespace>AshMind.Gallery.Imaging.Raw</RootNamespace>
+    <AssemblyName>AshMind.Gallery.Imaging.Raw</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -37,13 +36,15 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
-    <CodeAnalysisLogFile>bin\Debug\AshMind.Gallery.Integration.Picasa.Tests.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisLogFile>bin\Debug\Imaging.Raw.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSetDirectories>;p:\Microsoft Visual Studio 2010\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisRuleDirectories>;p:\Microsoft Visual Studio 2010\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -51,58 +52,73 @@
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
-    <CodeAnalysisLogFile>bin\Release\AshMind.Gallery.Integration.Picasa.Tests.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisLogFile>bin\Release\Imaging.Raw.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSetDirectories>;p:\Microsoft Visual Studio 2010\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisRuleDirectories>;p:\Microsoft Visual Studio 2010\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Gallio" />
-    <Reference Include="MbUnit" />
+    <Reference Include="AshMind.Extensions, Version=1.0.4.0, Culture=neutral, PublicKeyToken=32a35e6126a2a893, processorArchitecture=MSIL">
+      <HintPath>..\$packages\AshMind.Extensions.1.0.4\lib\3.5\AshMind.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac">
+      <HintPath>..\$packages\Autofac.2.4.5.724\lib\NET40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Configuration">
+      <HintPath>..\$packages\Autofac.2.4.5.724\lib\NET40\Autofac.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="LibRawNet, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\$libraries\LibRawNet\LibRawNet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Gallio35" />
-    <Reference Include="MbUnit35" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
-    <Compile Include="PicasaIniParserTest.cs" />
+    <Compile Include="RawImageLoader.cs" />
+    <Compile Include="RawImagingModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\picasa.complex.ini" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\picasa.simple.ini" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\%24libraries\AshMind.IO.Abstraction\AshMind.IO.Abstraction.csproj">
       <Project>{EB2E231C-3FF4-4FE7-9B51-FDE4127F7DD5}</Project>
       <Name>AshMind.IO.Abstraction</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Core.Tests\Core.Tests.csproj">
-      <Project>{93813FFE-7AD9-40A3-96DF-A00A8C5137F8}</Project>
-      <Name>Core.Tests</Name>
+    <ProjectReference Include="..\Imaging.GdiPlus\Imaging.GdiPlus.csproj">
+      <Project>{C6C4B0DA-D4EA-45C2-AABD-9B2E609FDBEF}</Project>
+      <Name>Imaging.GdiPlus</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Integration.Picasa\Integration.Picasa.csproj">
-      <Project>{48284DFD-9467-4B44-B4F3-F4B3CFCFD0E0}</Project>
-      <Name>Integration.Picasa</Name>
+    <ProjectReference Include="..\Imaging\Imaging.csproj">
+      <Project>{7B242166-BEE1-48DF-9D40-FE3CD8C773AB}</Project>
+      <Name>Imaging</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\%24libraries\LibRawNet\libraw.x64.dll">
+      <Link>libraw.x64.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\%24libraries\LibRawNet\libraw.x86.dll">
+      <Link>libraw.x86.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

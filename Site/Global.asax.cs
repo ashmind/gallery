@@ -18,8 +18,6 @@ using AshMind.IO.Abstraction.DefaultImplementation;
 
 using AshMind.Gallery.Core;
 using AshMind.Gallery.Core.Security;
-using AshMind.Gallery.Imaging.GdiPlus;
-using AshMind.Gallery.Integration.Picasa;
 using AshMind.Gallery.Site.Fixes;
 using AshMind.Gallery.Site.Routing;
 
@@ -123,8 +121,9 @@ namespace AshMind.Gallery.Site {
             // TODO: enable autodiscovery
             builder.RegisterModule(new CoreModule(albumLocation, dataLocation, () => new WebCache()));
             builder.RegisterModule(new SecurityModule(dataLocation));
-            builder.RegisterModule(new PicasaModule(picasaContactsXmlFile));
-            builder.RegisterModule(new GdiImagingModule());
+            builder.RegisterModule(new Integration.Picasa.PicasaModule(picasaContactsXmlFile));
+            builder.RegisterModule(new Imaging.GdiPlus.GdiImagingModule());
+            builder.RegisterModule(new Imaging.Raw.RawImagingModule());
             builder.RegisterModule(new WebModule());
 
             builder.RegisterInstance(dataLocation);

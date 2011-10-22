@@ -15,10 +15,10 @@ namespace AshMind.Gallery.Core.AlbumSupport {
         private readonly IMetadataStore<AlbumItem>[] metadataStores;
 
         public AlbumItemFactory(
-            IEnumerable<IImageFormat> imageFormats,
+            IEnumerable<IImageLoader> imageLoaders,
             IMetadataStore<AlbumItem>[] metadataStores
         ) {
-            this.imageExtensions = imageFormats.SelectMany(f => f.FileExtensions).ToSet(StringComparer.InvariantCultureIgnoreCase);
+            this.imageExtensions = imageLoaders.SelectMany(f => f.FileExtensions).ToSet(StringComparer.InvariantCultureIgnoreCase);
             this.metadataStores = metadataStores;
         }
 

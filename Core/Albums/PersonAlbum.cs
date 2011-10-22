@@ -5,7 +5,6 @@ using System.Linq;
 using AshMind.Gallery.Core.AlbumSupport;
 using AshMind.Gallery.Core.Security;
 using AshMind.Gallery.Core.Values;
-using AshMind.Gallery.Integration;
 using AshMind.Gallery.Integration.Faces;
 
 namespace AshMind.Gallery.Core.Albums {
