@@ -11,5 +11,7 @@ namespace AshMind.Gallery.Imaging {
 
         ReadOnlyCollection<string> FileExtensions { get; }
         ReadOnlyCollection<string> MediaTypeNames { get; }
+
+        string GetMediaTypeName(string fileExtension);
     }
 }

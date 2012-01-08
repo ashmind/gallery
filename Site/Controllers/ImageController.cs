@@ -9,28 +9,26 @@ using System.Net.Mime;
 using AshMind.Extensions;
 
 using AshMind.Gallery.Core;
+using AshMind.Gallery.Imaging;
 using AshMind.Gallery.Site.Logic;
 using AshMind.Gallery.Site.Models;
 
 namespace AshMind.Gallery.Site.Controllers {
     public class ImageController : ControllerBase {
-        private readonly IDictionary<string, string> knownMimeTypes = new Dictionary<string, string> {
-            {".jpg",    MediaTypeNames.Image.Jpeg},
-            {".jpeg",   MediaTypeNames.Image.Jpeg},
-            {".png",    "image/png"}
-        };
-
         private readonly PreviewFacade preview;
+        private readonly IImageFormat[] formats;
         private readonly IImageRequestStrategy strategy;
 
         public ImageController(
             PreviewFacade preview,
+            IImageFormat[] formats,
             IUserAuthentication authentication,
             IImageRequestStrategy strategy
         )
             : base(authentication)
         {
             this.preview = preview;
+            this.formats = formats;
             this.strategy = strategy;
         }
 
@@ -47,9 +45,9 @@ namespace AshMind.Gallery.Site.Controllers {
                 file = this.preview.GetPreview(file, imageSize.Size);
                 fileName = string.Format(
                     "{0}_{1}px.{2}",
-                    fileName.SubstringBefore("."),
+                    file.Name.SubstringBefore("."),
                     imageSize.Size,
-                    fileName.SubstringAfter(".")
+                    file.Name.SubstringAfter(".")
                 );
             }
 
@@ -76,11 +74,8 @@ namespace AshMind.Gallery.Site.Controllers {
             Response.Cache.SetExpires((DateTimeOffset.Now + maxAge).UtcDateTime);
             Response.Cache.SetMaxAge(maxAge);
 
-            return File(
-                file.Path,
-                knownMimeTypes[Path.GetExtension(file.Name).ToLower()],
-                fileName
-            );
+            var mimeType = formats.First(f => f.FileExtensions.Contains(file.Extension)).GetMediaTypeName(file.Extension);
+            return File(file.Path, mimeType, fileName);
         }
     }
 }

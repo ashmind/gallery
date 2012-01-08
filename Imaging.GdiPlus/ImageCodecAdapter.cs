@@ -35,6 +35,10 @@ namespace AshMind.Gallery.Imaging.GdiPlus {
             throw new NotImplementedException("It is recommended to use ImageLoader instead for now.");
         }
 
+        public string GetMediaTypeName(string fileExtension) {
+            return codec.MimeType;
+        }
+
         public ReadOnlyCollection<string> FileExtensions { get; private set; }
         public ReadOnlyCollection<string> MediaTypeNames { get; private set; }
     }
