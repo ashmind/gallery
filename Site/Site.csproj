@@ -148,6 +148,7 @@
     <Content Include="Scripts\jquery.dragToSelect.js" />
     <Content Include="Scripts\jquery.fancybox-2.0.4-thumbs.js" />
     <Content Include="Scripts\jquery.fancybox-2.0.4.js" />
+    <Content Include="Scripts\jquery.fancybox-2.0.4.min.js" />
     <Content Include="Scripts\jquery.form.js" />
     <Content Include="Scripts\jquery.lazyload.js" />
     <Content Include="Scripts\jquery.masonry.js" />
