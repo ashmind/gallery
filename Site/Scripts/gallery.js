@@ -89,28 +89,61 @@ var gallery = {
             return data;
         }
 
+        function createActionLinks(a) {
+            var data = getItemData(a);
+
+            var locate = "";
+            if (data.primaryAlbumID) {
+                locate = "<a class='locate' " +
+                    "data-albumID='" + data.primaryAlbumID + "' " +
+                    "data-itemname='" + data.name + "' " +
+                    "href='javascript:void(\"locate\")'" +
+                ">Locate</a>";
+            }
+
+            var deleteOrRestoreKey = data.actions['delete'] ? 'delete' : 'restore';
+            var deleteOrRestoreData = data.actions[deleteOrRestoreKey];
+            var deleteOrRestore = "<a class='" + deleteOrRestoreKey + "' href='" + deleteOrRestoreData.action + "'>" + deleteOrRestoreData.text + "</a>";
+            var download = "<span>Download: ";
+            var downloadData = data.actions.download;
+            for (var name in downloadData.sizes) {
+                download += "<a href='" + downloadData.action + "/" + downloadData.sizes[name] + "'>" + name + "</a>";
+            }
+            download += "</span>";
+
+            return "<span class='image-actions'>" +
+                [ locate, deleteOrRestore, download ]
+                    .filter(function(item) { return !!item; })
+                    .join('<span class="separator">|</span>') +
+            "</span>";
+        }
+
         $(".wall a.image-view").fancybox({
             type            : 'image',
             padding	        : 0,
-            transitionIn	: 'fade',
-            transitionOut	: 'fade',
-            overlayOpacity  : 0.8,
-            overlayColor    : '#000',
-            titlePosition   : 'over',
+            prevEffect	    : 'fade',
+            nextEffect	    : 'fade',
+            loop            : false,
 
-            onComplete : function(currentArray, currentIndex) {
+            beforeShow : function() {
                 gallery.lightboxOpen = true;
 
-                var a = $(currentArray).eq(currentIndex);
+                var a = $(this.element);
                 var data = getItemData(a);
                 gallery.history.add(a.parents('.album-view').attr('data-id'), data.name);
 
-                $("#fancybox-wrap .locate").click(function(event) {
+                this.title = createActionLinks($(this.element));
+                return true;
+            },
+
+            afterShow : function() {
+                var a = $(this.element);
+                $(".image-actions .locate").click(function(event) {
                     event.preventDefault();
                     gallery.openItem($(this).attr('data-itemname'), $(this).attr('data-albumid'));
                 });
 
-                $("#fancybox-wrap .delete, #fancybox-wrap .restore").click(function(event) {
+                $(".image-actions .delete, .image-actions .restore").click(function(event) {
                     event.preventDefault();
                     var item = a.parents(".item");
                     $.get($(this).attr('href'), {}, function(isDeleted) {
@@ -124,45 +157,36 @@ var gallery = {
                         }
                     });
                 });
+
+                return true;
             },
 
-            titleFormat : function(title, currentArray, currentIndex) {
-                var a = $(currentArray).eq(currentIndex);
-                var data = getItemData(a);
-
-                var locate = "";
-                if (data.primaryAlbumID) {
-                    locate = "<a class='locate' " +
-                        "data-albumID='" + data.primaryAlbumID + "' " +
-                        "data-itemname='" + data.name + "' " +
-                        "href='javascript:void(\"locate\")'" +
-                    ">Locate</a>";
-                }
-
-                var deleteOrRestoreKey = data.actions['delete'] ? 'delete' : 'restore';
-                var deleteOrRestoreData = data.actions[deleteOrRestoreKey];
-                var deleteOrRestore = "<a class='" + deleteOrRestoreKey + "' href='" + deleteOrRestoreData.action + "'>" + deleteOrRestoreData.text + "</a>";
-                var download = "<span>Download: ";
-                var downloadData = data.actions.download;
-                for (var name in downloadData.sizes) {
-                    download += "<a href='" + downloadData.action + "/" + downloadData.sizes[name] + "'>" + name + "</a>";
-                }
-                download += "</span>";
-
-                return "<span id='fancybox-title-over' class='image-actions'>" +
-                    [ locate, deleteOrRestore, download ]
-                        .filter(function(item) { return !!item; })
-                        .join('<span class="separator">|</span>') +
-                "</span>";
-            },
-
-            onClosed : function(currentArray, currentIndex) {
-                var a = $(currentArray).eq(currentIndex);
+            beforeClose : function() {
+                var a = $(this.element);
                 if (!global.noHistoryRecordWhileClosingLightbox)
                     gallery.history.add(a.parents('.album-view').attr('data-id'));
                 
                 global.noHistoryRecordWhileClosingLightbox = false;
                 gallery.lightboxOpen = false;
+                return true;
+            },
+
+            helpers : {
+                overlay : {
+                    opacity: 0.8,
+                    css : {
+                        'background-color': '#000'
+                    }
+                },
+
+                title : {
+                    type: 'over'
+                },
+
+                thumbs	: {
+                    width	: 50,
+                    height	: 50
+                }
             }
         });
 

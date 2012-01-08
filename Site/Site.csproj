@@ -132,37 +132,22 @@
     <Compile Include="Routing\LowerCaseRoute.cs" />
     <Compile Include="Routing\RouteCollectionExtensions.cs" />
     <Compile Include="WebModule.cs" />
+    <Content Include="Content\Images\fancybox_loading.gif" />
+    <Content Include="Content\Images\fancybox_sprite.png" />
     <Content Include="Content\item-details.css" />
     <Content Include="Content\Images\blank.gif" />
-    <Content Include="Content\Images\fancybox-x.png" />
-    <Content Include="Content\Images\fancybox-y.png" />
-    <Content Include="Content\Images\fancybox.png" />
-    <Content Include="Content\Images\fancy_close.png" />
-    <Content Include="Content\Images\fancy_loading.png" />
-    <Content Include="Content\Images\fancy_nav_left.png" />
-    <Content Include="Content\Images\fancy_nav_right.png" />
-    <Content Include="Content\Images\fancy_shadow_e.png" />
-    <Content Include="Content\Images\fancy_shadow_n.png" />
-    <Content Include="Content\Images\fancy_shadow_ne.png" />
-    <Content Include="Content\Images\fancy_shadow_nw.png" />
-    <Content Include="Content\Images\fancy_shadow_s.png" />
-    <Content Include="Content\Images\fancy_shadow_se.png" />
-    <Content Include="Content\Images\fancy_shadow_sw.png" />
-    <Content Include="Content\Images\fancy_shadow_w.png" />
-    <Content Include="Content\Images\fancy_title_left.png" />
-    <Content Include="Content\Images\fancy_title_main.png" />
     <Content Include="Content\Images\fancy_title_over.png" />
-    <Content Include="Content\Images\fancy_title_right.png" />
-    <Content Include="Content\Images\loading.gif" />
     <Content Include="Content\Images\openid\google.png" />
     <Content Include="Content\jquery.dragToSelect.css" />
-    <Content Include="Content\jquery.fancybox-1.3.1.css" />
+    <Content Include="Content\jquery.fancybox-2.0.4-thumbs.css" />
+    <Content Include="Content\jquery.fancybox-2.0.4.css" />
     <Content Include="Scripts\gallery.history.js" />
     <Content Include="Scripts\jquery.ba-hashchange.min.js" />
     <Content Include="Scripts\jquery.cookie.js" />
     <Content Include="Scripts\jquery.dragout.js" />
     <Content Include="Scripts\jquery.dragToSelect.js" />
-    <Content Include="Scripts\jquery.fancybox-1.3.1.js" />
+    <Content Include="Scripts\jquery.fancybox-2.0.4-thumbs.js" />
+    <Content Include="Scripts\jquery.fancybox-2.0.4.js" />
     <Content Include="Scripts\jquery.form.js" />
     <Content Include="Scripts\jquery.lazyload.js" />
     <Content Include="Scripts\jquery.masonry.js" />
@@ -171,6 +156,7 @@
   <ItemGroup>
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\jquery.mousewheel-3.0.6.js" />
     <Content Include="Views\Access\GrantForm.cshtml" />
     <Content Include="Views\Access\Login.aspx" />
     <Content Include="Web.config">
@@ -204,6 +190,10 @@
     <ProjectReference Include="..\Imaging.GdiPlus\Imaging.GdiPlus.csproj">
       <Project>{C6C4B0DA-D4EA-45C2-AABD-9B2E609FDBEF}</Project>
       <Name>Imaging.GdiPlus</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Imaging\Imaging.csproj">
+      <Project>{7B242166-BEE1-48DF-9D40-FE3CD8C773AB}</Project>
+      <Name>Imaging</Name>
     </ProjectReference>
     <ProjectReference Include="..\Integration.Picasa\Integration.Picasa.csproj">
       <Project>{48284DFD-9467-4B44-B4F3-F4B3CFCFD0E0}</Project>

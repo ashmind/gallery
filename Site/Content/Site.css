@@ -187,7 +187,7 @@ a.block-link:hover {
 .album-view .wall .item img {
     background-position: center center;
     background-repeat: no-repeat;
-    background-image: url('Images/loading.gif');	
+    background-image: url('Images/fancybox_loading.gif');	
     
     -moz-box-shadow:    0 0 5px #505050;
     -webkit-box-shadow: 0 0 5px #505050;
@@ -289,16 +289,21 @@ form.grant .user-group.granted {
     opacity: 1;
 }
 
-#fancybox-title {
+.fancybox-title {
     display: none !important;
 }
 
-#fancybox-outer:hover #fancybox-title {
-    display: block !important;
+.fancybox-title a {
+    color: white;
 }
 
-#fancybox-title-over {
+.fancybox-title-over-wrap {
+    right: 0;
     text-align: right;
+}
+
+.fancybox-wrap:hover .fancybox-title {
+    display: block !important;
 }
 
 .image-actions * + * {
