@@ -10,7 +10,7 @@
      data-json="{
         name : '@Model.Name',
 
-        @(Model.PrimaryAlbumID != null ? "primaryAlbumID : '" + Model.PrimaryAlbumID + "'" : "") 
+        @(Html.Raw(Model.PrimaryAlbumID != null ? "primaryAlbumID : '" + Model.PrimaryAlbumID + "'," : "")) 
 
         actions : {
             '@(Model.IsProposedToBeDeleted ? "restore" : "delete")' : {

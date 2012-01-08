@@ -72,7 +72,8 @@ namespace AshMind.Gallery.Core {
                 return this;
 
             return new AlbumItem(this.File, this.Name, this.Type, this.Date) {
-                ProposedToBeDeletedBy =  this.proposedToBeDeletedBy
+                ProposedToBeDeletedBy =  this.proposedToBeDeletedBy,
+                PrimaryAlbum = this.PrimaryAlbum.Get(a => a.AsWritable())
             };
         }
 
